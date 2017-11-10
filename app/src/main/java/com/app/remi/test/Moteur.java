@@ -64,7 +64,7 @@ public class Moteur extends SurfaceView implements Runnable {
 
         paddle = new Barre(screenX, screenY);
         ball = new Boule(screenX, screenY);
-        spellBlock = new SpellBlock(screenX,screenY,screenX*0.3,screenY*0.3);
+        spellBlock = new SpellBlock(screenX, screenY, screenX * 0.3, screenY * 0.3);
 
         reset();
 
@@ -96,14 +96,14 @@ public class Moteur extends SurfaceView implements Runnable {
 
     public void update() {
 
-        paddle.update(fps,screenX);
+        paddle.update(fps, screenX);
         ball.update(fps);
         collisions();
     }
 
     public void draw() {
 
-        Bitmap bal = BitmapFactory.decodeResource(getResources(),R.drawable.skull);
+        Bitmap bal = BitmapFactory.decodeResource(getResources(), R.drawable.skull);
 
         if (ourHolder.getSurface().isValid()) {
 
@@ -112,30 +112,28 @@ public class Moteur extends SurfaceView implements Runnable {
             canvas.drawColor(Color.argb(100, 0, 0, 0));
 
 
-
-
             paint.setColor(Color.argb(100, 255, 255, 255));
 
 
             canvas.drawRect(paddle.getRect(), paint);
-            canvas.drawRect(spellBlock.getRect(),paint);
+            canvas.drawRect(spellBlock.getRect(), paint);
             canvas.drawRect(ball.getRect(), paint);
 
-            float startX = ball.getRect().left- ball.getBallWidth();
-            float startY = ball.getRect().top-ball.getBallHeight();
-            float endX =  ball.getRect().right +(bal.getWidth()/10) ;
-            float endY = ball.getRect().bottom+(bal.getHeight()/5);
+            float startX = ball.getRect().left - ball.getBallWidth();
+            float startY = ball.getRect().top - ball.getBallHeight();
+            float endX = ball.getRect().right + (bal.getWidth() / 10);
+            float endY = ball.getRect().bottom + (bal.getHeight() / 5);
 
             //canvas.drawBitmap(bal, null, new RectF(startX, startY, endX, endY), null);
 
-            paint.setColor(Color.argb(255,0,255,255));
-            canvas.drawRect(spellBlock.getLeftSide(),paint);
-            paint.setColor(Color.argb(255,255,0,0));
-            canvas.drawRect(spellBlock.getRightSide(),paint);
-            paint.setColor(Color.argb(255,255,255,0));
-            canvas.drawRect(spellBlock.getBotSide(),paint);
-            paint.setColor(Color.argb(255,0,255,0));
-            canvas.drawRect(spellBlock.getTopSide(),paint);
+            paint.setColor(Color.argb(255, 0, 255, 255));
+            canvas.drawRect(spellBlock.getLeftSide(), paint);
+            paint.setColor(Color.argb(255, 255, 0, 0));
+            canvas.drawRect(spellBlock.getRightSide(), paint);
+            paint.setColor(Color.argb(255, 255, 255, 0));
+            canvas.drawRect(spellBlock.getBotSide(), paint);
+            paint.setColor(Color.argb(255, 0, 255, 0));
+            canvas.drawRect(spellBlock.getTopSide(), paint);
 
 
             paint.setColor(Color.argb(255, 249, 129, 0));
@@ -176,41 +174,38 @@ public class Moteur extends SurfaceView implements Runnable {
             case MotionEvent.ACTION_DOWN:
                 paused = false;
                 if (motionEvent.getX() > screenX / 2) {
-                    paddle.setMovementState(paddle.RIGHT,screenX);
-                }
-                else {
-                    paddle.setMovementState(paddle.LEFT,screenX);
+                    paddle.setMovementState(paddle.RIGHT, screenX);
+                } else {
+                    paddle.setMovementState(paddle.LEFT, screenX);
                 }
 
                 break;
 
             case MotionEvent.ACTION_UP:
 
-                paddle.setMovementState(paddle.STOPPED,screenX);
+                paddle.setMovementState(paddle.STOPPED, screenX);
                 break;
         }
 
         return true;
     }
 
-    void collisions(){
-        if (RectF.intersects(spellBlock.getRect(),ball.getRect())){
-            if((RectF.intersects(spellBlock.getLeftSide(),ball.getRect()))||(RectF.intersects(spellBlock.getRightSide(),ball.getRect()))){
-                if((RectF.intersects(spellBlock.getTopSide(),ball.getRect()))||(RectF.intersects(spellBlock.getBotSide(),ball.getRect()))){
+    void collisions() {
+        System.out.println("zeae");
+        if (RectF.intersects(spellBlock.getRect(), ball.getRect())) {
+            if ((RectF.intersects(spellBlock.getLeftSide(), ball.getRect())) || (RectF.intersects(spellBlock.getRightSide(), ball.getRect()))) {
+                if ((RectF.intersects(spellBlock.getTopSide(), ball.getRect())) || (RectF.intersects(spellBlock.getBotSide(), ball.getRect()))) {
                     ball.reverseXVelocity();
                     ball.reverseYVelocity();
-                }
-                else{
+                } else {
                     ball.reverseXVelocity();
                 }
 
-            }
-            else {
-                if((RectF.intersects(spellBlock.getLeftSide(),ball.getRect()))||(RectF.intersects(spellBlock.getRightSide(),ball.getRect()))){
+            } else {
+                if ((RectF.intersects(spellBlock.getLeftSide(), ball.getRect())) || (RectF.intersects(spellBlock.getRightSide(), ball.getRect()))) {
                     ball.reverseXVelocity();
                     ball.reverseYVelocity();
-                }
-                else {
+                } else {
                     ball.reverseYVelocity();
                 }
             }
@@ -220,21 +215,20 @@ public class Moteur extends SurfaceView implements Runnable {
             ball.reverseYVelocity();
         }
         if (ball.getRect().bottom > screenY) {
-            RectF rect = new RectF(paddle.getX()+(paddle.getLength()/2)-(ball.getBallWidth()/2)
-                                   ,paddle.getHeight()+ball.getBallHeight()
-                                   ,paddle.getX()+(paddle.getLength()/2)+(ball.getBallWidth()/2)
-                                   ,paddle.getHeight()+100);
+            RectF rect = new RectF(paddle.getX() + (paddle.getLength() / 2) - (ball.getBallWidth() / 2)
+                    , paddle.getHeight() + ball.getBallHeight()
+                    , paddle.getX() + (paddle.getLength() / 2) + (ball.getBallWidth() / 2)
+                    , paddle.getHeight() + 100);
             paused = true;
         }
-        if (ball.getRect().left < ball.getBallWidth()/2) {
+        if (ball.getRect().left < ball.getBallWidth() / 2) {
             ball.reverseXVelocity();
-        }
-        else if (ball.getRect().right > screenX - ball.getBallWidth()/2) {
+        } else if (ball.getRect().right > screenX - ball.getBallWidth() / 2) {
             ball.reverseXVelocity();
-        }
-        else if (ball.getRect().top < 0) {
+        } else if (ball.getRect().top < 0) {
             ball.reverseYVelocity();
         }
     }
 }
+
 

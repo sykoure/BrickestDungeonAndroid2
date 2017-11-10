@@ -1,6 +1,7 @@
 package com.app.remi.test;
 
 import android.app.Activity;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 
 
@@ -17,6 +18,9 @@ public class MainActivity extends Activity {
 
         moteur = new Moteur(this);
         setContentView(moteur);
+
+        MediaPlayer ring= MediaPlayer.create(MainActivity.this,R.raw.level7);
+        ring.start();
 
     }
 
