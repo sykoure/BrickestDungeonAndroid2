@@ -2,8 +2,8 @@ package com.app.remi.test;
 
 import android.app.Activity;
 import android.media.MediaPlayer;
+import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-
 
 public class MainActivity extends Activity {
 
@@ -35,7 +35,5 @@ public class MainActivity extends Activity {
         super.onPause();
         moteur.pause();
     }
-
-
 
 }
