@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 /**
  * Menu activity class
@@ -14,13 +15,16 @@ import android.widget.TextView;
  */
 public class LauncherMenu extends Activity {
     private Button startButton;
-    private TextView titleTextView;
+    private TextView titleTextView,accelerometerTextView;
+    private ToggleButton accelerometerToggleButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launcher_menu);
         startButton = (Button) findViewById(R.id.nextScreenButton);
         titleTextView = (TextView) findViewById(R.id.titleTextView);
+        accelerometerTextView = (TextView) findViewById(R.id.accelerometerTextView);
+        accelerometerToggleButton = (ToggleButton) findViewById(R.id.accelerometerToggleButton);
     }
 
     // Start the game activity
