@@ -19,8 +19,8 @@ public class MainActivity extends Activity {
         moteur = new Moteur(this);
         setContentView(moteur);
 
-        MediaPlayer ring= MediaPlayer.create(MainActivity.this,R.raw.level7);
-        ring.start();
+        //MediaPlayer ring= MediaPlayer.create(MainActivity.this,R.raw.level7);
+        //ring.start();
 
     }
 
