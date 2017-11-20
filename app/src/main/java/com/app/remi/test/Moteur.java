@@ -9,6 +9,10 @@ import android.graphics.Paint;
 import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.RectF;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
@@ -20,7 +24,6 @@ import android.view.WindowManager;
 /**
  * Created by Remi on 25/10/2017.
  */
-
 public class Moteur extends SurfaceView implements Runnable {
 
 
@@ -44,11 +47,24 @@ public class Moteur extends SurfaceView implements Runnable {
     Boule ball;
     int numBricks = 0;
 
+    private Boolean playWithSensor;
+    private float initialSensorValue;
 
-    public Moteur(Context context) {
+
+    public Moteur(Context context, Boolean playWithSensor,SensorManager sensorManager) {
 
 
         super(context);
+
+        this.playWithSensor = playWithSensor;
+        // initialSensorValue is always set a 0 the first time, it allow to detect difference in Z axis positions
+        initialSensorValue = 0;
+        if (playWithSensor) {
+            // We initialise the sensor only if the toggleButton has been checked
+            Sensor accelerometre = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+            // Here we choose the behavior for the sensor and his delay
+            sensorManager.registerListener(mSensorEventListener, accelerometre, SensorManager.SENSOR_DELAY_UI);
+        }
 
         ourHolder = getHolder();
         paint = new Paint();
@@ -162,33 +178,68 @@ public class Moteur extends SurfaceView implements Runnable {
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
 
-        System.out.println("carre gauche :  " + spellBlock.getRect().left);
-        System.out.println("boule gauche :  " + ball.getRect().left);
 
-        System.out.println("carre droite :  " + spellBlock.getRect().right);
-        System.out.println("boule droite :  " + spellBlock.getRect().right);
+            System.out.println("carre gauche :  " + spellBlock.getRect().left);
+            System.out.println("boule gauche :  " + ball.getRect().left);
 
-        switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
-            // Player has touched the screen
+            System.out.println("carre droite :  " + spellBlock.getRect().right);
+            System.out.println("boule droite :  " + spellBlock.getRect().right);
 
-            case MotionEvent.ACTION_DOWN:
-                paused = false;
-                if (motionEvent.getX() > screenX / 2) {
+            switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
+                // Player has touched the screen
+
+                case MotionEvent.ACTION_DOWN:
+                    paused = false;
+                    if(!playWithSensor) {
+                        if (motionEvent.getX() > screenX / 2) {
+                            paddle.setMovementState(paddle.RIGHT, screenX);
+                        } else {
+                            paddle.setMovementState(paddle.LEFT, screenX);
+                        }
+                    }
+                    break;
+
+                case MotionEvent.ACTION_UP:
+                    if(!playWithSensor) {
+                        paddle.setMovementState(paddle.STOPPED, screenX);
+                    }
+                    break;
+            }
+
+        return true;
+    }
+
+    /**
+     * Behavior for the sensor
+     * TODO add precision to the sensor mouvement (the speed of the bar should be the difference between the last value and the new value)
+     */
+    final SensorEventListener mSensorEventListener = new SensorEventListener() {
+
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        }
+
+        /**
+         * If the value has changed the bar is moved, else the bar stop
+         * @param sensorEvent
+         */
+        public void onSensorChanged(SensorEvent sensorEvent) {
+            // Que faire en cas d'évènements sur le capteur ?
+            if (sensorEvent.values[0] != initialSensorValue) {
+                String toDisplay = "Accelerometer Z Value : " + sensorEvent.values[0];
+                Log.d("ACCELEROMETRE", toDisplay);
+                if (sensorEvent.values[0] <= 0) {
                     paddle.setMovementState(paddle.RIGHT, screenX);
                 } else {
                     paddle.setMovementState(paddle.LEFT, screenX);
                 }
-
-                break;
-
-            case MotionEvent.ACTION_UP:
-
+                initialSensorValue = sensorEvent.values[0];
+            }
+            /*
+            else {
                 paddle.setMovementState(paddle.STOPPED, screenX);
-                break;
+            }*/
         }
-
-        return true;
-    }
+    };
 
     void collisions() {
         System.out.println("zeae");

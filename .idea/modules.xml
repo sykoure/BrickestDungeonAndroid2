@@ -3,7 +3,7 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/BrickestDungeonAndroid2.iml" filepath="$PROJECT_DIR$/BrickestDungeonAndroid2.iml" />
-      <module fileurl="file://$PROJECT_DIR$/Test.iml" filepath="$PROJECT_DIR$/Test.iml" />
+      <module fileurl="file://D:\Android_Project\BrickestDungeonAndroid2\Test.iml" filepath="D:\Android_Project\BrickestDungeonAndroid2\Test.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>

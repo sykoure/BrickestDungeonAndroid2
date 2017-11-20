@@ -1,7 +1,9 @@
 package com.app.remi.test;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.hardware.SensorManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -30,6 +32,8 @@ public class LauncherMenu extends Activity {
     // Start the game activity
     public void submit(View view) {
         Intent intent = new Intent(this,MainActivity.class);
+        boolean buttonState = accelerometerToggleButton.isChecked();
+        intent.putExtra("BOOLEAN_CHECK",buttonState);
         startActivity(intent);
     }
 }

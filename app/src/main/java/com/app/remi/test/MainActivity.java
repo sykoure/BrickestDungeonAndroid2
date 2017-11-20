@@ -1,6 +1,9 @@
 package com.app.remi.test;
 
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -15,8 +18,11 @@ public class MainActivity extends Activity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Intent intent = getIntent();
+        Boolean playWithSensor = intent.getBooleanExtra("BOOLEAN_CHECK",false);
+        SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
-        moteur = new Moteur(this);
+        moteur = new Moteur(this, playWithSensor,sensorManager);
         setContentView(moteur);
 
         //MediaPlayer ring= MediaPlayer.create(MainActivity.this,R.raw.level7);
