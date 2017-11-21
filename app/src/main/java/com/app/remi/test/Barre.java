@@ -21,7 +21,7 @@ public class Barre {
 
     public Barre(int screenX, int screenY){
         length = 130;
-        height = 20;
+        height = 30;
 
         x = screenX / 2;
         y = screenY - 20;

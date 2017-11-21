@@ -42,6 +42,9 @@ public class Moteur extends SurfaceView implements Runnable {
     int screenX;
     int screenY;
 
+    int life = 10;
+    int shield = 10;
+
     SpellBlock spellBlock;
     Barre paddle;
     Boule ball;
@@ -124,6 +127,10 @@ public class Moteur extends SurfaceView implements Runnable {
             canvas = ourHolder.lockCanvas();
 
             canvas.drawColor(Color.argb(100, 0, 0, 0));
+            paint.setColor(Color.argb(100,0,0,0));
+
+            canvas.drawText("Life : ", (float) (0+screenY*0.1), (float) (screenX*0.3),paint);
+            canvas.drawText("Life : ", (float) (0+screenY*0.1)+20, (float) (screenX*0.3),paint);
 
 
             paint.setColor(Color.argb(100, 255, 255, 255));
@@ -133,6 +140,21 @@ public class Moteur extends SurfaceView implements Runnable {
             canvas.drawRect(spellBlock.getRect(), paint);
             canvas.drawRect(ball.getRect(), paint);
             canvas.drawRect(0, (float)(screenY*0.2),screenX,0,paint);
+
+            paint.setColor(Color.argb(255,0,247,255));
+
+            int saut = 0;
+            for(int i = 0;i < shield;i++) {
+                canvas.drawOval((float) (screenX*0.1+saut), (float) (screenY*0.1), (float) (screenX*0.1+saut+50),  (float) (screenY*0.1+20), paint);
+                saut = saut + 50;
+            }
+
+            saut = 0;
+            paint.setColor(Color.argb(255,255,76,76));
+            for(int i = 0;i < life;i++) {
+                canvas.drawOval((float) (screenX*0.15+saut), (float) (screenY*0.15), (float) (screenX*0.15+saut+50),  (float) (screenY*0.15+20), paint);
+                saut = saut + 50;
+            }
 
             float startX = ball.getRect().left - ball.getBallWidth();
             float startY = ball.getRect().top - ball.getBallHeight();
@@ -266,11 +288,11 @@ public class Moteur extends SurfaceView implements Runnable {
         }
         if (ball.getRect().bottom > screenY) {
 
-
+            life--;
             RectF rect = new RectF(paddle.getX() + (paddle.getLength() / 2) - (ball.getBallWidth() / 2)
-                    , screenY - paddle.getHeight()
+                    , screenY - paddle.getHeight()+10
                     , paddle.getX() + (paddle.getLength() / 2) + (ball.getBallWidth() / 2)
-                    , screenY - paddle.getHeight() - ball.getBallHeight());
+                    , screenY - paddle.getHeight() - ball.getBallHeight()+10);
             ball.setRect(rect);
             float value = paddle.getX() + (paddle.getLength() / 2) - (ball.getBallWidth() / 2);
 
@@ -292,7 +314,7 @@ public class Moteur extends SurfaceView implements Runnable {
             ball.reverseXVelocity();
         } else if (ball.getRect().right > screenX - ball.getBallWidth() / 2) {
             ball.reverseXVelocity();
-        } else if (ball.getRect().top < 0 + screenY*0.2) {
+        } else if (ball.getRect().top < 0 + screenY*0.2 + ball.getBallHeight()) {
             ball.reverseYVelocity();
         }
     }
