@@ -127,12 +127,6 @@ public class Moteur extends SurfaceView implements Runnable {
             canvas = ourHolder.lockCanvas();
 
             canvas.drawColor(Color.argb(100, 0, 0, 0));
-            paint.setColor(Color.argb(100,0,0,0));
-
-            canvas.drawText("Life : ", (float) (0+screenY*0.1), (float) (screenX*0.3),paint);
-            canvas.drawText("Life : ", (float) (0+screenY*0.1)+20, (float) (screenX*0.3),paint);
-
-
             paint.setColor(Color.argb(100, 255, 255, 255));
 
 
