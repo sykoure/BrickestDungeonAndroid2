@@ -87,10 +87,7 @@ public class Moteur extends SurfaceView implements Runnable {
     }
 
     public void reset() {
-
         ball.reset(screenX, screenY);
-
-
     }
 
     @Override
@@ -115,6 +112,7 @@ public class Moteur extends SurfaceView implements Runnable {
         paddle.update(fps, screenX);
         ball.update(fps);
         collisions();
+        Log.d("SCREEN Y",String.valueOf(paddle.getHeight()));
     }
 
     public void draw() {
@@ -242,7 +240,6 @@ public class Moteur extends SurfaceView implements Runnable {
     };
 
     void collisions() {
-        System.out.println("zeae");
         if (RectF.intersects(spellBlock.getRect(), ball.getRect())) {
             if ((RectF.intersects(spellBlock.getLeftSide(), ball.getRect())) || (RectF.intersects(spellBlock.getRightSide(), ball.getRect()))) {
                 if ((RectF.intersects(spellBlock.getTopSide(), ball.getRect())) || (RectF.intersects(spellBlock.getBotSide(), ball.getRect()))) {
@@ -266,14 +263,18 @@ public class Moteur extends SurfaceView implements Runnable {
             ball.reverseYVelocity();
         }
         if (ball.getRect().bottom > screenY) {
+
+
             RectF rect = new RectF(paddle.getX() + (paddle.getLength() / 2) - (ball.getBallWidth() / 2)
-                    , paddle.getHeight() + ball.getBallHeight() +50  +100
+                    , screenY - 20 /*(paddle.getHeight() + ball.getBallHeight() + )*/
                     , paddle.getX() + (paddle.getLength() / 2) + (ball.getBallWidth() / 2)
-                    , paddle.getHeight() + 100 +50);
+                    , screenY - 30 /*(paddle.getHeight())*/);
+            ball.setRect(rect);
             float value = paddle.getX() + (paddle.getLength() / 2) - (ball.getBallWidth() / 2);
+
             Log.d("LEFT POSITION",String.valueOf(value));
 
-            value = paddle.getHeight() + ball.getBallHeight();
+            value = paddle.getHeight() + ball.getBallHeight() + 100;
             Log.d("TOP POSITION",String.valueOf(value));
 
             value = paddle.getX() + (paddle.getLength() / 2) + (ball.getBallWidth() / 2);
