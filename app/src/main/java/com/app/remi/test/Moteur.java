@@ -267,9 +267,22 @@ public class Moteur extends SurfaceView implements Runnable {
         }
         if (ball.getRect().bottom > screenY) {
             RectF rect = new RectF(paddle.getX() + (paddle.getLength() / 2) - (ball.getBallWidth() / 2)
-                    , paddle.getHeight() + ball.getBallHeight()
+                    , paddle.getHeight() + ball.getBallHeight() +50  +100
                     , paddle.getX() + (paddle.getLength() / 2) + (ball.getBallWidth() / 2)
-                    , paddle.getHeight() + 100);
+                    , paddle.getHeight() + 100 +50);
+            float value = paddle.getX() + (paddle.getLength() / 2) - (ball.getBallWidth() / 2);
+            Log.d("LEFT POSITION",String.valueOf(value));
+
+            value = paddle.getHeight() + ball.getBallHeight();
+            Log.d("TOP POSITION",String.valueOf(value));
+
+            value = paddle.getX() + (paddle.getLength() / 2) + (ball.getBallWidth() / 2);
+            Log.d("RIGHT POSITION",String.valueOf(value));
+
+            value = paddle.getHeight() + 100;
+            Log.d("BOTTOM POSITION",String.valueOf(value));
+
+
             paused = true;
         }
         if (ball.getRect().left < ball.getBallWidth() / 2) {
