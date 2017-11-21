@@ -266,9 +266,9 @@ public class Moteur extends SurfaceView implements Runnable {
 
 
             RectF rect = new RectF(paddle.getX() + (paddle.getLength() / 2) - (ball.getBallWidth() / 2)
-                    , screenY - 20 /*(paddle.getHeight() + ball.getBallHeight() + )*/
+                    , screenY - paddle.getHeight()
                     , paddle.getX() + (paddle.getLength() / 2) + (ball.getBallWidth() / 2)
-                    , screenY - 30 /*(paddle.getHeight())*/);
+                    , screenY - paddle.getHeight() - ball.getBallHeight());
             ball.setRect(rect);
             float value = paddle.getX() + (paddle.getLength() / 2) - (ball.getBallWidth() / 2);
 
