@@ -236,7 +236,7 @@ public class Moteur extends SurfaceView implements Runnable {
             else {
                 paddle.setMovementState(paddle.STOPPED, screenX);
             }*/
-            //ezd
+
         }
     };
 
