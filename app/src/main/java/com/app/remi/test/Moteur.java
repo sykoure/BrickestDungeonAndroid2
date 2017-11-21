@@ -80,7 +80,7 @@ public class Moteur extends SurfaceView implements Runnable {
 
         paddle = new Barre(screenX, screenY);
         ball = new Boule(screenX, screenY);
-        spellBlock = new SpellBlock(screenX, screenY, screenX * 0.3, screenY * 0.3);
+        spellBlock = new SpellBlock(screenX, screenY, screenX * 0.1, screenY * 0.3);
 
         reset();
 
@@ -132,6 +132,7 @@ public class Moteur extends SurfaceView implements Runnable {
             canvas.drawRect(paddle.getRect(), paint);
             canvas.drawRect(spellBlock.getRect(), paint);
             canvas.drawRect(ball.getRect(), paint);
+            canvas.drawRect(0, (float)(screenY*0.2),screenX,0,paint);
 
             float startX = ball.getRect().left - ball.getBallWidth();
             float startY = ball.getRect().top - ball.getBallHeight();
@@ -291,7 +292,7 @@ public class Moteur extends SurfaceView implements Runnable {
             ball.reverseXVelocity();
         } else if (ball.getRect().right > screenX - ball.getBallWidth() / 2) {
             ball.reverseXVelocity();
-        } else if (ball.getRect().top < 0) {
+        } else if (ball.getRect().top < 0 + screenY*0.2) {
             ball.reverseYVelocity();
         }
     }

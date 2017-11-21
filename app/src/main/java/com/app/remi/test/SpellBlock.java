@@ -28,8 +28,8 @@ public class SpellBlock {
         this.xPosition = xPosition;
         this.yPosition = yPosition;
 
-        width = 200;
-        height = 200;
+        width = 100;
+        height = 100;
 
         rect = new RectF((float)xPosition, (float)yPosition, (float)xPosition + width,(float) yPosition +height);
         leftSide = new RectF((float)xPosition,(float)yPosition,(float)xPosition+1,(float)yPosition+height);
