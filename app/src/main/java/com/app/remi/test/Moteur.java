@@ -145,14 +145,14 @@ public class Moteur extends SurfaceView implements Runnable {
 
             int saut = 0;
             for(int i = 0;i < shield;i++) {
-                canvas.drawOval((float) (screenX*0.1+saut), (float) (screenY*0.1), (float) (screenX*0.1+saut+50),  (float) (screenY*0.1+20), paint);
+                canvas.drawOval((float) (screenX*0.1+saut), (float) (screenY*0.1), (float) (screenX*0.1+saut+20),  (float) (screenY*0.1+50), paint);
                 saut = saut + 50;
             }
 
             saut = 0;
             paint.setColor(Color.argb(255,255,76,76));
             for(int i = 0;i < life;i++) {
-                canvas.drawOval((float) (screenX*0.15+saut), (float) (screenY*0.15), (float) (screenX*0.15+saut+50),  (float) (screenY*0.15+20), paint);
+                canvas.drawOval((float) (screenX*0.1+saut), (float) (screenY*0.15), (float) (screenX*0.1+saut+20),  (float) (screenY*0.15+50), paint);
                 saut = saut + 50;
             }
 
