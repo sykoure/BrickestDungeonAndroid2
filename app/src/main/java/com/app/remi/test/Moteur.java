@@ -1,6 +1,7 @@
 package com.app.remi.test;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -19,6 +20,10 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.WindowManager;
+
+import com.app.remi.test.soundServices.BallBounceService;
+import com.app.remi.test.soundServices.BallDropService;
+import com.app.remi.test.soundServices.BallStartService;
 
 
 /**
@@ -52,13 +57,15 @@ public class Moteur extends SurfaceView implements Runnable {
 
     private Boolean playWithSensor;
     private float initialSensorValue;
+    private Context mainActivityContext;
 
 
-    public Moteur(Context context, Boolean playWithSensor,SensorManager sensorManager) {
+    public Moteur(Context context, Boolean playWithSensor, SensorManager sensorManager) {
 
 
         super(context);
-
+        // We will need the context for many services
+        this.mainActivityContext = context;
         this.playWithSensor = playWithSensor;
         // initialSensorValue is always set a 0 the first time, it allow to detect difference in Z axis positions
         initialSensorValue = 0;
@@ -115,7 +122,7 @@ public class Moteur extends SurfaceView implements Runnable {
         paddle.update(fps, screenX);
         ball.update(fps);
         collisions();
-        Log.d("SCREEN Y",String.valueOf(paddle.getHeight()));
+        Log.d("SCREEN Y", String.valueOf(paddle.getHeight()));
     }
 
     public void draw() {
@@ -133,20 +140,20 @@ public class Moteur extends SurfaceView implements Runnable {
             canvas.drawRect(paddle.getRect(), paint);
             canvas.drawRect(spellBlock.getRect(), paint);
             canvas.drawRect(ball.getRect(), paint);
-            canvas.drawRect(0, (float)(screenY*0.2),screenX,0,paint);
+            canvas.drawRect(0, (float) (screenY * 0.2), screenX, 0, paint);
 
-            paint.setColor(Color.argb(255,0,247,255));
+            paint.setColor(Color.argb(255, 0, 247, 255));
 
             int saut = 0;
-            for(int i = 0;i < shield;i++) {
-                canvas.drawOval((float) (screenX*0.1+saut), (float) (screenY*0.1), (float) (screenX*0.1+saut+20),  (float) (screenY*0.1+50), paint);
+            for (int i = 0; i < shield; i++) {
+                canvas.drawOval((float) (screenX * 0.1 + saut), (float) (screenY * 0.1), (float) (screenX * 0.1 + saut + 20), (float) (screenY * 0.1 + 50), paint);
                 saut = saut + 50;
             }
 
             saut = 0;
-            paint.setColor(Color.argb(255,255,76,76));
-            for(int i = 0;i < life;i++) {
-                canvas.drawOval((float) (screenX*0.1+saut), (float) (screenY*0.15), (float) (screenX*0.1+saut+20),  (float) (screenY*0.15+50), paint);
+            paint.setColor(Color.argb(255, 255, 76, 76));
+            for (int i = 0; i < life; i++) {
+                canvas.drawOval((float) (screenX * 0.1 + saut), (float) (screenY * 0.15), (float) (screenX * 0.1 + saut + 20), (float) (screenY * 0.15 + 50), paint);
                 saut = saut + 50;
             }
 
@@ -194,32 +201,32 @@ public class Moteur extends SurfaceView implements Runnable {
     public boolean onTouchEvent(MotionEvent motionEvent) {
 
 
-            System.out.println("carre gauche :  " + spellBlock.getRect().left);
-            System.out.println("boule gauche :  " + ball.getRect().left);
+        System.out.println("carre gauche :  " + spellBlock.getRect().left);
+        System.out.println("boule gauche :  " + ball.getRect().left);
 
-            System.out.println("carre droite :  " + spellBlock.getRect().right);
-            System.out.println("boule droite :  " + spellBlock.getRect().right);
+        System.out.println("carre droite :  " + spellBlock.getRect().right);
+        System.out.println("boule droite :  " + spellBlock.getRect().right);
 
-            switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
-                // Player has touched the screen
+        switch (motionEvent.getAction() & MotionEvent.ACTION_MASK) {
+            // Player has touched the screen
 
-                case MotionEvent.ACTION_DOWN:
-                    paused = false;
-                    if(!playWithSensor) {
-                        if (motionEvent.getX() > screenX / 2) {
-                            paddle.setMovementState(paddle.RIGHT, screenX);
-                        } else {
-                            paddle.setMovementState(paddle.LEFT, screenX);
-                        }
+            case MotionEvent.ACTION_DOWN:
+                paused = false;
+                if (!playWithSensor) {
+                    if (motionEvent.getX() > screenX / 2) {
+                        paddle.setMovementState(paddle.RIGHT, screenX);
+                    } else {
+                        paddle.setMovementState(paddle.LEFT, screenX);
                     }
-                    break;
+                }
+                break;
 
-                case MotionEvent.ACTION_UP:
-                    if(!playWithSensor) {
-                        paddle.setMovementState(paddle.STOPPED, screenX);
-                    }
-                    break;
-            }
+            case MotionEvent.ACTION_UP:
+                if (!playWithSensor) {
+                    paddle.setMovementState(paddle.STOPPED, screenX);
+                }
+                break;
+        }
 
         return true;
     }
@@ -284,22 +291,22 @@ public class Moteur extends SurfaceView implements Runnable {
 
             life--;
             RectF rect = new RectF(paddle.getX() + (paddle.getLength() / 2) - (ball.getBallWidth() / 2)
-                    , screenY - paddle.getHeight()+10
+                    , screenY - paddle.getHeight() + 10
                     , paddle.getX() + (paddle.getLength() / 2) + (ball.getBallWidth() / 2)
-                    , screenY - paddle.getHeight() - ball.getBallHeight()+10);
+                    , screenY - paddle.getHeight() - ball.getBallHeight() + 10);
             ball.setRect(rect);
             float value = paddle.getX() + (paddle.getLength() / 2) - (ball.getBallWidth() / 2);
 
-            Log.d("LEFT POSITION",String.valueOf(value));
+            Log.d("LEFT POSITION", String.valueOf(value));
 
             value = paddle.getHeight() + ball.getBallHeight() + 100;
-            Log.d("TOP POSITION",String.valueOf(value));
+            Log.d("TOP POSITION", String.valueOf(value));
 
             value = paddle.getX() + (paddle.getLength() / 2) + (ball.getBallWidth() / 2);
-            Log.d("RIGHT POSITION",String.valueOf(value));
+            Log.d("RIGHT POSITION", String.valueOf(value));
 
             value = paddle.getHeight() + 100;
-            Log.d("BOTTOM POSITION",String.valueOf(value));
+            Log.d("BOTTOM POSITION", String.valueOf(value));
 
 
             paused = true;
@@ -308,9 +315,31 @@ public class Moteur extends SurfaceView implements Runnable {
             ball.reverseXVelocity();
         } else if (ball.getRect().right > screenX - ball.getBallWidth() / 2) {
             ball.reverseXVelocity();
-        } else if (ball.getRect().top < 0 + screenY*0.2 + ball.getBallHeight()) {
+        } else if (ball.getRect().top < 0 + screenY * 0.2 + ball.getBallHeight()) {
             ball.reverseYVelocity();
         }
+    }
+
+    /**
+     * Call this method to launch the "onStartCommand" method of the associated service
+     */
+    void playBallBounceSound() {
+        Intent intent = new Intent(this.mainActivityContext, BallBounceService.class);
+        mainActivityContext.startService(intent);
+    }
+    /**
+     * Call this method to launch the "onStartCommand" method of the associated service
+     */
+    void playBallDropSound() {
+        Intent intent = new Intent(this.mainActivityContext, BallDropService.class);
+        mainActivityContext.startService(intent);
+    }
+    /**
+     * Call this method to launch the "onStartCommand" method of the associated service
+     */
+    void playBallStartSound() {
+        Intent intent = new Intent(this.mainActivityContext, BallStartService.class);
+        mainActivityContext.startService(intent);
     }
 }
 

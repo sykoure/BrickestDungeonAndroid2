@@ -10,9 +10,7 @@
         android:screenOrientation="portrait"
         android:supportsRtl="true"
         android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
-        <activity android:name=".MainActivity">
-
-        </activity>
+        <activity android:name=".MainActivity" />
         <activity android:name=".LauncherMenu">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,6 +18,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name=".soundServices.BallBounceService"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name=".soundServices.BallDropService"
+            android:enabled="true"
+            android:exported="true" />
+        <service
+            android:name=".soundServices.BallStartService"
+            android:enabled="true"
+            android:exported="true"></service>
     </application>
 
 </manifest>
