@@ -10,15 +10,15 @@ import android.os.Bundle;
 
 public class MainActivity extends Activity {
 
-
+    //Moteur will be used as a view
     private Moteur moteur;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
+
+        //Check is the sensorbutton is on or off
         Boolean playWithSensor = intent.getBooleanExtra("BOOLEAN_CHECK",false);
         SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 

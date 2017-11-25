@@ -16,13 +16,21 @@ import android.widget.ToggleButton;
  * NB : maybe contain some error on background
  */
 public class LauncherMenu extends Activity {
+
+    //Button that will launch the game
     private Button startButton;
+
+    //The textViews
     private TextView titleTextView,accelerometerTextView;
+
+    //The button to allow or not the player to use the accelerometer
     private ToggleButton accelerometerToggleButton;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_launcher_menu);
+
+        //all the views
         startButton = (Button) findViewById(R.id.nextScreenButton);
         titleTextView = (TextView) findViewById(R.id.titleTextView);
         accelerometerTextView = (TextView) findViewById(R.id.accelerometerTextView);
