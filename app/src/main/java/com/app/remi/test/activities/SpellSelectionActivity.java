@@ -25,6 +25,7 @@ public class SpellSelectionActivity extends Activity {
 
     //The button to allow or not the player to use the accelerometer
     private ToggleButton accelerometerToggleButton;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -38,9 +39,9 @@ public class SpellSelectionActivity extends Activity {
 
     // Start the game activity
     public void submit(View view) {
-        Intent intent = new Intent(this,MainActivity.class);
+        Intent intent = new Intent(this, MainActivity.class);
         boolean buttonState = accelerometerToggleButton.isChecked();
-        intent.putExtra("BOOLEAN_CHECK",buttonState);
+        intent.putExtra("BOOLEAN_CHECK", buttonState);
         startActivity(intent);
     }
 }
