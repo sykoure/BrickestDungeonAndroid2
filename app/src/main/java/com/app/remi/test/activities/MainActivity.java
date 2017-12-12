@@ -1,4 +1,4 @@
-package com.app.remi.test;
+package com.app.remi.test.activities;
 
 import android.app.Activity;
 import android.content.Context;
@@ -7,6 +7,8 @@ import android.hardware.SensorManager;
 import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+
+import com.app.remi.test.Moteur;
 
 public class MainActivity extends Activity {
 
