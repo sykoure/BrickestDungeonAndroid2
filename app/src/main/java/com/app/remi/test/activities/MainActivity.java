@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.hardware.SensorManager;
 import android.os.Bundle;
+import android.widget.Toast;
 
 import com.app.remi.test.Moteur;
 
@@ -27,7 +28,7 @@ public class MainActivity extends Activity {
 
         //MediaPlayer ring= MediaPlayer.create(MainActivity.this,R.raw.level7);
         //ring.start();
-
+        Toast.makeText(this,"bite ihihihih",Toast.LENGTH_SHORT).show();
     }
 
     @Override

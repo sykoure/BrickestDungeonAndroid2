@@ -49,10 +49,10 @@ public class SpellBlock {
         height = 100;
 
         rect = new RectF((float)xPosition, (float)yPosition, (float)xPosition + width,(float) yPosition +height);
-        leftSide = new RectF((float)xPosition,(float)yPosition,(float)xPosition+1,(float)yPosition+height);
-        rightSide = new RectF((float)xPosition + width - 1,(float)yPosition,(float)xPosition + width,(float)yPosition+height);
-        topSide = new RectF((float)xPosition,(float)yPosition+1,(float)xPosition+width,(float)yPosition);
-        botSide = new RectF((float)xPosition,(float)yPosition+height-1,(float)xPosition+width,(float)yPosition+height);
+        leftSide = new RectF((float)xPosition,(float)yPosition,(float)xPosition+10,(float)yPosition+height);
+        rightSide = new RectF((float)xPosition + width - 10,(float)yPosition,(float)xPosition + width,(float)yPosition+height);
+        topSide = new RectF((float)xPosition,(float)yPosition+10,(float)xPosition+width,(float)yPosition);
+        botSide = new RectF((float)xPosition,(float)yPosition+height-10,(float)xPosition+width,(float)yPosition+height);
     }
 
     /**

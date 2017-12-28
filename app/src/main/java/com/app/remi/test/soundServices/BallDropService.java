@@ -2,7 +2,9 @@ package com.app.remi.test.soundServices;
 
 import android.app.Service;
 import android.content.Intent;
+import android.media.MediaPlayer;
 import android.os.IBinder;
+import android.provider.Settings;
 import android.util.Log;
 /**
  * Service responsible for playing a sound when the ball fall below the bar

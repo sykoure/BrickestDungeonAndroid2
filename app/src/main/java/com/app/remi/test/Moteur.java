@@ -20,10 +20,14 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.WindowManager;
+import android.widget.Toast;
 
 import com.app.remi.test.soundServices.BallBounceService;
 import com.app.remi.test.soundServices.BallDropService;
 import com.app.remi.test.soundServices.BallStartService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -53,11 +57,15 @@ public class Moteur extends SurfaceView implements Runnable {
 
     int life = 10;              // The number of life
     int shield = 10;            // The number of shield
+    boolean leftTouched;        // Does the user touch the left or right side of the screen left = true
+    boolean firstTouched = true;       // First collision after a freeze
 
-    //TODO Create a List of spellBlock and a List of Ball
     SpellBlock spellBlock;      // The spellBlock
     Barre paddle;               // The paddle
     Boule ball;                 // The ball
+
+    List<SpellBlock> listeS = new ArrayList<SpellBlock>();  // List of spellblocks
+    List<Boule> listeB = new ArrayList<Boule>();            // List of balls
 
     private Boolean playWithSensor;
     private float initialSensorValue;       // The value with which the first sensor value will be compared
@@ -72,6 +80,7 @@ public class Moteur extends SurfaceView implements Runnable {
     public Moteur(Context context, Boolean playWithSensor, SensorManager sensorManager) {
 
         super(context);
+
 
         this.mainActivityContext = context;         // We will need the context for many services
         this.playWithSensor = playWithSensor;
@@ -98,14 +107,19 @@ public class Moteur extends SurfaceView implements Runnable {
 
         paddle = new Barre(screenX, screenY);
         ball = new Boule(screenX, screenY);
+
+        //TODO Il faudra ici faire passer le parametre pour le nombre de sort
         spellBlock = new SpellBlock(screenX, screenY, screenX * 0.1, screenY * 0.3);
 
-        reset();
+        listeB.add(ball);               // We add the first ball
+        listeS.add(spellBlock);
+
+        reset(0);                     // We put the position of the ball
 
     }
 
-    public void reset() {
-        ball.reset(screenX, screenY);
+    public void reset(int i) {
+        listeB.get(i).reset(screenX,screenY);
     }
 
     @Override
@@ -130,8 +144,12 @@ public class Moteur extends SurfaceView implements Runnable {
      */
     public void update() {
         paddle.update(fps, screenX);
-        ball.update(fps);
-        collisions();
+
+        for(int i = 0; i < listeB.size();i++) {
+            listeB.get(i).update(fps);
+            for(int j = 0;j < listeS.size();j++)
+                collisions(j);
+        }
     }
 
     /**
@@ -148,15 +166,21 @@ public class Moteur extends SurfaceView implements Runnable {
             canvas = ourHolder.lockCanvas();
 
             //we put the background of the game in the canvas, a big black rectangle
-            canvas.drawColor(Color.argb(100, 0, 0, 0));
+            canvas.drawColor(Color.argb(255, 0, 0, 0));
 
             //the paint (paintbrush) will now has a white color
-            paint.setColor(Color.argb(100, 255, 255, 255));
+            paint.setColor(Color.argb(255, 255, 255, 255));
 
             //we are putting each objects in the canvas
             canvas.drawRect(paddle.getRect(), paint);
-            canvas.drawRect(spellBlock.getRect(), paint);
-            canvas.drawRect(ball.getRect(), paint);
+            //canvas.drawRect(spellBlock.getRect(), paint);
+            //canvas.drawRect(ball.getRect(), paint);
+
+            for(int i = 0; i < listeB.size();i++)
+                canvas.drawRect(listeB.get(i).getRect(), paint);
+
+            for(int i = 0; i < listeS.size();i++)
+                canvas.drawRect(listeS.get(i).getRect(), paint);
 
             //this is the HUD
             canvas.drawRect(0, (float) (screenY * 0.2), screenX, 0, paint);
@@ -183,10 +207,12 @@ public class Moteur extends SurfaceView implements Runnable {
                 saut = saut + 50;
             }
 
+            /*
             float startX = ball.getRect().left - ball.getBallWidth();
             float startY = ball.getRect().top - ball.getBallHeight();
             float endX = ball.getRect().right + (bal.getWidth() / 10);
             float endY = ball.getRect().bottom + (bal.getHeight() / 5);
+            */
 
             //canvas.drawBitmap(bal, null, new RectF(startX, startY, endX, endY), null);
 
@@ -242,8 +268,10 @@ public class Moteur extends SurfaceView implements Runnable {
                 if (!playWithSensor) {
                     if (motionEvent.getX() > screenX / 2) {
                         paddle.setMovementState(paddle.RIGHT, screenX);
+                        leftTouched = false;
                     } else {
                         paddle.setMovementState(paddle.LEFT, screenX);
+                        leftTouched = true;
                     }
                 }
                 break;
@@ -295,32 +323,48 @@ public class Moteur extends SurfaceView implements Runnable {
     /**
      * This method is checking the collisions between the ball and the others object
      */
-    void collisions() {
-
+    void collisions(int j) {
         //collisions between the ball and the spellblocks
-        if (RectF.intersects(spellBlock.getRect(), ball.getRect())) {
-            if ((RectF.intersects(spellBlock.getLeftSide(), ball.getRect())) || (RectF.intersects(spellBlock.getRightSide(), ball.getRect()))) {
-                if ((RectF.intersects(spellBlock.getTopSide(), ball.getRect())) || (RectF.intersects(spellBlock.getBotSide(), ball.getRect()))) {
+        if (RectF.intersects(listeS.get(j).getRect(), ball.getRect())) {
+            if ((RectF.intersects(listeS.get(j).getLeftSide(), ball.getRect())) || (RectF.intersects(listeS.get(j).getRightSide(), ball.getRect()))) {
+                if ((RectF.intersects(listeS.get(j).getTopSide(), ball.getRect())) || (RectF.intersects(listeS.get(j).getBotSide(), ball.getRect()))) {
+                    Log.d("SPELLBLOCK","SPELLBLOCK CORNER");
                     ball.reverseXVelocity();
                     ball.reverseYVelocity();
                 } else {
                     ball.reverseXVelocity();
+                    Log.d("SPELLBLOCK","SPELLBLOCK LEFT OR RIGHT");
                 }
 
             } else {
-                if ((RectF.intersects(spellBlock.getLeftSide(), ball.getRect())) || (RectF.intersects(spellBlock.getRightSide(), ball.getRect()))) {
+                if ((RectF.intersects(listeS.get(j).getLeftSide(), ball.getRect())) || (RectF.intersects(listeS.get(j).getRightSide(), ball.getRect()))) {
                     ball.reverseXVelocity();
                     ball.reverseYVelocity();
+                    Log.d("SPELLBLOCK","SPELLBLOCK CORNER");
+
                 } else {
                     ball.reverseYVelocity();
+                    Log.d("SPELLBLOCK","SPELLBLOCK TOP OR BOT");
+
                 }
             }
         }
 
         //Collision between the ball and the the paddle
         if (RectF.intersects(paddle.getRect(), ball.getRect())) {
-            //penser à prendre en compte la barre
+            //TODO penser à prendre en compte la barre
+            if(firstTouched){
+                if(leftTouched){
+                    ball.setxSpeed(-200);
+                }
+                else{
+                    ball.setxSpeed(200);
+                }
+                firstTouched = false;
+            }
             ball.reverseYVelocity();
+            Log.d("PADDLE","PADDLE");
+
         }
 
         //If the ball is hitting the bottom of the screen
@@ -335,16 +379,22 @@ public class Moteur extends SurfaceView implements Runnable {
                     , screenY - paddle.getHeight() - ball.getBallHeight() + 10);
             ball.setRect(rect);
 
-            paused = true;      //freeze the game
+            paused = true;      // Freeze the game
+            firstTouched = true;// First time before a collision
         }
 
         //if the ball hits the right, left or the top side of the screen
         if (ball.getRect().left < ball.getBallWidth() / 2) {
             ball.reverseXVelocity();
-        } else if (ball.getRect().right > screenX - ball.getBallWidth() / 2) {
+            Log.d("SCREEN","LEFT SCREEN");
+        }
+        if (ball.getRect().right > screenX - ball.getBallWidth() / 2) {
             ball.reverseXVelocity();
-        } else if (ball.getRect().top < 0 + screenY * 0.2 + ball.getBallHeight()) {
+            Log.d("SCR1EEN","RIGHT SCREEN");
+        }
+        if (ball.getRect().top < 0 + screenY * 0.2 + ball.getBallHeight()) {
             ball.reverseYVelocity();
+            Log.d("SCREEN","HUD");
         }
     }
 
