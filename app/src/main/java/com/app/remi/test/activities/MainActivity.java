@@ -6,8 +6,7 @@ import android.content.Intent;
 import android.hardware.SensorManager;
 import android.os.Bundle;
 
-import com.app.remi.test.Moteur;
-import com.app.remi.test.soundServices.BallBounceService;
+import com.app.remi.test.engine.Moteur;
 
 public class MainActivity extends Activity {
 

@@ -1,4 +1,4 @@
-package com.app.remi.test;
+package com.app.remi.test.engine;
 
 import android.content.Context;
 import android.content.Intent;
@@ -8,20 +8,20 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Point;
-import android.graphics.Rect;
 import android.graphics.RectF;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Vibrator;
 import android.util.Log;
 import android.view.Display;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.WindowManager;
-import android.widget.Toast;
 
+import com.app.remi.test.R;
 import com.app.remi.test.soundServices.BallBounceService;
 import com.app.remi.test.soundServices.BallDropService;
 import com.app.remi.test.soundServices.BallStartService;
@@ -70,6 +70,7 @@ public class Moteur extends SurfaceView implements Runnable {
     private Boolean playWithSensor;
     private float initialSensorValue;       // The value with which the first sensor value will be compared
     private Context mainActivityContext;    // The Context of the mainActivity used for Services
+    private Vibrator vibrator;              // Reference to the vibrator manager
 
     /**
      * @param context
@@ -90,6 +91,7 @@ public class Moteur extends SurfaceView implements Runnable {
             // Here we choose the behavior for the sensor and his delay
             sensorManager.registerListener(mSensorEventListener, accelerometre, SensorManager.SENSOR_DELAY_UI);
         }
+        this.vibrator = (Vibrator) this.mainActivityContext.getSystemService(Context.VIBRATOR_SERVICE); // Instantiation of a vibrator manager
 
 
         this.ourHolder = getHolder();   //Initializing the ourHolder objecet
@@ -262,8 +264,10 @@ public class Moteur extends SurfaceView implements Runnable {
             // Player has touched the screen
 
             case MotionEvent.ACTION_DOWN:
-                if (paused == true)
+                if (paused == true) {
                     this.playBallStartSound();
+                    this.startVibration(250);
+                }
                 paused = false;
 
                 //if the player is touching the left part of the screen or the right part of the screen
@@ -351,6 +355,7 @@ public class Moteur extends SurfaceView implements Runnable {
                 }
             }
             this.playBallBounceSound();
+            this.startVibration(100);
         }
 
         //Collision between the ball and the the paddle
@@ -426,6 +431,16 @@ public class Moteur extends SurfaceView implements Runnable {
     void playBallStartSound() {
         Intent intent = new Intent(this.mainActivityContext, BallStartService.class);
         mainActivityContext.startService(intent);
+    }
+
+    /**
+     * Make the user phone vibrate
+     * @param duration Duration of the vibration in milliseconds
+     */
+    void startVibration(int duration) {
+        if (this.vibrator != null) {
+            this.vibrator.vibrate(duration);
+        }
     }
 }
 
