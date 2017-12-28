@@ -5,9 +5,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import com.app.remi.test.Moteur;
+import com.app.remi.test.soundServices.BallBounceService;
 
 public class MainActivity extends Activity {
 
@@ -20,15 +20,14 @@ public class MainActivity extends Activity {
         Intent intent = getIntent();
 
         //Check is the sensorbutton is on or off
-        Boolean playWithSensor = intent.getBooleanExtra("BOOLEAN_CHECK",false);
+        Boolean playWithSensor = intent.getBooleanExtra("BOOLEAN_CHECK", false);
         SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
-        moteur = new Moteur(this, playWithSensor,sensorManager);
+
+        moteur = new Moteur(this, playWithSensor, sensorManager);
         setContentView(moteur);
 
-        //MediaPlayer ring= MediaPlayer.create(MainActivity.this,R.raw.level7);
-        //ring.start();
-        Toast.makeText(this,"bite ihihihih",Toast.LENGTH_SHORT).show();
+
     }
 
     @Override

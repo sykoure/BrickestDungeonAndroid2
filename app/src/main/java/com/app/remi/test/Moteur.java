@@ -72,10 +72,9 @@ public class Moteur extends SurfaceView implements Runnable {
     private Context mainActivityContext;    // The Context of the mainActivity used for Services
 
     /**
-     *
      * @param context
      * @param playWithSensor Boolean value, define the playstyle, activate or not the accelerometer, desactivate the touch screen.
-     * @param sensorManager The sensor manager used to manage the accelerometer
+     * @param sensorManager  The sensor manager used to manage the accelerometer
      */
     public Moteur(Context context, Boolean playWithSensor, SensorManager sensorManager) {
 
@@ -96,7 +95,7 @@ public class Moteur extends SurfaceView implements Runnable {
         this.ourHolder = getHolder();   //Initializing the ourHolder objecet
         this.paint = new Paint();       //Initializing the paint object
 
-        //chopper la taille de l'écran sans etre dans une activity
+        // Retrieving the screen size
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         Display display = wm.getDefaultDisplay();
         Point size = new Point();
@@ -119,7 +118,7 @@ public class Moteur extends SurfaceView implements Runnable {
     }
 
     public void reset(int i) {
-        listeB.get(i).reset(screenX,screenY);
+        listeB.get(i).reset(screenX, screenY);
     }
 
     @Override
@@ -145,9 +144,9 @@ public class Moteur extends SurfaceView implements Runnable {
     public void update() {
         paddle.update(fps, screenX);
 
-        for(int i = 0; i < listeB.size();i++) {
+        for (int i = 0; i < listeB.size(); i++) {
             listeB.get(i).update(fps);
-            for(int j = 0;j < listeS.size();j++)
+            for (int j = 0; j < listeS.size(); j++)
                 collisions(j);
         }
     }
@@ -176,10 +175,10 @@ public class Moteur extends SurfaceView implements Runnable {
             //canvas.drawRect(spellBlock.getRect(), paint);
             //canvas.drawRect(ball.getRect(), paint);
 
-            for(int i = 0; i < listeB.size();i++)
+            for (int i = 0; i < listeB.size(); i++)
                 canvas.drawRect(listeB.get(i).getRect(), paint);
 
-            for(int i = 0; i < listeS.size();i++)
+            for (int i = 0; i < listeS.size(); i++)
                 canvas.drawRect(listeS.get(i).getRect(), paint);
 
             //this is the HUD
@@ -252,6 +251,7 @@ public class Moteur extends SurfaceView implements Runnable {
 
     /**
      * The method touchEvent will translate our action with the phone
+     *
      * @param motionEvent
      * @return
      */
@@ -262,6 +262,8 @@ public class Moteur extends SurfaceView implements Runnable {
             // Player has touched the screen
 
             case MotionEvent.ACTION_DOWN:
+                if (paused == true)
+                    this.playBallStartSound();
                 paused = false;
 
                 //if the player is touching the left part of the screen or the right part of the screen
@@ -328,43 +330,43 @@ public class Moteur extends SurfaceView implements Runnable {
         if (RectF.intersects(listeS.get(j).getRect(), ball.getRect())) {
             if ((RectF.intersects(listeS.get(j).getLeftSide(), ball.getRect())) || (RectF.intersects(listeS.get(j).getRightSide(), ball.getRect()))) {
                 if ((RectF.intersects(listeS.get(j).getTopSide(), ball.getRect())) || (RectF.intersects(listeS.get(j).getBotSide(), ball.getRect()))) {
-                    Log.d("SPELLBLOCK","SPELLBLOCK CORNER");
+                    Log.d("SPELLBLOCK", "SPELLBLOCK CORNER");
                     ball.reverseXVelocity();
                     ball.reverseYVelocity();
                 } else {
                     ball.reverseXVelocity();
-                    Log.d("SPELLBLOCK","SPELLBLOCK LEFT OR RIGHT");
+                    Log.d("SPELLBLOCK", "SPELLBLOCK LEFT OR RIGHT");
                 }
 
             } else {
                 if ((RectF.intersects(listeS.get(j).getLeftSide(), ball.getRect())) || (RectF.intersects(listeS.get(j).getRightSide(), ball.getRect()))) {
                     ball.reverseXVelocity();
                     ball.reverseYVelocity();
-                    Log.d("SPELLBLOCK","SPELLBLOCK CORNER");
+                    Log.d("SPELLBLOCK", "SPELLBLOCK CORNER");
 
                 } else {
                     ball.reverseYVelocity();
-                    Log.d("SPELLBLOCK","SPELLBLOCK TOP OR BOT");
+                    Log.d("SPELLBLOCK", "SPELLBLOCK TOP OR BOT");
 
                 }
             }
+            this.playBallBounceSound();
         }
 
         //Collision between the ball and the the paddle
         if (RectF.intersects(paddle.getRect(), ball.getRect())) {
             //TODO penser à prendre en compte la barre
-            if(firstTouched){
-                if(leftTouched){
+            if (firstTouched) {
+                if (leftTouched) {
                     ball.setxSpeed(-200);
-                }
-                else{
+                } else {
                     ball.setxSpeed(200);
                 }
                 firstTouched = false;
             }
             ball.reverseYVelocity();
-            Log.d("PADDLE","PADDLE");
-
+            Log.d("PADDLE", "PADDLE");
+            this.playBallBounceSound();
         }
 
         //If the ball is hitting the bottom of the screen
@@ -379,6 +381,7 @@ public class Moteur extends SurfaceView implements Runnable {
                     , screenY - paddle.getHeight() - ball.getBallHeight() + 10);
             ball.setRect(rect);
 
+            this.playBallDropSound();
             paused = true;      // Freeze the game
             firstTouched = true;// First time before a collision
         }
@@ -386,15 +389,18 @@ public class Moteur extends SurfaceView implements Runnable {
         //if the ball hits the right, left or the top side of the screen
         if (ball.getRect().left < ball.getBallWidth() / 2) {
             ball.reverseXVelocity();
-            Log.d("SCREEN","LEFT SCREEN");
+            Log.d("SCREEN", "LEFT SCREEN");
+            this.playBallBounceSound();
         }
         if (ball.getRect().right > screenX - ball.getBallWidth() / 2) {
             ball.reverseXVelocity();
-            Log.d("SCR1EEN","RIGHT SCREEN");
+            Log.d("SCR1EEN", "RIGHT SCREEN");
+            this.playBallBounceSound();
         }
         if (ball.getRect().top < 0 + screenY * 0.2 + ball.getBallHeight()) {
             ball.reverseYVelocity();
-            Log.d("SCREEN","HUD");
+            Log.d("SCREEN", "HUD");
+            this.playBallBounceSound();
         }
     }
 
