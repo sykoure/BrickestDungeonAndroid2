@@ -73,6 +73,8 @@ public class Moteur extends SurfaceView implements Runnable {
     private Context mainActivityContext;    // The Context of the mainActivity used for Services
     private Vibrator vibrator;              // Reference to the vibrator manager
 
+    private RectF leftSide,rightSide;
+
     /**
      * @param context
      * @param playWithSensor Boolean value, define the playstyle, activate or not the accelerometer, desactivate the touch screen.
@@ -107,18 +109,19 @@ public class Moteur extends SurfaceView implements Runnable {
         screenX = size.x;
         screenY = size.y;
 
+        rightSide = new RectF(0,0,1,screenY);
+        leftSide = new RectF(screenX-1,0,screenX,screenY);
+
         paddle = new Barre(screenX, screenY);
         ball = new Boule(screenX, screenY);
         listeB.add(ball);                        // We add the first balll
 
         for(int i = 0;i < numberSpellBlocks;i++) {
-            double xposition = screenX * 0.1  +(i*(75/numberSpellBlocks*3) +(i*(150/numberSpellBlocks*3)));
+            double xposition = screenX * 0.1  +(i*(70/numberSpellBlocks*3) +(i*(150/numberSpellBlocks*3)));
 
-            spellBlock = new SpellBlock(screenX, screenY,xposition ,screenY * 0.3,150/numberSpellBlocks*3,150/numberSpellBlocks*3);
-            listeS.add(spellBlock);               // We add the spellBlocks;
-            Log.d("xPOSITION", String.valueOf(i*(150/numberSpellBlocks*3)+200/numberSpellBlocks));
+            spellBlock = new SpellBlock(screenX, screenY,xposition ,screenY * 0.3,150/numberSpellBlocks*3,150/numberSpellBlocks*3,"spellblock"+i+1);
+            listeS.add(spellBlock);               // We add the spellBlocks
         }
-        Log.d("NUMBERSPELLBLOCK",String.valueOf(listeS.size()));
         reset(0);                     // We put the position of the ball
 
     }
@@ -162,8 +165,6 @@ public class Moteur extends SurfaceView implements Runnable {
      */
     public void draw() {
 
-        //bal is the object that will take care of the image of the skull.
-        Bitmap bal = BitmapFactory.decodeResource(getResources(), R.drawable.skull);
 
         if (ourHolder.getSurface().isValid()) {
 
@@ -189,6 +190,10 @@ public class Moteur extends SurfaceView implements Runnable {
 
             //this is the HUD
             canvas.drawRect(0, (float) (screenY * 0.2), screenX, 0, paint);
+
+            //Left and right side
+            canvas.drawRect(leftSide,paint);
+            canvas.drawRect(rightSide,paint);
 
             //the paint (paintbrush) will now has a teal color
             paint.setColor(Color.argb(255, 0, 247, 255));
@@ -220,6 +225,7 @@ public class Moteur extends SurfaceView implements Runnable {
             */
 
             //canvas.drawBitmap(bal, null, new RectF(startX, startY, endX, endY), null);
+
 
             //we are drawing each side for the Spellblocks
             for(int i = 0; i < listeS.size();i++) {
@@ -273,8 +279,6 @@ public class Moteur extends SurfaceView implements Runnable {
                     this.playBallStartSound();
                     this.startVibration(250);
                 }
-                paused = false;
-
                 //if the player is touching the left part of the screen or the right part of the screen
                 if (!playWithSensor) {
                     if (motionEvent.getX() > screenX / 2) {
@@ -285,6 +289,8 @@ public class Moteur extends SurfaceView implements Runnable {
                         leftTouched = true;
                     }
                 }
+
+                paused = false;
                 break;
 
             //If the player is not touching the phone anymore
@@ -368,9 +374,11 @@ public class Moteur extends SurfaceView implements Runnable {
             //TODO penser à prendre en compte la barre
             if (firstTouched) {
                 if (leftTouched) {
-                    ball.setxSpeed(-200);
+                    ball.setySpeed(-400);
+                    ball.setxSpeed(-100);
                 } else {
-                    ball.setxSpeed(200);
+                    ball.setySpeed(-400);
+                    ball.setxSpeed(100);
                 }
                 firstTouched = false;
             }
@@ -410,6 +418,10 @@ public class Moteur extends SurfaceView implements Runnable {
         if (ball.getRect().top < 0 + screenY * 0.2 + ball.getBallHeight()) {
             ball.reverseYVelocity();
             Log.d("SCREEN", "HUD");
+            this.playBallBounceSound();
+        }
+        if((RectF.intersects(ball.getRect(),leftSide))||(RectF.intersects(ball.getRect(),rightSide))){
+            ball.reverseYVelocity();
             this.playBallBounceSound();
         }
     }

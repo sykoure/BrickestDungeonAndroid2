@@ -22,7 +22,7 @@ public class MainActivity extends Activity {
         int number = intent.getIntExtra("SPELL_BLOCKS_NUMBER",3);
         Boolean playWithSensor = intent.getBooleanExtra("BOOLEAN_CHECK", false);
         SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
-
+        //tab[number] qui sera le tableau contenant les sorts
 
         moteur = new Moteur(this, playWithSensor, sensorManager,number);
         setContentView(moteur);

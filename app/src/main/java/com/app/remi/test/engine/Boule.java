@@ -28,7 +28,7 @@ public class Boule {
      */
     public Boule(int screenX, int screenY){
 
-        xSpeed = 200;
+        xSpeed = 100;
         ySpeed = -400;
 
         rect = new RectF();

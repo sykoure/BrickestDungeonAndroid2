@@ -18,6 +18,8 @@ public class SpellBlock {
      */
     private RectF rect,leftSide,rightSide,topSide,botSide;
 
+    //The spell of a Spellblock
+    private String spell;
 
     //This is the dimension of the Spellblock
     private int width;
@@ -38,9 +40,11 @@ public class SpellBlock {
      * @param xPosition is the xPosition of the Spellblock, the xposition of the upper-left corner
      * @param yPosition is the yPosition of the Spellblock, the yposition of the upper-left corner
      */
-    public SpellBlock(int xScreen, int yScreen,double xPosition,double yPosition,int width,int height){
+    public SpellBlock(int xScreen, int yScreen,double xPosition,double yPosition,int width,int height,String spell){
         this.xScreen = xScreen;
         this.yScreen = yScreen;
+
+        this.spell = spell;
 
         this.xPosition = xPosition;
         this.yPosition = yPosition;
@@ -96,5 +100,13 @@ public class SpellBlock {
      */
     public RectF getBotSide(){
         return botSide;
+    }
+
+    public String getSpell(){
+        return spell;
+    }
+
+    public void setSpell(String spell){
+        this.spell = spell;
     }
 }
