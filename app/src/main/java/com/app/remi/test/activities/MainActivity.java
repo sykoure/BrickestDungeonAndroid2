@@ -5,9 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.hardware.SensorManager;
 import android.os.Bundle;
-import android.widget.Toast;
 
-import com.app.remi.test.Moteur;
+import com.app.remi.test.engine.Moteur;
 
 public class MainActivity extends Activity {
 
@@ -20,15 +19,14 @@ public class MainActivity extends Activity {
         Intent intent = getIntent();
 
         //Check is the sensorbutton is on or off
-        Boolean playWithSensor = intent.getBooleanExtra("BOOLEAN_CHECK",false);
-        int numberSpellBlocks = intent.getIntExtra("SPELL_BLOCKS_NUMBER",3);
+        Boolean playWithSensor = intent.getBooleanExtra("BOOLEAN_CHECK", false);
         SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
-        moteur = new Moteur(this, playWithSensor,sensorManager,numberSpellBlocks);
+
+        moteur = new Moteur(this, playWithSensor, sensorManager);
         setContentView(moteur);
 
-        //MediaPlayer ring= MediaPlayer.create(MainActivity.this,R.raw.level7);
-        //ring.start();
+
     }
 
     @Override

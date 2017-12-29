@@ -1,4 +1,4 @@
-package com.app.remi.test;
+package com.app.remi.test.engine;
 
 import android.graphics.Rect;
 import android.graphics.RectF;
