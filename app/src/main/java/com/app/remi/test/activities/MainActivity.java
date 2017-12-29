@@ -19,7 +19,7 @@ public class MainActivity extends Activity {
         Intent intent = getIntent();
 
         //Check is the sensorbutton is on or off
-        int number = intent.getIntExtra("SPELL_BLOCKS_NUMBER",3),
+        int number = intent.getIntExtra("SPELL_BLOCKS_NUMBER",3);
         Boolean playWithSensor = intent.getBooleanExtra("BOOLEAN_CHECK", false);
         SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
