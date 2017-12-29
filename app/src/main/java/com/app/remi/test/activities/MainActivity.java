@@ -21,14 +21,14 @@ public class MainActivity extends Activity {
 
         //Check is the sensorbutton is on or off
         Boolean playWithSensor = intent.getBooleanExtra("BOOLEAN_CHECK",false);
+        int numberSpellBlocks = intent.getIntExtra("SPELL_BLOCKS_NUMBER",3);
         SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
-        moteur = new Moteur(this, playWithSensor,sensorManager);
+        moteur = new Moteur(this, playWithSensor,sensorManager,numberSpellBlocks);
         setContentView(moteur);
 
         //MediaPlayer ring= MediaPlayer.create(MainActivity.this,R.raw.level7);
         //ring.start();
-        Toast.makeText(this,"bite ihihihih",Toast.LENGTH_SHORT).show();
     }
 
     @Override

@@ -67,6 +67,7 @@ public class Moteur extends SurfaceView implements Runnable {
     List<SpellBlock> listeS = new ArrayList<SpellBlock>();  // List of spellblocks
     List<Boule> listeB = new ArrayList<Boule>();            // List of balls
 
+    private int numberSpellBlocks;          // The number of spellBlocks
     private Boolean playWithSensor;
     private float initialSensorValue;       // The value with which the first sensor value will be compared
     private Context mainActivityContext;    // The Context of the mainActivity used for Services
@@ -77,11 +78,11 @@ public class Moteur extends SurfaceView implements Runnable {
      * @param playWithSensor Boolean value, define the playstyle, activate or not the accelerometer, desactivate the touch screen.
      * @param sensorManager The sensor manager used to manage the accelerometer
      */
-    public Moteur(Context context, Boolean playWithSensor, SensorManager sensorManager) {
+    public Moteur(Context context, Boolean playWithSensor, SensorManager sensorManager,int numberSpellBlocks) {
 
         super(context);
 
-
+        this.numberSpellBlocks = numberSpellBlocks;
         this.mainActivityContext = context;         // We will need the context for many services
         this.playWithSensor = playWithSensor;
         initialSensorValue = 0;                     // initialSensorValue is always set a 0 the first time, it allow to detect difference in Z axis positions
@@ -107,13 +108,16 @@ public class Moteur extends SurfaceView implements Runnable {
 
         paddle = new Barre(screenX, screenY);
         ball = new Boule(screenX, screenY);
+        listeB.add(ball);                        // We add the first balll
 
-        //TODO Il faudra ici faire passer le parametre pour le nombre de sort
-        spellBlock = new SpellBlock(screenX, screenY, screenX * 0.1, screenY * 0.3);
+        for(int i = 0;i < numberSpellBlocks;i++) {
+            double xposition = screenX * 0.1  +(i*(75/numberSpellBlocks*3) +(i*(150/numberSpellBlocks*3)));
 
-        listeB.add(ball);               // We add the first ball
-        listeS.add(spellBlock);
-
+            spellBlock = new SpellBlock(screenX, screenY,xposition ,screenY * 0.3,150/numberSpellBlocks*3,150/numberSpellBlocks*3);
+            listeS.add(spellBlock);               // We add the spellBlocks;
+            Log.d("xPOSITION", String.valueOf(i*(150/numberSpellBlocks*3)+200/numberSpellBlocks));
+        }
+        Log.d("NUMBERSPELLBLOCK",String.valueOf(listeS.size()));
         reset(0);                     // We put the position of the ball
 
     }
@@ -217,15 +221,16 @@ public class Moteur extends SurfaceView implements Runnable {
             //canvas.drawBitmap(bal, null, new RectF(startX, startY, endX, endY), null);
 
             //we are drawing each side for the Spellblocks
-            paint.setColor(Color.argb(255, 0, 255, 255));
-            canvas.drawRect(spellBlock.getLeftSide(), paint);
-            paint.setColor(Color.argb(255, 255, 0, 0));
-            canvas.drawRect(spellBlock.getRightSide(), paint);
-            paint.setColor(Color.argb(255, 255, 255, 0));
-            canvas.drawRect(spellBlock.getBotSide(), paint);
-            paint.setColor(Color.argb(255, 0, 255, 0));
-            canvas.drawRect(spellBlock.getTopSide(), paint);
-
+            for(int i = 0; i < listeS.size();i++) {
+                paint.setColor(Color.argb(255, 0, 255, 255));
+                canvas.drawRect(listeS.get(i).getLeftSide(), paint);
+                paint.setColor(Color.argb(255, 255, 0, 0));
+                canvas.drawRect(listeS.get(i).getRightSide(), paint);
+                paint.setColor(Color.argb(255, 255, 255, 0));
+                canvas.drawRect(listeS.get(i).getBotSide(), paint);
+                paint.setColor(Color.argb(255, 0, 255, 0));
+                canvas.drawRect(listeS.get(i).getTopSide(), paint);
+            }
 
             paint.setColor(Color.argb(255, 249, 129, 0));
 

@@ -38,21 +38,21 @@ public class SpellBlock {
      * @param xPosition is the xPosition of the Spellblock, the xposition of the upper-left corner
      * @param yPosition is the yPosition of the Spellblock, the yposition of the upper-left corner
      */
-    public SpellBlock(int xScreen, int yScreen,double xPosition,double yPosition){
+    public SpellBlock(int xScreen, int yScreen,double xPosition,double yPosition,int width,int height){
         this.xScreen = xScreen;
         this.yScreen = yScreen;
 
         this.xPosition = xPosition;
         this.yPosition = yPosition;
 
-        width = 100;
-        height = 100;
+        this.width = width;
+        this.height = height;
 
         rect = new RectF((float)xPosition, (float)yPosition, (float)xPosition + width,(float) yPosition +height);
-        leftSide = new RectF((float)xPosition,(float)yPosition,(float)xPosition+10,(float)yPosition+height);
-        rightSide = new RectF((float)xPosition + width - 10,(float)yPosition,(float)xPosition + width,(float)yPosition+height);
-        topSide = new RectF((float)xPosition,(float)yPosition+10,(float)xPosition+width,(float)yPosition);
-        botSide = new RectF((float)xPosition,(float)yPosition+height-10,(float)xPosition+width,(float)yPosition+height);
+        leftSide = new RectF((float)xPosition,(float)yPosition,(float)xPosition+3,(float)yPosition+height);
+        rightSide = new RectF((float)xPosition + width - 3,(float)yPosition,(float)xPosition + width,(float)yPosition+height);
+        topSide = new RectF((float)xPosition,(float)yPosition+3,(float)xPosition+width,(float)yPosition);
+        botSide = new RectF((float)xPosition,(float)yPosition+height-3,(float)xPosition+width,(float)yPosition+height);
     }
 
     /**
