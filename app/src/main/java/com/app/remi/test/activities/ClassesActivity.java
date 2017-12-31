@@ -25,7 +25,7 @@ public class ClassesActivity extends Activity {
     }
 
     public void goToSpellActivity(View view) {
-        Intent intent = new Intent(this, SpellSelectionActivity.class);
+        Intent intent = new Intent(this, TrueSpellSelectionActivity.class);
         startActivity(intent);
     }
 }

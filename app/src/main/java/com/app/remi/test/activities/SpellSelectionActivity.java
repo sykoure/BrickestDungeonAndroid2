@@ -13,6 +13,8 @@ import android.widget.ToggleButton;
 
 import com.app.remi.test.R;
 
+import java.util.ArrayList;
+
 /**
  * Menu activity class
  * NB : maybe contain some error on background
@@ -25,13 +27,13 @@ public class SpellSelectionActivity extends Activity {
 
     //The textViews
     private TextView accelerometerTextView;
-    private TextView numberSpell;
 
-    //The EditText
-    private EditText number;
 
     //The button to allow or not the player to use the accelerometer
     private ToggleButton accelerometerToggleButton;
+
+    private ArrayList<String> spellsList;
+    public static final String MATCHMAKING_SPELLS_LIST = "com.app.remi.test.activities.SpellSelectionActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,8 +44,10 @@ public class SpellSelectionActivity extends Activity {
         startButton = (Button) findViewById(R.id.nextScreenButton);
         accelerometerTextView = (TextView) findViewById(R.id.accelerometerTextView);
         accelerometerToggleButton = (ToggleButton) findViewById(R.id.accelerometerToggleButton);
-        numberSpell = (TextView) findViewById(R.id.NumberofSpell);
-        number = (EditText) findViewById(R.id.Number);
+
+        this.spellsList = getIntent().getStringArrayListExtra(TrueSpellSelectionActivity.TAG_LIST_SPELL);
+        Log.d("SPELL_SELECTION : ", this.spellsList.toString());
+
     }
 
     // Start the game activity
@@ -51,22 +55,12 @@ public class SpellSelectionActivity extends Activity {
         Intent intent = new Intent(this, MainActivity.class);
         boolean buttonState = accelerometerToggleButton.isChecked();
 
-        //check if we have a good number of spell
-        String check = number.getText().toString();
-        if(check.matches("")){
-            number.setError("No number given");
-            Toast.makeText(this,"You did not put a number of spellblock",Toast.LENGTH_SHORT).show();
-        }
-        else {
-            int numbergiven = Integer.parseInt(number.getText().toString());
-            if ((numbergiven < 3) || (numbergiven > 6)) {
-                number.setError("Bad number given");
-                Toast.makeText(this,"You did not put a number between 3 and 6",Toast.LENGTH_SHORT).show();
-            } else {
-                intent.putExtra("SPELL_BLOCKS_NUMBER", numbergiven);
-                intent.putExtra("BOOLEAN_CHECK", buttonState);
-                startActivity(intent);
-            }
-        }
+
+            intent.putExtra("SPELL_BLOCKS_NUMBER", this.spellsList.size());
+            intent.putExtra(SpellSelectionActivity.MATCHMAKING_SPELLS_LIST,this.spellsList);
+            intent.putExtra("BOOLEAN_CHECK", buttonState);
+            startActivity(intent);
+
+
     }
 }

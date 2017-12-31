@@ -34,11 +34,13 @@
         <activity android:name=".activities.MainMenuActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".activities.ConnectionActivity" />
-        <activity android:name=".activities.ClassesActivity"></activity>
+        <activity android:name=".activities.ClassesActivity" />
+        <activity android:name=".activities.TrueSpellSelectionActivity"></activity>
     </application>
 
 </manifest>
