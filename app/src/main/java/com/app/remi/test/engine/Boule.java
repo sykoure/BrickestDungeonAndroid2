@@ -82,6 +82,13 @@ public class Boule {
         rect.bottom = y - 20 - ballHeight;
     }
 
+    public void givePosition(Boule b1,Boule b2){
+        b1.rect.left = b2.rect.left;
+        b1.rect.right = b2.rect.right;
+        b1.rect.top = b2.rect.top;
+        b1.rect.bottom = b2.rect.bottom;
+    }
+
     /**
      * @return the width of the ball
      */
@@ -112,4 +119,19 @@ public class Boule {
         this.ySpeed = ySpeed;
     }
 
+    public float getySpeed(){
+        return this.ySpeed;
+    }
+
+    public float getxSpeed(){
+        return this.xSpeed;
+    }
+
+    public void setBallWidth(float ballWidth){
+        this.ballWidth = ballWidth;
+    }
+
+    public void setBallHeight(float ballHeight){
+        this.ballHeight = ballHeight;
+    }
 }

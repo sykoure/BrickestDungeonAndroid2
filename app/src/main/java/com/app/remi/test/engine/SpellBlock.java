@@ -19,7 +19,9 @@ public class SpellBlock {
     private RectF rect,leftSide,rightSide,topSide,botSide;
 
     //The spell of a Spellblock
-    private String spell;
+    private String spell;               // Nom du spell
+    private float cooldown = 1;         // Cooldown actuel
+    private float cooldownDuration = 5; // Temps de recharche d'un spell
 
     //This is the dimension of the Spellblock
     private int width;
@@ -108,5 +110,21 @@ public class SpellBlock {
 
     public void setSpell(String spell){
         this.spell = spell;
+    }
+
+    public float getCooldown() {
+        return cooldown;
+    }
+
+    public void setCooldown(float cooldown) {
+        this.cooldown = cooldown;
+    }
+
+    public float getCooldownDuration() {
+        return cooldownDuration;
+    }
+
+    public void setCooldownDuration(float cooldownDuration) {
+        this.cooldownDuration = cooldownDuration;
     }
 }
