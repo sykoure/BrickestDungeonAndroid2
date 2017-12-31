@@ -20,7 +20,7 @@ public class SpellBlock {
 
     //The spell of a Spellblock
     private String spell;               // Nom du spell
-    private float cooldown = 1;         // Cooldown actuel
+    private float cooldown = 0;         // Cooldown actuel
     private float cooldownDuration = 5; // Temps de recharche d'un spell
 
     //This is the dimension of the Spellblock

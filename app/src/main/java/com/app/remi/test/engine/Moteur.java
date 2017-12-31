@@ -180,10 +180,10 @@ public class Moteur extends SurfaceView implements Runnable {
             canvas = ourHolder.lockCanvas();
 
             //we put the background of the game in the canvas, a big black rectangle
-            canvas.drawColor(Color.argb(255, 0, 0, 0));
+            canvas.drawColor(Color.argb(100, 0, 0, 0));
 
             //the paint (paintbrush) will now has a white color
-            paint.setColor(Color.argb(255, 255, 255, 255));
+            paint.setColor(Color.argb(100, 255, 255, 255));
 
             //we are putting each objects in the canvas
             canvas.drawRect(paddle.getRect(), paint);
@@ -210,7 +210,11 @@ public class Moteur extends SurfaceView implements Runnable {
 
             //this will draw as many oval as the number or shield remaining
             for (int i = 0; i < player.getShield(); i++) {
-                canvas.drawOval((float) (screenX * 0.1 + saut), (float) (screenY * 0.1), (float) (screenX * 0.1 + saut + 20), (float) (screenY * 0.1 + 50), paint);
+                canvas.drawOval((float) (screenX * 0.1 + saut),
+                                (float) (screenY * 0.1),
+                                (float) (screenX * 0.1 + saut + 20),
+                                (float) (screenY * 0.1 + 50),
+                                 paint);
                 saut = saut + 50;
             }
 
@@ -246,10 +250,10 @@ public class Moteur extends SurfaceView implements Runnable {
                 paint.setColor(Color.argb(255, 0, 255, 0));
                 canvas.drawRect(listeS.get(i).getTopSide(), paint);
 
-                if(listeS.get(i).getCooldown() > 1){
+                if(listeS.get(i).getCooldown() > 0){
                     paint.setColor(Color.argb(255, 0, 0, 200));
                     canvas.drawRect(listeS.get(i).getRect().left,
-                                    listeS.get(i).getRect().bottom - (listeS.get(i).getRect().bottom - listeS.get(i).getRect().top)*(listeS.get(i).getCooldownDuration() - listeS.get(i).getCooldown()),
+                                    listeS.get(i).getRect().bottom - (listeS.get(i).getRect().bottom - listeS.get(i).getRect().top)*((listeS.get(i).getCooldownDuration() - listeS.get(i).getCooldown())/listeS.get(i).getCooldownDuration()),
                                     listeS.get(i).getRect().right,
                                     listeS.get(i).getRect().bottom
                                     ,paint
@@ -372,7 +376,7 @@ public class Moteur extends SurfaceView implements Runnable {
     void collisions(int j,Boule ball) {
         //collisions between the ball and the spellblocks
         if (RectF.intersects(listeS.get(j).getRect(), ball.getRect())) {
-            if((j == 0)&&(listeS.get(j).getCooldown() == 1)){
+            if((j == 0)&&(listeS.get(j).getCooldown() == 0)){
                 listeS.get(j).setCooldown(listeS.get(j).getCooldownDuration());
                 //diviseBall(ball);
                 reduireBoule(listeB);
@@ -514,13 +518,12 @@ public class Moteur extends SurfaceView implements Runnable {
 
     //Met à jour les cooldowns
     public void checkCooldown(SpellBlock spellBlock){
-        if(spellBlock.getCooldown() > 1){
+        if(spellBlock.getCooldown() > 0){
             spellBlock.setCooldown(spellBlock.getCooldown() - 1/(float)fps);
-
-
+            Log.w("EZEAEZAE",String.valueOf(((spellBlock.getCooldownDuration() - spellBlock.getCooldown())/spellBlock.getCooldownDuration())));
         }
         else{
-            spellBlock.setCooldown(1);
+            spellBlock.setCooldown(0);
         }
     }
 }
