@@ -6,6 +6,7 @@ import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import com.app.remi.test.activities.MainMenuActivity;
 import com.app.remi.test.network.backend.ClientInterfaceTCP;
 import com.app.remi.test.network.backend.networkRunnable.BackgroundRunnableConnection;
 import com.app.remi.test.network.backend.networkRunnable.BackgroundRunnableDisconnection;
@@ -25,10 +26,6 @@ public class NetworkBackendService extends Service {
     private LocalBroadcastManager localBroadcastManager;
 
 
-    public NetworkBackendService() {
-
-    }
-
     /**
      * At the creation instantiate a TCP client
      * we do it here to no ensure that the client has the same lifetime has this service
@@ -39,6 +36,7 @@ public class NetworkBackendService extends Service {
         super.onCreate();
         this.clientInterfaceTCP = new ClientInterfaceTCP(this);
         this.localBroadcastManager = LocalBroadcastManager.getInstance(this);
+        Log.d(CLASS_TAG,"Instantiation of this this service");
 
     }
 
@@ -86,20 +84,22 @@ public class NetworkBackendService extends Service {
 
     /**
      * Used to send a string to the receiver
-     *
+     * will sort message received and send them to the corresponding activity
      * @param message Message to send to the receiver
      */
     public void sendMessageToReceiver(String message) {
-        Intent intent = new Intent("com.example.mat.testfirstactivity.TRANSMISSION");
-        intent.putExtra(MESSAGE_SEND_TAG, message);
-        this.localBroadcastManager.sendBroadcast(intent);
+        if (message.equals("BPONG")) {
+            Intent intent = new Intent(MainMenuActivity.FILTER_MAIN_MENU);
+            intent.putExtra(MESSAGE_SEND_TAG, message);
+            this.localBroadcastManager.sendBroadcast(intent);
+        }
     }
 
     /**
-     *     * Used to send a string to the receiver with specification of the filter
+     * * Used to send a string to the receiver with specification of the filter
      *
      * @param message Message to send to the receiver
-     * @param filter Filter wich determine wich activity can see this message
+     * @param filter  Filter wich determine wich activity can see this message
      */
     public void sendMessageToReceiver(String message, String filter) {
         Intent intent = new Intent(filter);
@@ -109,17 +109,16 @@ public class NetworkBackendService extends Service {
 
     /**
      * Will use a thread to start the connection with the server
-     * and send a string to establish a pseudo
-     * TODO remove the pseudo once the server is updated.
+     * and send a string to ping the server
      */
     public void establishConnection() {
         Log.d(CLASS_TAG, "Trying To connect");
         new Thread(new BackgroundRunnableConnection(this, this.clientInterfaceTCP)).start();
-        this.sendMessageToServer("Pseudo");
+        //this.sendMessageToServer("BPING");
     }
 
     /**
-     * Will use a thrad to send a message to the server
+     * Will use a thread to send a message to the server
      *
      * @param messageToSend String to send to the server
      */
@@ -137,4 +136,9 @@ public class NetworkBackendService extends Service {
         new Thread(new BackgroundRunnableDisconnection(this, this.clientInterfaceTCP)).start();
     }
 
+    @Override
+    public void onDestroy() {
+        this.terminateConnection();
+        super.onDestroy();
+    }
 }

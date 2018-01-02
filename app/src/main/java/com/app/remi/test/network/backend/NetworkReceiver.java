@@ -12,6 +12,7 @@ public class NetworkReceiver extends BroadcastReceiver {
     Displayable displayable;
 
     public NetworkReceiver(Displayable displayable) {
+        super();
         this.displayable = displayable;
     }
 

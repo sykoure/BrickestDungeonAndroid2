@@ -5,5 +5,5 @@ package com.app.remi.test.network.backend;
  * Allow the backend to uses any client in a transparent way.
  */
 public interface Displayable {
-    public abstract void handleReception(String textToDisplay);
+    public abstract void handleReception(String textReceived);
 }
