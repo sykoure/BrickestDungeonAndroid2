@@ -397,6 +397,7 @@ public class Moteur extends SurfaceView implements Runnable {
         for(int i = 0;i < listeB.size();i++) {
             for(int j = 0; j < listeS.size(); j++){
                 if (RectF.intersects(listeS.get(j).getRect(), listeB.get(i).getRect())) {
+
                     if ((j == 0) && (listeS.get(j).getCooldown() == 0)) {
                         listeS.get(j).setCooldown(listeS.get(j).getCooldownDuration());
                         diviseBall(listeB.get(i));
@@ -405,6 +406,8 @@ public class Moteur extends SurfaceView implements Runnable {
                         listeS.get(j).setCooldown(listeS.get(j).getCooldownDuration());
                         reduireBoule(listeB);
                     }
+
+
                     if ((RectF.intersects(listeS.get(j).getLeftSide(), listeB.get(i).getRect())) || (RectF.intersects(listeS.get(j).getRightSide(), listeB.get(i).getRect()))) {
                         if ((RectF.intersects(listeS.get(j).getTopSide(), listeB.get(i).getRect())) || (RectF.intersects(listeS.get(j).getBotSide(), listeB.get(i).getRect()))) {
                             Log.d("SPELLBLOCK", "SPELLBLOCK CORNER");
@@ -442,7 +445,6 @@ public class Moteur extends SurfaceView implements Runnable {
 
             //If the ball is hitting the bottom of the screen
             if (listeB.get(i).getRect().bottom > screenY) {
-                /*
                 player.loseLife(1);          // The user loses 1 hp
                 if (listeB.size() == 1) {
                     //update the ball location to put it on the paddle
@@ -457,13 +459,11 @@ public class Moteur extends SurfaceView implements Runnable {
                     firstTouched = true;                // First time before a collision
                 } else {
                     listeB.remove(listeB.get(i));
-                }*/
-                listeB.get(i).reverseYVelocity();
+                }
             }
 
-
             //if the ball hits the right, left or the top side of the screen
-            if (listeB.get(i).getRect().top < 0 + screenY * 0.2 ) {
+            else if (listeB.get(i).getRect().top < 0 + screenY * 0.2 ) {
                 listeB.get(i).reverseYVelocity();
                 Log.d("SCREEN", "HUD");
                 this.playBallBounceSound();
@@ -472,7 +472,8 @@ public class Moteur extends SurfaceView implements Runnable {
                 listeB.get(i).reverseXVelocity();
                 Log.d("SCREEN", "LEFT SCREEN");
                 this.playBallBounceSound();
-            } else if (listeB.get(i).getRect().right > screenX - listeB.get(i).getBallWidth() / 2) {
+            }
+            else if (listeB.get(i).getRect().right > screenX - listeB.get(i).getBallWidth() / 2) {
                 listeB.get(i).reverseXVelocity();
                 Log.d("SCR1EEN", "RIGHT SCREEN");
                 this.playBallBounceSound();
@@ -533,8 +534,14 @@ public class Moteur extends SurfaceView implements Runnable {
     //Reduire la taille de la boule
     public void reduireBoule(List<Boule> liste){
         for(int i = 0;i < liste.size(); i++){
-            liste.get(i).setBallHeight(liste.get(i).getBallHeight()/2);
-            liste.get(i).setBallWidth(liste.get(i).getBallWidth()/2);
+            if(liste.get(i).getBallHeight()/2 < liste.get(i).getBallHeightMin()){
+                liste.get(i).setBallWidth(liste.get(i).getBallWidthMin());
+                liste.get(i).setBallHeight(liste.get(i).getBallHeightMin());
+            }
+            else {
+                liste.get(i).setBallHeight(liste.get(i).getBallHeight() / 2);
+                liste.get(i).setBallWidth(liste.get(i).getBallWidth() / 2);
+            }
         }
         addHistory(history,"reduireBall",true,(player.getPseudo()));
     }
@@ -542,8 +549,7 @@ public class Moteur extends SurfaceView implements Runnable {
     //Met à jour les cooldowns
     public void checkCooldown(SpellBlock spellBlock){
         if(spellBlock.getCooldown() > 0){
-            spellBlock.setCooldown(spellBlock.getCooldown() - 1/(float)fps);
-            Log.w("EZEAEZAE",String.valueOf(((spellBlock.getCooldownDuration() - spellBlock.getCooldown())/spellBlock.getCooldownDuration())));
+            spellBlock.setCooldown(spellBlock.getCooldown() - 1/(float)fps); //Reduit le cooldown de 1 par seconde
         }
         else{
             spellBlock.setCooldown(0);

@@ -16,10 +16,14 @@ public class Boule {
     //Speed of the ball
     private float xSpeed;
     private float ySpeed;
+    private float xSpeedMax = 800;
+    private float ySpeedMax = 800;
 
     //Dimension of the ball
     private float ballWidth = 10;
     private float ballHeight = 10;
+    private float ballWidthMin = 3;
+    private float ballHeightMin = 3;
 
     /**
      * The method Boule() is setting the values of the object Boule, its hitbox and its speed
@@ -133,5 +137,21 @@ public class Boule {
 
     public void setBallHeight(float ballHeight){
         this.ballHeight = ballHeight;
+    }
+
+    public float getBallWidthMin() {
+        return ballWidthMin;
+    }
+
+    public float getBallHeightMin() {
+        return ballHeightMin;
+    }
+
+    public float getxSpeedMax() {
+        return xSpeedMax;
+    }
+
+    public float getySpeedMax() {
+        return ySpeedMax;
     }
 }
