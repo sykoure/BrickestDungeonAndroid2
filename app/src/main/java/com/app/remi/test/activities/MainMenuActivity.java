@@ -15,7 +15,8 @@ import com.app.remi.test.R;
  */
 public class MainMenuActivity extends Activity {
 
-    private Button goToConnectionActivity;
+    public static final boolean BRICKEST_DEBUG_MODE = true;
+    private Button goToConnectionActivity, goToEngine;
     private ImageView titleview;
 
     @Override
@@ -24,11 +25,25 @@ public class MainMenuActivity extends Activity {
         setContentView(R.layout.activity_main_menu);
 
         this.goToConnectionActivity = (Button) findViewById(R.id.goToConnectionButton);
+        this.goToEngine = (Button) findViewById(R.id.debugModeButton);
+        if (!BRICKEST_DEBUG_MODE)
+            this.goToEngine.setVisibility(View.INVISIBLE);
         this.titleview = (ImageView) findViewById(R.id.titleView);
     }
 
     public void goToConnectionScreen(View view) {
         Intent intent = new Intent(this, ConnectionActivity.class);
         startActivity(intent);
+    }
+
+    /**
+     * Used only in debug mode, will skip every part of the connection and go directly into a game alone
+     * @param view Context
+     */
+    public void goToEngineBehavior(View view) {
+        if(BRICKEST_DEBUG_MODE){
+            Intent intent = new Intent(this,MainActivity.class);
+            startActivity(intent);
+        }
     }
 }

@@ -18,8 +18,8 @@ public class MainActivity extends Activity {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
 
-        //Check is the sensorbutton is on or off
         int number = intent.getIntExtra("SPELL_BLOCKS_NUMBER",3);
+        //Check if the sensorbutton is on or off
         Boolean playWithSensor = intent.getBooleanExtra("BOOLEAN_CHECK", false);
         SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         //tab[number] qui sera le tableau contenant les sorts
