@@ -9,11 +9,13 @@ public class Player {
     private int life;
     private int shield;
     private String nameClass;
+    private String pseudo;
 
-    public Player(int life,int shield,String nameClass){
+    public Player(int life,int shield,String nameClass,String pseudo){
         this.life = life;
         this.shield = shield;
         this.nameClass = nameClass;
+        this.pseudo = pseudo;
     }
 
     public String getNameClass() {
@@ -56,5 +58,13 @@ public class Player {
         else {
             this.shield = this.shield - damage;
         }
+    }
+
+    public String getPseudo() {
+        return pseudo;
+    }
+
+    public void setPseudo(String pseudo) {
+        this.pseudo = pseudo;
     }
 }
