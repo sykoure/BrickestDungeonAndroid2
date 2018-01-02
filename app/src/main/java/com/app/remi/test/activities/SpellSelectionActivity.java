@@ -56,10 +56,10 @@ public class SpellSelectionActivity extends Activity {
         boolean buttonState = accelerometerToggleButton.isChecked();
 
 
-            intent.putExtra("SPELL_BLOCKS_NUMBER", this.spellsList.size());
-            intent.putExtra(SpellSelectionActivity.MATCHMAKING_SPELLS_LIST,this.spellsList);
-            intent.putExtra("BOOLEAN_CHECK", buttonState);
-            startActivity(intent);
+        intent.putExtra("SPELL_BLOCKS_NUMBER", this.spellsList.size());
+        intent.putExtra(SpellSelectionActivity.MATCHMAKING_SPELLS_LIST, this.spellsList);
+        intent.putExtra("BOOLEAN_CHECK", buttonState);
+        startActivity(intent);
 
 
     }

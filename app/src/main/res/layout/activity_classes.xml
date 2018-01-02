@@ -22,5 +22,68 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.636" />
+        app:layout_constraintVertical_bias="0.848" />
+
+    <ImageView
+        android:id="@+id/heroImageView1"
+        android:layout_width="99dp"
+        android:layout_height="99dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/paladin"
+        android:onClick="behaviorHeroImage1"
+        app:layout_constraintBottom_toBottomOf="@+id/heroImageView2"
+        app:layout_constraintEnd_toStartOf="@+id/heroImageView2"
+        app:layout_constraintHorizontal_bias="0.285"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/heroImageView2"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <ImageView
+        android:id="@+id/heroImageView2"
+        android:layout_width="99dp"
+        android:layout_height="99dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:src="@drawable/warrior"
+        android:onClick="behaviorHeroImage2"
+        app:layout_constraintBottom_toTopOf="@+id/goToSpellbutton"
+        app:layout_constraintEnd_toEndOf="@+id/goToSpellbutton"
+        app:layout_constraintStart_toStartOf="@+id/goToSpellbutton"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/heroImageView3"
+        android:layout_width="99dp"
+        android:layout_height="99dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:src="@drawable/wizard"
+        android:onClick="behaviorHeroImage3"
+        app:layout_constraintBottom_toBottomOf="@+id/heroImageView2"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.703"
+        app:layout_constraintStart_toEndOf="@+id/heroImageView2"
+        app:layout_constraintTop_toTopOf="@+id/heroImageView2"
+        app:layout_constraintVertical_bias="0.0" />
+
+    <TextView
+        android:id="@+id/textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Choose A Hero"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        app:layout_constraintBottom_toTopOf="@+id/heroImageView2"
+        app:layout_constraintEnd_toEndOf="@+id/heroImageView2"
+        app:layout_constraintStart_toStartOf="@+id/heroImageView2"
+        app:layout_constraintTop_toTopOf="parent" />
+
 </android.support.constraint.ConstraintLayout>
