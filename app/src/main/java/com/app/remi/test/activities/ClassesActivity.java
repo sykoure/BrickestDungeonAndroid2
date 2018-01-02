@@ -155,7 +155,7 @@ public class ClassesActivity extends Activity {
     public void goToSpellActivity(View view) {
         ArrayList<String> heroListToSend = this.putSelectedHeroInArray();
 
-        if(heroListToSend.size() > 1){
+        if(heroListToSend.size() != 1){
             Toast.makeText(this,"Choose only one hero",Toast.LENGTH_SHORT).show();
         }
         else{
