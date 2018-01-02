@@ -14,6 +14,7 @@ import android.widget.Toast;
 import com.app.remi.test.R;
 import com.app.remi.test.network.backend.Displayable;
 import com.app.remi.test.network.backend.NetworkReceiver;
+import com.app.remi.test.network.backend.networkRunnable.BackgroundRunnableConnection;
 import com.app.remi.test.network.backend.services.NetworkBackendService;
 
 /**
@@ -74,7 +75,10 @@ public class MainMenuActivity extends Activity implements Displayable {
      */
     @Override
     public void handleReception(String textReceived) {
-        Toast.makeText(this, "Connection established", Toast.LENGTH_SHORT).show();
+        if (textReceived.equals(BackgroundRunnableConnection.SERVER_UNREACHABLE_TAG))
+            Toast.makeText(this, "Server Unreachable", Toast.LENGTH_SHORT).show();
+        else
+            Toast.makeText(this, "Connection established", Toast.LENGTH_SHORT).show();
 
     }
 
@@ -99,5 +103,10 @@ public class MainMenuActivity extends Activity implements Displayable {
         Intent intent = new Intent(this, NetworkBackendService.class);                                // Start the service responsible for client/server exchanges
         intent.putExtra(NetworkBackendService.NETWORK_INTENT_TAG, 0);
         startService(intent);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
     }
 }

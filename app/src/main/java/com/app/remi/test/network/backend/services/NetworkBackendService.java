@@ -88,23 +88,11 @@ public class NetworkBackendService extends Service {
      * @param message Message to send to the receiver
      */
     public void sendMessageToReceiver(String message) {
-        if (message.equals("BPONG")) {
+        if (message.equals("BPONG") || message.equals(BackgroundRunnableConnection.SERVER_UNREACHABLE_TAG)) {
             Intent intent = new Intent(MainMenuActivity.FILTER_MAIN_MENU);
             intent.putExtra(MESSAGE_SEND_TAG, message);
             this.localBroadcastManager.sendBroadcast(intent);
         }
-    }
-
-    /**
-     * * Used to send a string to the receiver with specification of the filter
-     *
-     * @param message Message to send to the receiver
-     * @param filter  Filter wich determine wich activity can see this message
-     */
-    public void sendMessageToReceiver(String message, String filter) {
-        Intent intent = new Intent(filter);
-        intent.putExtra(MESSAGE_SEND_TAG, message);
-        this.localBroadcastManager.sendBroadcast(intent);
     }
 
     /**
