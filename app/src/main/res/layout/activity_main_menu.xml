@@ -48,4 +48,17 @@
         app:layout_constraintEnd_toEndOf="@+id/goToConnectionButton"
         app:layout_constraintStart_toStartOf="@+id/goToConnectionButton"
         app:layout_constraintTop_toBottomOf="@+id/titleView" />
+
+    <Button
+        android:id="@+id/networkDebugModeButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
+        android:onClick="forceConnection"
+        android:text="Force Connection"
+        app:layout_constraintBottom_toTopOf="@+id/goToConnectionButton"
+        app:layout_constraintEnd_toEndOf="@+id/debugModeButton"
+        app:layout_constraintStart_toStartOf="@+id/debugModeButton"
+        app:layout_constraintTop_toBottomOf="@+id/debugModeButton" />
 </android.support.constraint.ConstraintLayout>

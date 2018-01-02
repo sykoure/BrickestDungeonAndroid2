@@ -8,6 +8,8 @@ import com.app.remi.test.network.backend.services.NetworkBackendService;
 import java.io.IOException;
 import java.io.InputStreamReader;
 
+import static java.util.Arrays.copyOf;
+
 /**
  * Runnable class that will only listen what is send by the server
  * and displays it on a TextArea.
@@ -18,8 +20,7 @@ public class ClientListener implements Runnable {
     private NetworkBackendService networkBackendService;
 
     /**
-     *
-     * @param flux_entree The reader on the socket
+     * @param flux_entree           The reader on the socket
      * @param networkBackendService The service in charge of handling the data received
      */
     public ClientListener(InputStreamReader flux_entree, NetworkBackendService networkBackendService) {
@@ -40,10 +41,13 @@ public class ClientListener implements Runnable {
         while (this.readyToRead) {
             try {
                 if (this.flux_entree.ready()) {
-                    this.flux_entree.read(buf);
-                    System.out.println("ClientListener : READ" + String.valueOf(buf));
-                    this.networkBackendService.sendMessageToReceiver(String.valueOf(buf));
-                    Log.d("ClientListener", String.valueOf(buf));
+                    int numberOfRealChar = this.flux_entree.read(buf);
+                    char[] shortenedBuffer;
+                    shortenedBuffer = copyOf(buf, numberOfRealChar);
+
+                    System.out.println("ClientListener : READ " + String.valueOf(shortenedBuffer));
+                    this.networkBackendService.sendMessageToReceiver(String.valueOf(shortenedBuffer));
+                    Log.d("ClientListener", String.valueOf(shortenedBuffer));
                     buf = resetBuffer(buf, 1024);
                 }
             } catch (IOException e) {
