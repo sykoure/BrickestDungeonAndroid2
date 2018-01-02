@@ -109,13 +109,12 @@ public class NetworkBackendService extends Service {
 
     /**
      * Will use a thread to start the connection with the server
-     * and send a string to establish a pseudo
-     * TODO remove the pseudo once the server is updated.
+     * and send a string to ping the server
      */
     public void establishConnection() {
         Log.d(CLASS_TAG, "Trying To connect");
         new Thread(new BackgroundRunnableConnection(this, this.clientInterfaceTCP)).start();
-        this.sendMessageToServer("Pseudo");
+        //this.sendMessageToServer("BPING");
     }
 
     /**

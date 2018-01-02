@@ -23,6 +23,7 @@ public class BackgroundRunnableConnection implements Runnable {
 
     /**
      * If the TCP client is not already connected, connect it
+     * And send a ping to the server
      */
     @Override
     public void run() {
@@ -30,6 +31,8 @@ public class BackgroundRunnableConnection implements Runnable {
         try {
             if (!this.clientInterfaceTCP.getConnected())
                 this.clientInterfaceTCP.setConnected(this.clientInterfaceTCP.connection());
+            new Thread(new BackgroundRunnableSendString(this.clientInterfaceTCP, this.networkBackendService, "BPING")).start();
+
         } catch (IOException e) {
             e.printStackTrace();
         }

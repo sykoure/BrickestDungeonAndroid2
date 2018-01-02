@@ -46,7 +46,7 @@ public class MainMenuActivity extends Activity implements Displayable {
         BroadcastReceiver myReceiver = new NetworkReceiver(this);                                        // Create a class and set in it the behavior when an information is received
         IntentFilter intentFilter = new IntentFilter(FILTER_MAIN_MENU);                                             // The intentFilter action should match the action of the intent send
         localBroadcastManager.registerReceiver(myReceiver, intentFilter);                                           // We register the receiver for the localBroadcastManager
-
+        this.establishConnection();
 
     }
 
@@ -80,21 +80,24 @@ public class MainMenuActivity extends Activity implements Displayable {
 
     /**
      * Force the connection with the server
+     *
      * @param view
      */
     public void forceConnection(View view) {
         if (BRICKEST_DEBUG_MODE) {
-            Toast.makeText(this, "Trying to establish connection", Toast.LENGTH_SHORT).show();
-
-            Intent intent = new Intent(this, NetworkBackendService.class);                                // Start the service responsible for client/server exchanges
-            intent.putExtra(NetworkBackendService.NETWORK_INTENT_TAG, 0);
-            startService(intent);
-
-            Intent pingIntent = new Intent(this, NetworkBackendService.class);                            // Send a ping to the server
-            pingIntent.putExtra(NetworkBackendService.NETWORK_INTENT_TAG, 1);
-            pingIntent.putExtra(NetworkBackendService.NETWORK_MESSAGE_TAG, "BPING");
-            startService(pingIntent);
+            this.establishConnection();
         }
 
+    }
+
+    /**
+     * Method use to call the network background service to establish a connection with the server
+     */
+    public void establishConnection() {
+        Toast.makeText(this, "Trying to establish connection", Toast.LENGTH_SHORT).show();
+
+        Intent intent = new Intent(this, NetworkBackendService.class);                                // Start the service responsible for client/server exchanges
+        intent.putExtra(NetworkBackendService.NETWORK_INTENT_TAG, 0);
+        startService(intent);
     }
 }
