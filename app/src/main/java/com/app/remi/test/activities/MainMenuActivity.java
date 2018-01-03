@@ -23,7 +23,6 @@ import com.app.remi.test.network.backend.services.NetworkBackendService;
 
 /**
  * Main menu of the application
- * TODO display the server connection status
  */
 public class MainMenuActivity extends Activity implements Displayable {
 
@@ -60,6 +59,7 @@ public class MainMenuActivity extends Activity implements Displayable {
 
     /**
      * Defines callbacks for service binding, passed to bindService()
+     * Source : https://developer.android.com/guide/components/bound-services.html#Binder
      */
     private ServiceConnection mConnection = new ServiceConnection() {
 
@@ -142,16 +142,19 @@ public class MainMenuActivity extends Activity implements Displayable {
         networkBackendService.establishConnection();
     }
 
+    /***
+     * The service is only unbound onDestroy, this allow the service to persist between activities
+     */
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        unbindService(mConnection);
+        mBound = false;
     }
 
     @Override
     protected void onStop() {
         super.onStop();
-        unbindService(mConnection);
-        mBound = false;
     }
 
 }
