@@ -7,6 +7,7 @@ import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import com.app.remi.test.activities.ConnectionActivity;
 import com.app.remi.test.activities.MainMenuActivity;
 import com.app.remi.test.network.backend.ClientInterfaceTCP;
 import com.app.remi.test.network.backend.networkRunnable.BackgroundRunnableConnection;
@@ -25,6 +26,7 @@ public class NetworkBackendService extends Service {
     boolean mAllowRebind; // indicates whether onRebind should be used
     private ClientInterfaceTCP clientInterfaceTCP; // Backend class used for connection
     private LocalBroadcastManager localBroadcastManager;
+    private boolean authentified;
 
 
     /**
@@ -48,6 +50,7 @@ public class NetworkBackendService extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+        this.authentified = false;
         this.clientInterfaceTCP = new ClientInterfaceTCP(this);
         this.localBroadcastManager = LocalBroadcastManager.getInstance(this);
         Log.d(CLASS_TAG, "Instantiation of this this service");
@@ -109,6 +112,25 @@ public class NetworkBackendService extends Service {
             intent.putExtra(MESSAGE_SEND_TAG, message);
             this.localBroadcastManager.sendBroadcast(intent);
         }
+        String[] slicedMessage = message.split(",");
+
+        if (slicedMessage[0].equals("BLOGIN")) {                                       // Authentification
+            if (slicedMessage[1].equals("0")) {                                        // Authentification successful
+                Intent intent = new Intent(ConnectionActivity.FILTER_CONNECTION);
+                intent.putExtra(MESSAGE_SEND_TAG, "0");
+                this.localBroadcastManager.sendBroadcast(intent);
+                this.setAuthentified(true);
+            } else {                                                                   // Authentification failed
+                Intent intent = new Intent(ConnectionActivity.FILTER_CONNECTION);
+                intent.putExtra(MESSAGE_SEND_TAG, slicedMessage[1]);
+                this.localBroadcastManager.sendBroadcast(intent);
+            }
+        }
+        if (slicedMessage[0].equals("BCLASSESA")) {                                    // Reception of available classes
+            Intent intent = new Intent(ConnectionActivity.FILTER_CONNECTION);
+            intent.putExtra(MESSAGE_SEND_TAG, message);
+            this.localBroadcastManager.sendBroadcast(intent);
+        }
     }
 
     /**
@@ -144,5 +166,13 @@ public class NetworkBackendService extends Service {
     public void onDestroy() {
         this.terminateConnection();
         super.onDestroy();
+    }
+
+    public boolean isAuthentified() {
+        return authentified;
+    }
+
+    public void setAuthentified(boolean authentified) {
+        this.authentified = authentified;
     }
 }

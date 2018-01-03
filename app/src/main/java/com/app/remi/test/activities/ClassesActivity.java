@@ -45,16 +45,17 @@ public class ClassesActivity extends Activity {
         this.heroImagaView3.setImageAlpha(90);
 
         // TODO remove this, the list will be sent by the server or passed as an argument
-        this.listHeroesName = new ArrayList<String>();
+        //this.listHeroesName = new ArrayList<String>();
+        this.listHeroesName = getIntent().getStringArrayListExtra(ConnectionActivity.HERO_LIST_TAG);
 
         this.listHeroesImage = new ArrayList<ImageView>();
         this.listVisibleImageView = new ArrayList<Boolean>();
         this.listSelectedImageView = new ArrayList<Boolean>();
 
         // TODO remove this, the list will be sent by the server or passed as an argument
-        this.listHeroesName.add("warrior");
+        /*this.listHeroesName.add("warrior");
         this.listHeroesName.add("paladin");
-        this.listHeroesName.add("wizard");
+        this.listHeroesName.add("wizard");*/
 
 
         this.listInstantiation();
