@@ -404,36 +404,42 @@ public class Moteur extends SurfaceView implements Runnable {
                                                 Math.abs(listeB.get(i).getRect().bottom - listeS.get(j).getTopSide().top)
                     );
 
-                    Log.w("BLALL LEFT",String.valueOf(listeB.get(i).getRect().left));
-                    Log.w("BLALL RIGHT",String.valueOf(listeB.get(i).getRect().right));
-                    Log.w("BLALL TOP",String.valueOf(listeB.get(i).getRect().top));
-                    Log.w("BLALL BOTTOM",String.valueOf(listeB.get(i).getRect().bottom));
+                    Log.d("BLALL LEFT",String.valueOf(listeB.get(i).getRect().left));
+                    Log.d("BLALL RIGHT",String.valueOf(listeB.get(i).getRect().right));
+                    Log.d("BLALL TOP",String.valueOf(listeB.get(i).getRect().top));
+                    Log.d("BLALL BOTTOM",String.valueOf(listeB.get(i).getRect().bottom));
 
-                    Log.w("BLOCK LEFT",String.valueOf(listeS.get(j).getLeftSide().left));
-                    Log.w("BLOCK RIGHT",String.valueOf(listeS.get(j).getRightSide().right));
-                    Log.w("BLOCK TOP",String.valueOf(listeS.get(j).getTopSide().top));
-                    Log.w("BLOCK BOTTOM",String.valueOf(listeS.get(j).getBotSide().bottom));
+                    Log.d("BLOCK LEFT",String.valueOf(listeS.get(j).getLeftSide().left));
+                    Log.d("BLOCK RIGHT",String.valueOf(listeS.get(j).getRightSide().right));
+                    Log.d("BLOCK TOP",String.valueOf(listeS.get(j).getTopSide().top));
+                    Log.d("BLOCK BOTTOM",String.valueOf(listeS.get(j).getBotSide().bottom));
 
                     if ((listeS.get(j).getLeftSide().left < listeB.get(i).getRect().right) && (listeB.get(i).getxSpeed() > 0)&&(minimumS == Math.abs(listeB.get(i).getRect().right - listeS.get(j).getLeftSide().left))) {
                         listeB.get(i).reverseXVelocity();
-                        Log.w("SPELLBLOCK","leftSide");
-                        Log.w("VALUE LEFT",String.valueOf(listeS.get(j).getLeftSide().left - listeB.get(i).getRect().right));
-                        Log.w("VALUE BOTTOM",String.valueOf(listeS.get(j).getBotSide().bottom - listeB.get(i).getRect().top));
+                        this.playBallBounceSound();
+                        this.startVibration(100);
+                        Log.d("SPELLBLOCK","leftSide");
+                        Log.d("VALUE LEFT",String.valueOf(listeS.get(j).getLeftSide().left - listeB.get(i).getRect().right));
+                        Log.d("VALUE BOTTOM",String.valueOf(listeS.get(j).getBotSide().bottom - listeB.get(i).getRect().top));
                     } else if ((listeS.get(j).getRightSide().right > listeB.get(i).getRect().left) && (listeB.get(i).getxSpeed() < 0)&&(minimumS == Math.abs(listeB.get(i).getRect().left - listeS.get(j).getRightSide().right))) {
                         listeB.get(i).reverseXVelocity();
-                        Log.w("SPELLBLOCK","rightSide");
+                        this.playBallBounceSound();
+                        this.startVibration(100);
+                        Log.d("SPELLBLOCK","rightSide");
                     } else if ((listeS.get(j).getBotSide().bottom > listeB.get(i).getRect().top) && (listeB.get(i).getySpeed() < 0)&&(minimumS == Math.abs(listeS.get(j).getBotSide().bottom - listeB.get(i).getRect().top))) {
                         listeB.get(i).reverseYVelocity();
-                        Log.w("SPELLBLOCK","botSide");
-                        Log.w("VALUE RIGHT",String.valueOf(Math.abs(listeB.get(i).getRect().left - listeS.get(j).getRightSide().right)));
-                        Log.w("VALUE LEFT",String.valueOf(Math.abs(listeB.get(i).getRect().right - listeS.get(j).getLeftSide().left)));
-                        Log.w("VALUE BOTTOM",String.valueOf(Math.abs(listeS.get(j).getBotSide().bottom - listeB.get(i).getRect().top)));
+                        this.playBallBounceSound();
+                        this.startVibration(100);
+                        Log.d("SPELLBLOCK","botSide");
+                        Log.d("VALUE RIGHT",String.valueOf(Math.abs(listeB.get(i).getRect().left - listeS.get(j).getRightSide().right)));
+                        Log.d("VALUE LEFT",String.valueOf(Math.abs(listeB.get(i).getRect().right - listeS.get(j).getLeftSide().left)));
+                        Log.d("VALUE BOTTOM",String.valueOf(Math.abs(listeS.get(j).getBotSide().bottom - listeB.get(i).getRect().top)));
                     } else if ((listeS.get(j).getTopSide().top < listeB.get(i).getRect().bottom) && (listeB.get(i).getySpeed() > 0)&&(minimumS == Math.abs(listeB.get(i).getRect().bottom - listeS.get(j).getTopSide().top))) {
                         listeB.get(i).reverseYVelocity();
-                        Log.w("SPELLBLOCK","topSide");
+                        Log.d("SPELLBLOCK","topSide");
+                        this.playBallBounceSound();
+                        this.startVibration(100);
                     }
-                    this.playBallBounceSound();
-                    this.startVibration(100);
                 }
             }
                 /*
