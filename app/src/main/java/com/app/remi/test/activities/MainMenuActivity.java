@@ -2,9 +2,13 @@ package com.app.remi.test.activities;
 
 import android.app.Activity;
 import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.widget.Button;
@@ -28,6 +32,9 @@ public class MainMenuActivity extends Activity implements Displayable {
     private Button goToConnectionActivity, goToEngine, forceConnectionButton;
     private ImageView titleview;
     private LocalBroadcastManager localBroadcastManager;
+    private NetworkBackendService networkBackendService;
+    private boolean mBound = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,9 +54,38 @@ public class MainMenuActivity extends Activity implements Displayable {
         BroadcastReceiver myReceiver = new NetworkReceiver(this);                                        // Create a class and set in it the behavior when an information is received
         IntentFilter intentFilter = new IntentFilter(FILTER_MAIN_MENU);                                             // The intentFilter action should match the action of the intent send
         localBroadcastManager.registerReceiver(myReceiver, intentFilter);                                           // We register the receiver for the localBroadcastManager
-        this.establishConnection();
+
 
     }
+
+    /**
+     * Defines callbacks for service binding, passed to bindService()
+     */
+    private ServiceConnection mConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName className,
+                                       IBinder service) {
+            // We've bound to LocalService, cast the IBinder and get LocalService instance
+            NetworkBackendService.LocalBinder binder = (NetworkBackendService.LocalBinder) service;
+            networkBackendService = binder.getService();
+            mBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            mBound = false;
+        }
+    };
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Intent intent = new Intent(this, NetworkBackendService.class);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+
+    }
+
 
     public void goToConnectionScreen(View view) {
         Intent intent = new Intent(this, ConnectionActivity.class);
@@ -85,7 +121,7 @@ public class MainMenuActivity extends Activity implements Displayable {
     /**
      * Force the connection with the server
      *
-     * @param view
+     * @param view Context
      */
     public void forceConnection(View view) {
         if (BRICKEST_DEBUG_MODE) {
@@ -100,13 +136,22 @@ public class MainMenuActivity extends Activity implements Displayable {
     public void establishConnection() {
         Toast.makeText(this, "Trying to establish connection", Toast.LENGTH_SHORT).show();
 
-        Intent intent = new Intent(this, NetworkBackendService.class);                                // Start the service responsible for client/server exchanges
-        intent.putExtra(NetworkBackendService.NETWORK_INTENT_TAG, 0);
-        startService(intent);
+        //Intent intent = new Intent(this, NetworkBackendService.class);                                // Start the service responsible for client/server exchanges
+        //intent.putExtra(NetworkBackendService.NETWORK_INTENT_TAG, 0);
+        //startService(intent);
+        networkBackendService.establishConnection();
     }
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
     }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        unbindService(mConnection);
+        mBound = false;
+    }
+
 }
