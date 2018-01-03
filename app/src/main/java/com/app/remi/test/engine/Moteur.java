@@ -2,6 +2,7 @@ package com.app.remi.test.engine;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.ReceiverCallNotAllowedException;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -81,7 +82,7 @@ public class Moteur extends SurfaceView implements Runnable {
      * @param playWithSensor Boolean value, define the playstyle, activate or not the accelerometer, desactivate the touch screen.
      * @param sensorManager  The sensor manager used to manage the accelerometer
      */
-    public Moteur(Context context, Boolean playWithSensor, SensorManager sensorManager,int numberSpellBlocks) {
+    public Moteur(Context context, Boolean playWithSensor, SensorManager sensorManager, int numberSpellBlocks) {
 
         super(context);
 
@@ -110,11 +111,11 @@ public class Moteur extends SurfaceView implements Runnable {
         screenX = size.x;
         screenY = size.y;
 
-        player = new Player(10,0,"Warrior","Player 1");
-        foe = new Player(10,0,"Wizard","Player 2");
+        player = new Player(10, 0, "Warrior", "Player 1");
+        foe = new Player(10, 0, "Wizard", "Player 2");
 
         history = new BattleMessage[5];
-        for(int i = 0; i < 5;i++){
+        for (int i = 0; i < 5; i++) {
             history[i] = new BattleMessage("");
             history[i].setPseudo(null);
         }
@@ -123,10 +124,10 @@ public class Moteur extends SurfaceView implements Runnable {
         ball = new Boule(screenX, screenY);
         listeB.add(ball);                        // We add the first ball²²
 
-        for(int i = 0;i < numberSpellBlocks;i++) {
-            double xposition = screenX * 0.1  +(i*(70/numberSpellBlocks*3) +(i*(150/numberSpellBlocks*3)));
+        for (int i = 0; i < numberSpellBlocks; i++) {
+            double xposition = screenX * 0.1 + (i * (70 / numberSpellBlocks * 3) + (i * (150 / numberSpellBlocks * 3)));
 
-            spellBlock = new SpellBlock(screenX, screenY,xposition ,screenY * 0.3,150/numberSpellBlocks*3,150/numberSpellBlocks*3,"spellblock"+i+1);
+            spellBlock = new SpellBlock(screenX, screenY, xposition, screenY * 0.3, 150 / numberSpellBlocks * 3, 150 / numberSpellBlocks * 3, "spellblock" + i + 1);
             listeS.add(spellBlock);               // We add the spellBlocks
         }
 
@@ -163,7 +164,7 @@ public class Moteur extends SurfaceView implements Runnable {
         for (int i = 0; i < listeB.size(); i++) {
             listeB.get(i).update(fps);
         }
-        for (int j = 0; j < listeS.size(); j++){
+        for (int j = 0; j < listeS.size(); j++) {
             checkCooldown(listeS.get(j));
         }
         collisions();
@@ -206,16 +207,16 @@ public class Moteur extends SurfaceView implements Runnable {
 
 
             //Information about the Player 1
-            canvas.drawText(player.getPseudo(),20,(float)(screenY*0.04),paint);
+            canvas.drawText(player.getPseudo(), 20, (float) (screenY * 0.04), paint);
 
             //the paint (paintbrush) will now has a black color
             paint.setColor(Color.argb(255, 0, 0, 0));
 
-            canvas.drawText(player.getNameClass(),20,(float)(screenY*0.09),paint);
-            canvas.drawText("Life : ",20,(float)(screenY*0.13),paint);
-            canvas.drawText(String.valueOf(foe.getLife()),120,(float)(screenY*0.13),paint);
-            canvas.drawText("Shield : ", 20,(float)(screenY*0.17),paint);
-            canvas.drawText(String.valueOf(foe.getShield()),120,(float)(screenY*0.17),paint);
+            canvas.drawText(player.getNameClass(), 20, (float) (screenY * 0.09), paint);
+            canvas.drawText("Life : ", 20, (float) (screenY * 0.13), paint);
+            canvas.drawText(String.valueOf(foe.getLife()), 120, (float) (screenY * 0.13), paint);
+            canvas.drawText("Shield : ", 20, (float) (screenY * 0.17), paint);
+            canvas.drawText(String.valueOf(foe.getShield()), 120, (float) (screenY * 0.17), paint);
 
 
             //the paint (paintbrush) will now has a red color
@@ -225,41 +226,40 @@ public class Moteur extends SurfaceView implements Runnable {
 
             //the paint (paintbrush) will now has a red color
             paint.setColor(Color.argb(255, 255, 76, 76));
-            canvas.drawText(foe.getPseudo(),screenX - 200,(float)(screenY*0.04),paint);
+            canvas.drawText(foe.getPseudo(), screenX - 200, (float) (screenY * 0.04), paint);
 
             //the paint (paintbrush) will now has a black color
             paint.setColor(Color.argb(255, 0, 0, 0));
 
-            canvas.drawText(foe.getNameClass(),screenX - 200,(float)(screenY*0.09),paint);
-            canvas.drawText("Life : ",screenX - 200,(float)(screenY*0.13),paint);
-            canvas.drawText(String.valueOf(foe.getLife()),screenX - 100,(float)(screenY*0.13),paint);
-            canvas.drawText("Shield : ",screenX - 200,(float)(screenY*0.17),paint);
-            canvas.drawText(String.valueOf(foe.getShield()),screenX - 100,(float)(screenY*0.17),paint);
+            canvas.drawText(foe.getNameClass(), screenX - 200, (float) (screenY * 0.09), paint);
+            canvas.drawText("Life : ", screenX - 200, (float) (screenY * 0.13), paint);
+            canvas.drawText(String.valueOf(foe.getLife()), screenX - 100, (float) (screenY * 0.13), paint);
+            canvas.drawText("Shield : ", screenX - 200, (float) (screenY * 0.17), paint);
+            canvas.drawText(String.valueOf(foe.getShield()), screenX - 100, (float) (screenY * 0.17), paint);
 
             //We will now paint the history
 
-            for(int i = 1;i < 6;i++){
+            for (int i = 1; i < 6; i++) {
                 double saut = screenY * 0.04;
-                if(history[i-1].getHasMessage()){
-                    if(history[i-1].getPseudo().equals(player.getPseudo())) {
+                if (history[i - 1].getHasMessage()) {
+                    if (history[i - 1].getPseudo().equals(player.getPseudo())) {
                         paint.setColor(Color.argb(255, 0, 247, 255));
-                    }
-                    else{
+                    } else {
                         paint.setColor(Color.argb(255, 255, 76, 76));
                     }
-                    canvas.drawText(history[i-1].getPseudo(), (float)(screenX*0.3), (float) (saut)*i, paint);
+                    canvas.drawText(history[i - 1].getPseudo(), (float) (screenX * 0.3), (float) (saut) * i, paint);
 
                     paint.setColor(Color.argb(255, 0, 0, 0));
-                    canvas.drawText("=>",(float)(screenX*0.45), (float) (saut)*i, paint);
+                    canvas.drawText("=>", (float) (screenX * 0.45), (float) (saut) * i, paint);
 
                     paint.setColor(Color.argb(255, 0, 255, 0));
-                    canvas.drawText(history[i-1].getMessageCombat(),(float)(screenX*0.5), (float) (saut)*i, paint);
+                    canvas.drawText(history[i - 1].getMessageCombat(), (float) (screenX * 0.5), (float) (saut) * i, paint);
                 }
             }
 
 
             //we are drawing each side for the Spellblocks
-            for(int i = 0; i < listeS.size();i++) {
+            for (int i = 0; i < listeS.size(); i++) {
                 paint.setColor(Color.argb(255, 0, 255, 255));
                 canvas.drawRect(listeS.get(i).getLeftSide(), paint);
                 paint.setColor(Color.argb(255, 255, 0, 0));
@@ -269,14 +269,14 @@ public class Moteur extends SurfaceView implements Runnable {
                 paint.setColor(Color.argb(255, 0, 255, 0));
                 canvas.drawRect(listeS.get(i).getTopSide(), paint);
 
-                if(listeS.get(i).getCooldown() > 0){
+                if (listeS.get(i).getCooldown() > 0) {
                     paint.setColor(Color.argb(255, 0, 0, 200));
                     canvas.drawRect(listeS.get(i).getRect().left,
-                                    listeS.get(i).getRect().bottom - (listeS.get(i).getRect().bottom - listeS.get(i).getRect().top)*((listeS.get(i).getCooldownDuration() - listeS.get(i).getCooldown())/listeS.get(i).getCooldownDuration()),
-                                    listeS.get(i).getRect().right,
-                                    listeS.get(i).getRect().bottom
-                                    ,paint
-                                    );
+                            listeS.get(i).getRect().bottom - (listeS.get(i).getRect().bottom - listeS.get(i).getRect().top) * ((listeS.get(i).getCooldownDuration() - listeS.get(i).getCooldown()) / listeS.get(i).getCooldownDuration()),
+                            listeS.get(i).getRect().right,
+                            listeS.get(i).getRect().bottom
+                            , paint
+                    );
                     //Log.w("WARNING",String.valueOf(listeS.get(i).getCooldown()));
                 }
             }
@@ -325,18 +325,18 @@ public class Moteur extends SurfaceView implements Runnable {
                     if (motionEvent.getX() > screenX / 2) {
                         paddle.setMovementState(paddle.RIGHT, screenX);
                         leftTouched = false;
-                        if(firstTouched){
-                            ball.setySpeed(-400);
-                            ball.setxSpeed(100);
+                        if (firstTouched) {
+                            ball.setySpeed(-200);
+                            ball.setxSpeed(200);
                             firstTouched = false;
                         }
 
                     } else {
                         paddle.setMovementState(paddle.LEFT, screenX);
                         leftTouched = true;
-                        if(firstTouched){
-                            ball.setySpeed(-400);
-                            ball.setxSpeed(-100);
+                        if (firstTouched) {
+                            ball.setySpeed(-200);
+                            ball.setxSpeed(-200);
                             firstTouched = false;
                         }
                     }
@@ -395,9 +395,49 @@ public class Moteur extends SurfaceView implements Runnable {
     void collisions() {
         //collisions between the ball and the spellblocks
         for(int i = 0;i < listeB.size();i++) {
-            for(int j = 0; j < listeS.size(); j++){
+            for(int j = 0; j < listeS.size(); j++) {
+                float minimumS;
                 if (RectF.intersects(listeS.get(j).getRect(), listeB.get(i).getRect())) {
+                    minimumS = calculeMinimum(  Math.abs(listeB.get(i).getRect().right - listeS.get(j).getLeftSide().left),
+                                                Math.abs(listeB.get(i).getRect().left - listeS.get(j).getRightSide().right),
+                                                Math.abs(listeS.get(j).getBotSide().bottom - listeB.get(i).getRect().top),
+                                                Math.abs(listeB.get(i).getRect().bottom - listeS.get(j).getTopSide().top)
+                    );
 
+                    Log.w("BLALL LEFT",String.valueOf(listeB.get(i).getRect().left));
+                    Log.w("BLALL RIGHT",String.valueOf(listeB.get(i).getRect().right));
+                    Log.w("BLALL TOP",String.valueOf(listeB.get(i).getRect().top));
+                    Log.w("BLALL BOTTOM",String.valueOf(listeB.get(i).getRect().bottom));
+
+                    Log.w("BLOCK LEFT",String.valueOf(listeS.get(j).getLeftSide().left));
+                    Log.w("BLOCK RIGHT",String.valueOf(listeS.get(j).getRightSide().right));
+                    Log.w("BLOCK TOP",String.valueOf(listeS.get(j).getTopSide().top));
+                    Log.w("BLOCK BOTTOM",String.valueOf(listeS.get(j).getBotSide().bottom));
+
+                    if ((listeS.get(j).getLeftSide().left < listeB.get(i).getRect().right) && (listeB.get(i).getxSpeed() > 0)&&(minimumS == Math.abs(listeB.get(i).getRect().right - listeS.get(j).getLeftSide().left))) {
+                        listeB.get(i).reverseXVelocity();
+                        Log.w("SPELLBLOCK","leftSide");
+                        Log.w("VALUE LEFT",String.valueOf(listeS.get(j).getLeftSide().left - listeB.get(i).getRect().right));
+                        Log.w("VALUE BOTTOM",String.valueOf(listeS.get(j).getBotSide().bottom - listeB.get(i).getRect().top));
+                    } else if ((listeS.get(j).getRightSide().right > listeB.get(i).getRect().left) && (listeB.get(i).getxSpeed() < 0)&&(minimumS == Math.abs(listeB.get(i).getRect().left - listeS.get(j).getRightSide().right))) {
+                        listeB.get(i).reverseXVelocity();
+                        Log.w("SPELLBLOCK","rightSide");
+                    } else if ((listeS.get(j).getBotSide().bottom > listeB.get(i).getRect().top) && (listeB.get(i).getySpeed() < 0)&&(minimumS == Math.abs(listeS.get(j).getBotSide().bottom - listeB.get(i).getRect().top))) {
+                        listeB.get(i).reverseYVelocity();
+                        Log.w("SPELLBLOCK","botSide");
+                        Log.w("VALUE RIGHT",String.valueOf(Math.abs(listeB.get(i).getRect().left - listeS.get(j).getRightSide().right)));
+                        Log.w("VALUE LEFT",String.valueOf(Math.abs(listeB.get(i).getRect().right - listeS.get(j).getLeftSide().left)));
+                        Log.w("VALUE BOTTOM",String.valueOf(Math.abs(listeS.get(j).getBotSide().bottom - listeB.get(i).getRect().top)));
+                    } else if ((listeS.get(j).getTopSide().top < listeB.get(i).getRect().bottom) && (listeB.get(i).getySpeed() > 0)&&(minimumS == Math.abs(listeB.get(i).getRect().bottom - listeS.get(j).getTopSide().top))) {
+                        listeB.get(i).reverseYVelocity();
+                        Log.w("SPELLBLOCK","topSide");
+                    }
+                    this.playBallBounceSound();
+                    this.startVibration(100);
+                }
+            }
+                /*
+                if (RectF.intersects(listeS.get(j).getRect(), listeB.get(i).getRect())) {
                     if ((j == 0) && (listeS.get(j).getCooldown() == 0)) {
                         listeS.get(j).setCooldown(listeS.get(j).getCooldownDuration());
                         diviseBall(listeB.get(i));
@@ -406,8 +446,6 @@ public class Moteur extends SurfaceView implements Runnable {
                         listeS.get(j).setCooldown(listeS.get(j).getCooldownDuration());
                         reduireBoule(listeB);
                     }
-
-
                     if ((RectF.intersects(listeS.get(j).getLeftSide(), listeB.get(i).getRect())) || (RectF.intersects(listeS.get(j).getRightSide(), listeB.get(i).getRect()))) {
                         if ((RectF.intersects(listeS.get(j).getTopSide(), listeB.get(i).getRect())) || (RectF.intersects(listeS.get(j).getBotSide(), listeB.get(i).getRect()))) {
                             Log.d("SPELLBLOCK", "SPELLBLOCK CORNER");
@@ -433,10 +471,10 @@ public class Moteur extends SurfaceView implements Runnable {
                     this.playBallBounceSound();
                     this.startVibration(100);
                 }
-            }
-            //for(int i = 0;i < listeB.size();i++) {
+            }*/
+
             //Collision between the ball and the the paddle
-            if (RectF.intersects(paddle.getRect(), listeB.get(i).getRect())) {
+            if(((listeB.get(i).getySpeed()/fps) - listeB.get(i).getBallHeight() + listeB.get(i).getRect().top > paddle.getRect().top)&&(listeB.get(i).getySpeed() > 0)){
                 //TODO penser à prendre en compte la barre
                 listeB.get(i).reverseYVelocity();
                 Log.d("PADDLE", "PADDLE");
@@ -444,7 +482,10 @@ public class Moteur extends SurfaceView implements Runnable {
             }
 
             //If the ball is hitting the bottom of the screen
-            if (listeB.get(i).getRect().bottom > screenY) {
+            else if (((listeB.get(i).getySpeed()/fps) - listeB.get(i).getBallHeight() + listeB.get(i).getRect().top > screenY)&&(listeB.get(i).getySpeed() > 0)){
+
+                /*(listeB.get(i).getRect().bottom > screenY) {
+
                 player.loseLife(1);          // The user loses 1 hp
                 if (listeB.size() == 1) {
                     //update the ball location to put it on the paddle
@@ -453,27 +494,27 @@ public class Moteur extends SurfaceView implements Runnable {
                             , paddle.getX() + (paddle.getLength() / 2) + (listeB.get(i).getBallWidth() / 2)
                             , screenY - paddle.getHeight() - listeB.get(i).getBallHeight() + 10);
                     listeB.get(i).setRect(rect);
-
                     this.playBallDropSound();
                     paused = true;                      // Freeze the game
                     firstTouched = true;                // First time before a collision
                 } else {
                     listeB.remove(listeB.get(i));
-                }
+                }*/
+                listeB.get(i).reverseYVelocity();
             }
 
+
             //if the ball hits the right, left or the top side of the screen
-            else if (listeB.get(i).getRect().top < 0 + screenY * 0.2 ) {
+            else if ((listeB.get(i).getRect().top - (listeB.get(i).getySpeed() / fps) - listeB.get(i).getBallHeight()< screenY * 0.2 )&&(listeB.get(i).getySpeed() < 0)) {
                 listeB.get(i).reverseYVelocity();
                 Log.d("SCREEN", "HUD");
                 this.playBallBounceSound();
             }
-            else if (listeB.get(i).getRect().left < listeB.get(i).getBallWidth() / 2) {
+            else if ((listeB.get(i).getRect().left - (listeB.get(i).getxSpeed() / fps) - listeB.get(i).getBallWidth() < 0)&&(listeB.get(i).getxSpeed() < 0)) {
                 listeB.get(i).reverseXVelocity();
                 Log.d("SCREEN", "LEFT SCREEN");
                 this.playBallBounceSound();
-            }
-            else if (listeB.get(i).getRect().right > screenX - listeB.get(i).getBallWidth() / 2) {
+            } else if ((listeB.get(i).getRect().right + (listeB.get(i).getxSpeed() /fps) > screenX)&&(listeB.get(i).getxSpeed() > 0)) {
                 listeB.get(i).reverseXVelocity();
                 Log.d("SCR1EEN", "RIGHT SCREEN");
                 this.playBallBounceSound();
@@ -481,9 +522,12 @@ public class Moteur extends SurfaceView implements Runnable {
         }
     }
 
-    /**
-     * Call this method to launch the "onStartCommand" method of the associated service
-     */
+
+
+        /**
+         * Call this method to launch the "onStartCommand" method of the associated service
+         */
+
     void playBallBounceSound() {
         Intent intent = new Intent(this.mainActivityContext, BallBounceService.class);
         mainActivityContext.startService(intent);
@@ -507,6 +551,7 @@ public class Moteur extends SurfaceView implements Runnable {
 
     /**
      * Make the user phone vibrate
+     *
      * @param duration Duration of the vibration in milliseconds
      */
     void startVibration(int duration) {
@@ -516,11 +561,11 @@ public class Moteur extends SurfaceView implements Runnable {
     }
 
     // Division d'une balle
-    public void diviseBall(Boule ball){
+    public void diviseBall(Boule ball) {
         // Creation de la boule n°2
-        Boule ball2 = new Boule(screenX,screenY);
+        Boule ball2 = new Boule(screenX, screenY);
 
-        ball2.givePosition(ball2,ball);
+        ball2.givePosition(ball2, ball);
         ball2.setySpeed(ball.getySpeed());
         ball2.setxSpeed(ball.getxSpeed());
         ball2.reverseXVelocity();
@@ -528,46 +573,57 @@ public class Moteur extends SurfaceView implements Runnable {
         ball2.setBallWidth(ball.getBallHeight());
 
         listeB.add(ball2);
-        addHistory(history,"diviseBall",true,(player.getPseudo()));
+        addHistory(history, "diviseBall", true, (player.getPseudo()));
     }
 
     //Reduire la taille de la boule
-    public void reduireBoule(List<Boule> liste){
-        for(int i = 0;i < liste.size(); i++){
-            if(liste.get(i).getBallHeight()/2 < liste.get(i).getBallHeightMin()){
+    public void reduireBoule(List<Boule> liste) {
+        for (int i = 0; i < liste.size(); i++) {
+            if (liste.get(i).getBallHeight() / 2 < liste.get(i).getBallHeightMin()) {
                 liste.get(i).setBallWidth(liste.get(i).getBallWidthMin());
                 liste.get(i).setBallHeight(liste.get(i).getBallHeightMin());
-            }
-            else {
+            } else {
                 liste.get(i).setBallHeight(liste.get(i).getBallHeight() / 2);
                 liste.get(i).setBallWidth(liste.get(i).getBallWidth() / 2);
             }
         }
-        addHistory(history,"reduireBall",true,(player.getPseudo()));
+        addHistory(history, "reduireBall", true, (player.getPseudo()));
     }
 
     //Met à jour les cooldowns
-    public void checkCooldown(SpellBlock spellBlock){
-        if(spellBlock.getCooldown() > 0){
-            spellBlock.setCooldown(spellBlock.getCooldown() - 1/(float)fps); //Reduit le cooldown de 1 par seconde
-        }
-        else{
+    public void checkCooldown(SpellBlock spellBlock) {
+        if (spellBlock.getCooldown() > 0) {
+            spellBlock.setCooldown(spellBlock.getCooldown() - 1 / (float) fps); //Reduit le cooldown de 1 par seconde
+        } else {
             spellBlock.setCooldown(0);
         }
     }
 
     // Update the history
-    public void addHistory(BattleMessage[] history,String message,Boolean bool,String pseudo){
+    public void addHistory(BattleMessage[] history, String message, Boolean bool, String pseudo) {
         int i = 4;
-        while(i > 0){
-            history[i].setPseudo(history[i-1].getPseudo());
-            history[i].setHasMessage(history[i-1].getHasMessage());
-            history[i].setMessageCombat(history[i-1].getMessageCombat());
+        while (i > 0) {
+            history[i].setPseudo(history[i - 1].getPseudo());
+            history[i].setHasMessage(history[i - 1].getHasMessage());
+            history[i].setMessageCombat(history[i - 1].getMessageCombat());
             i--;
         }
         history[0].setPseudo(pseudo);
         history[0].setHasMessage(bool);
         history[0].setMessageCombat(message);
+    }
+
+    public float calculeMinimum(float nombre1,float nombre2,float nombre3,float nombre4){
+        if(nombre1 > nombre2){
+           nombre1 = nombre2;
+        }
+        if(nombre1 > nombre3){
+            nombre1 = nombre3;
+        }
+        if(nombre1 > nombre4){
+            nombre1 = nombre4;
+        }
+        return nombre1;
     }
 }
 

@@ -55,8 +55,8 @@ public class SpellBlock {
         this.height = height;
 
         rect = new RectF((float)xPosition, (float)yPosition, (float)xPosition + width,(float) yPosition +height);
-        leftSide = new RectF((float)xPosition,(float)yPosition,(float)xPosition+3,(float)yPosition+height);
-        rightSide = new RectF((float)xPosition + width - 3,(float)yPosition,(float)xPosition + width,(float)yPosition+height);
+        leftSide = new RectF((float)xPosition,(float)yPosition+1,(float)xPosition+3,(float)yPosition+height-1);
+        rightSide = new RectF((float)xPosition + width - 3,(float)yPosition+1,(float)xPosition + width,(float)yPosition+height-1);
         topSide = new RectF((float)xPosition,(float)yPosition+3,(float)xPosition+width,(float)yPosition);
         botSide = new RectF((float)xPosition,(float)yPosition+height-3,(float)xPosition+width,(float)yPosition+height);
     }
