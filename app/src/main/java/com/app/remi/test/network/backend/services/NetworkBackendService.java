@@ -7,6 +7,7 @@ import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
+import com.app.remi.test.activities.ClassesActivity;
 import com.app.remi.test.activities.ConnectionActivity;
 import com.app.remi.test.activities.MainMenuActivity;
 import com.app.remi.test.network.backend.ClientInterfaceTCP;
@@ -128,6 +129,14 @@ public class NetworkBackendService extends Service {
         }
         if (slicedMessage[0].equals("BCLASSESA")) {                                    // Reception of available classes
             Intent intent = new Intent(ConnectionActivity.FILTER_CONNECTION);
+            intent.putExtra(MESSAGE_SEND_TAG, message);
+            this.localBroadcastManager.sendBroadcast(intent);
+        }
+        if (slicedMessage[0].equals("BCLASSESACK")) {                                  // Reception of acknowledgement of classes choice
+            this.sendMessageToServer("BSPELLSR");                       // Requesting list of spells available for this class
+        }
+        if (slicedMessage[0].equals("BSPELLSA")) {                                     // Reception of available spells
+            Intent intent = new Intent(ClassesActivity.FILTER_CLASSES);
             intent.putExtra(MESSAGE_SEND_TAG, message);
             this.localBroadcastManager.sendBroadcast(intent);
         }

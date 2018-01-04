@@ -1,14 +1,24 @@
 package com.app.remi.test.activities;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.app.remi.test.R;
+import com.app.remi.test.network.backend.Displayable;
+import com.app.remi.test.network.backend.NetworkReceiver;
+import com.app.remi.test.network.backend.services.NetworkBackendService;
 
 import java.util.ArrayList;
 
@@ -16,8 +26,9 @@ import java.util.ArrayList;
  * Activity where the player choose his class for his future games
  * TODO add the connection and the choosing part
  */
-public class ClassesActivity extends Activity {
+public class ClassesActivity extends Activity implements Displayable {
 
+    public final static String FILTER_CLASSES = "com.app.remi.test.activities.ClassesActivity.FILTER_CLASSES";
     private ImageView heroImagaView1, heroImagaView2, heroImagaView3;
     private Button goToMatchMakingActivityButton;
     private ArrayList<String> listHeroesName;
@@ -26,6 +37,9 @@ public class ClassesActivity extends Activity {
     private ArrayList<Boolean> listVisibleImageView;
     public static final String TAG_LIST_HERO = "com.app.remi.test.ClassesActivity.TAG_LIST_HERO";
     private Button goToSpellActitivy;
+    private LocalBroadcastManager localBroadcastManager;
+    private NetworkBackendService networkBackendService;
+    private boolean mBound = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,24 +58,53 @@ public class ClassesActivity extends Activity {
         this.heroImagaView2.setImageAlpha(90);
         this.heroImagaView3.setImageAlpha(90);
 
-        // TODO remove this, the list will be sent by the server or passed as an argument
-        //this.listHeroesName = new ArrayList<String>();
         this.listHeroesName = getIntent().getStringArrayListExtra(ConnectionActivity.HERO_LIST_TAG);
 
         this.listHeroesImage = new ArrayList<ImageView>();
         this.listVisibleImageView = new ArrayList<Boolean>();
         this.listSelectedImageView = new ArrayList<Boolean>();
 
-        // TODO remove this, the list will be sent by the server or passed as an argument
-        /*this.listHeroesName.add("warrior");
-        this.listHeroesName.add("paladin");
-        this.listHeroesName.add("wizard");*/
-
-
         this.listInstantiation();
         this.setHeroImageVisibility();
         this.setHeroImageContent();
+
+        this.localBroadcastManager = LocalBroadcastManager.getInstance(this);                                       // Get an instance of a broadcast manager
+        BroadcastReceiver myReceiver = new NetworkReceiver(this);                                        // Create a class and set in it the behavior when an information is received
+        IntentFilter intentFilter = new IntentFilter(FILTER_CLASSES);                                            // The intentFilter action should match the action of the intent send
+        localBroadcastManager.registerReceiver(myReceiver, intentFilter);                                           // We register the receiver for the localBroadcastManager
+
+
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Intent intent = new Intent(this, NetworkBackendService.class);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+
+    }
+
+    /**
+     * Defines callbacks for service binding, passed to bindService()
+     * Source : https://developer.android.com/guide/components/bound-services.html#Binder
+     */
+    private ServiceConnection mConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName className,
+                                       IBinder service) {
+            // We've bound to LocalService, cast the IBinder and get LocalService instance
+            NetworkBackendService.LocalBinder binder = (NetworkBackendService.LocalBinder) service;
+            networkBackendService = binder.getService();
+            mBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            mBound = false;
+        }
+    };
+
 
     /**
      * Instantiate everyList of this activity
@@ -133,7 +176,7 @@ public class ClassesActivity extends Activity {
     public ArrayList<String> putSelectedHeroInArray() {
         ArrayList<String> arrayToReturn = new ArrayList<>();
         for (int index = 0; index < this.listHeroesName.size(); index++) {
-            if(this.listSelectedImageView.get(index))
+            if (this.listSelectedImageView.get(index))
                 arrayToReturn.add(this.listHeroesName.get(index));
         }
         return arrayToReturn;
@@ -156,14 +199,31 @@ public class ClassesActivity extends Activity {
     public void goToSpellActivity(View view) {
         ArrayList<String> heroListToSend = this.putSelectedHeroInArray();
 
-        if(heroListToSend.size() != 1){
-            Toast.makeText(this,"Choose only one hero",Toast.LENGTH_SHORT).show();
-        }
-        else{
-            Intent intent = new Intent(this, TrueSpellSelectionActivity.class);
-            intent.putExtra(TAG_LIST_HERO, heroListToSend);
-            startActivity(intent);
+        if (heroListToSend.size() != 1) {
+            Toast.makeText(this, "Choose only one hero", Toast.LENGTH_SHORT).show();
+        } else {
+            String formattedAnswer = heroListToSend.get(0).substring(0, 1).toUpperCase() + heroListToSend.get(0).substring(1);  // It's necessary to capitalise the first letter
+            this.networkBackendService.sendMessageToServer("BCLASSESC," + formattedAnswer);
         }
 
+    }
+
+    /**
+     * Reception of the list of spells available for the chosen classes
+     * Parse it and pass it to the next activity
+     * @param textReceived
+     */
+    @Override
+    public void handleReception(String textReceived) {
+
+        String[] slicedMessage = textReceived.split(",");
+        ArrayList<String> spellsList = new ArrayList<>();
+        for (int index = 1; index < slicedMessage.length; index++) {                                   // Parsing of received spells
+            spellsList.add(slicedMessage[index].toLowerCase());
+        }
+        //Toast.makeText(this, spellsList.toString(), Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(this, TrueSpellSelectionActivity.class);
+        intent.putExtra(TrueSpellSelectionActivity.TAG_LIST_SPELL, spellsList);                        // We put in the intent the list of available classes
+        startActivity(intent);
     }
 }

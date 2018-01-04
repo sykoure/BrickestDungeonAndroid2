@@ -45,18 +45,11 @@ public class TrueSpellSelectionActivity extends Activity {
         this.spellImagaView5.setImageAlpha(90);
         this.spellImagaView6.setImageAlpha(90);
 
-        // TODO remove this, the list will be sent by the server or passed as an argument
-        this.listSpellsName = new ArrayList<String>();
+        this.listSpellsName = getIntent().getStringArrayListExtra(TAG_LIST_SPELL);
 
         this.listSpellsImage = new ArrayList<ImageView>();
         this.listVisibleImageView = new ArrayList<Boolean>();
         this.listSelectedImageView = new ArrayList<Boolean>();
-
-        // TODO remove this, the list will be sent by the server or passed as an argument
-        this.listSpellsName.add("fury");
-        this.listSpellsName.add("attack");
-        this.listSpellsName.add("defense");
-        this.listSpellsName.add("division");
 
         this.listInstantiation();
         this.setSpellImageVisibility();
@@ -135,7 +128,7 @@ public class TrueSpellSelectionActivity extends Activity {
     public ArrayList<String> putSelectedSpellInArray() {
         ArrayList<String> arrayToReturn = new ArrayList<>();
         for (int index = 0; index < this.listSpellsName.size(); index++) {
-            if(this.listSelectedImageView.get(index))
+            if (this.listSelectedImageView.get(index))
                 arrayToReturn.add(this.listSpellsName.get(index));
         }
         return arrayToReturn;
@@ -171,14 +164,14 @@ public class TrueSpellSelectionActivity extends Activity {
     /**
      * This will start the next activity and give it the list of selected spells
      * Makes sure the user chose at least 3 spells
+     *
      * @param view Context
      */
     public void goToSpellSelectionActivit(View view) {
         ArrayList<String> spellListToSend = this.putSelectedSpellInArray();
-        if(spellListToSend.size() < 3){
-            Toast.makeText(this,"Choose at least 3 spells",Toast.LENGTH_SHORT).show();
-        }
-        else{
+        if (spellListToSend.size() < 3) {
+            Toast.makeText(this, "Choose at least 3 spells", Toast.LENGTH_SHORT).show();
+        } else {
             Intent intent = new Intent(this, SpellSelectionActivity.class);
             intent.putExtra(TAG_LIST_SPELL, spellListToSend);
             startActivity(intent);
