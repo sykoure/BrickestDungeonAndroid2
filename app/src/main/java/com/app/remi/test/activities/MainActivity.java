@@ -27,11 +27,17 @@ public class MainActivity extends Activity {
         Boolean playWithSensor = intent.getBooleanExtra("BOOLEAN_CHECK", false);
         SensorManager sensorManager = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
         //tab[number] qui sera le tableau contenant les sorts
-
-        //TODO add the class used by players
-        Player ownPlayer = this.generatePlayer(getIntent().getStringExtra(SpellSelectionActivity.TAG_PLAYER_OWN_INFO));
-        Player oppPlayer = this.generatePlayer(getIntent().getStringExtra(SpellSelectionActivity.TAG_PLAYER_OPP_INFO));
-
+        Player ownPlayer;
+        Player oppPlayer;
+        if(!MainMenuActivity.BRICKEST_OFFLINE_MODE) {
+            //TODO add the class used by players
+             ownPlayer = this.generatePlayer(getIntent().getStringExtra(SpellSelectionActivity.TAG_PLAYER_OWN_INFO));
+             oppPlayer = this.generatePlayer(getIntent().getStringExtra(SpellSelectionActivity.TAG_PLAYER_OPP_INFO));
+        }
+        else{
+             ownPlayer = new Player(10,10,"offLineClass","Yourself");
+             oppPlayer = new Player(10,10,"offLineClass","Opponent");
+        }
         engine = new Engine(this, playWithSensor, sensorManager, number, ownPlayer, oppPlayer);
         setContentView(engine);
 

@@ -27,6 +27,7 @@ import com.app.remi.test.network.backend.services.NetworkBackendService;
 public class MainMenuActivity extends Activity implements Displayable {
 
     public static final boolean BRICKEST_DEBUG_MODE = true;
+    public static final boolean BRICKEST_OFFLINE_MODE = true;
     public final static String FILTER_MAIN_MENU = "com.app.remi.test.activities.MainMenuActivity.FILTER_MAIN_MENU";
     private Button goToConnectionActivity, goToEngine, forceConnectionButton;
     private ImageView titleview;
@@ -43,7 +44,7 @@ public class MainMenuActivity extends Activity implements Displayable {
         this.goToConnectionActivity = (Button) findViewById(R.id.goToConnectionButton);
         this.goToEngine = (Button) findViewById(R.id.debugModeButton);
         this.forceConnectionButton = (Button) findViewById(R.id.networkDebugModeButton);
-        if (!BRICKEST_DEBUG_MODE) {
+        if (!BRICKEST_DEBUG_MODE && BRICKEST_OFFLINE_MODE) {
             this.goToEngine.setVisibility(View.INVISIBLE);
             this.forceConnectionButton.setVisibility(View.INVISIBLE);
         }
@@ -98,7 +99,7 @@ public class MainMenuActivity extends Activity implements Displayable {
      * @param view Context
      */
     public void goToEngineBehavior(View view) {
-        if (BRICKEST_DEBUG_MODE) {
+        if (BRICKEST_DEBUG_MODE && BRICKEST_OFFLINE_MODE) {
             Intent intent = new Intent(this, MainActivity.class);
             startActivity(intent);
         }
@@ -124,7 +125,7 @@ public class MainMenuActivity extends Activity implements Displayable {
      * @param view Context
      */
     public void forceConnection(View view) {
-        if (BRICKEST_DEBUG_MODE) {
+        if (BRICKEST_DEBUG_MODE && !BRICKEST_OFFLINE_MODE) {
             this.establishConnection();
         }
 
