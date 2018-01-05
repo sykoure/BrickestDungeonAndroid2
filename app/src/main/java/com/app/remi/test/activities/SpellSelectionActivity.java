@@ -49,6 +49,7 @@ public class SpellSelectionActivity extends Activity implements Displayable {
     public final static String FILTER_MATCHMAKING = "com.app.remi.test.activities.SpellSelectionActivity.FILTER_MATCHMAKING";
     public static final String TAG_PLAYER_OWN_INFO = "com.app.remi.test.SpellSelectionActivity.TAG_PLAYER_OWN_INFO";
     public static final String TAG_PLAYER_OPP_INFO = "com.app.remi.test.SpellSelectionActivity.TAG_PLAYER_OPP_INFO";
+    public static final String TAG_SPELL_LIST = "com.app.remi.test.SpellSelectionActivity.TAG_SPELL_LIST";
 
 
     @Override
@@ -136,6 +137,7 @@ public class SpellSelectionActivity extends Activity implements Displayable {
 
         intent.putExtra(TAG_PLAYER_OWN_INFO, own_player_info);
         intent.putExtra(TAG_PLAYER_OPP_INFO, opp_player_info);
+        intent.putExtra(TAG_SPELL_LIST,this.spellsList); // Retrieving of the list of spells
         intent.putExtra("SPELL_BLOCKS_NUMBER", this.spellsList.size());
         intent.putExtra(SpellSelectionActivity.MATCHMAKING_SPELLS_LIST, this.spellsList);
         intent.putExtra("BOOLEAN_CHECK", buttonState);

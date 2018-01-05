@@ -27,7 +27,7 @@ import com.app.remi.test.network.backend.services.NetworkBackendService;
 public class MainMenuActivity extends Activity implements Displayable {
 
     public static final boolean BRICKEST_DEBUG_MODE = true;
-    public static final boolean BRICKEST_OFFLINE_MODE = true;
+    public static final boolean BRICKEST_OFFLINE_MODE = false;
     public final static String FILTER_MAIN_MENU = "com.app.remi.test.activities.MainMenuActivity.FILTER_MAIN_MENU";
     private Button goToConnectionActivity, goToEngine, forceConnectionButton;
     private ImageView titleview;

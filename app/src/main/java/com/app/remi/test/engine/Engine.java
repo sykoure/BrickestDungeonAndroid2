@@ -18,7 +18,9 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.WindowManager;
+import android.widget.Toast;
 
+import com.app.remi.test.activities.MainMenuActivity;
 import com.app.remi.test.soundServices.BallBounceService;
 import com.app.remi.test.soundServices.BallDropService;
 import com.app.remi.test.soundServices.BallStartService;
@@ -78,7 +80,7 @@ public class Engine extends SurfaceView implements Runnable {
      * @param playWithSensor Boolean value, define the playstyle, activate or not the accelerometer, desactivate the touch screen.
      * @param sensorManager  The sensor manager used to manage the accelerometer
      */
-    public Engine(Context context, Boolean playWithSensor, SensorManager sensorManager, int numberSpellBlocks,Player ownPlayer, Player oppPlayer) {
+    public Engine(Context context, Boolean playWithSensor, SensorManager sensorManager, int numberSpellBlocks, Player ownPlayer, Player oppPlayer) {
 
         super(context);
 
@@ -123,10 +125,17 @@ public class Engine extends SurfaceView implements Runnable {
         ball = new Ball(screenX, screenY);
         listeB.add(ball);                        // We add the first ball²²
 
+        // TODO check if there is no interference, to be changed by " i < ownPlayer.getSelectedSpells().size() "
         for (int i = 0; i < numberSpellBlocks; i++) {
             double xposition = screenX * 0.1 + (i * (70 / numberSpellBlocks * 3) + (i * (150 / numberSpellBlocks * 3)));
+            if (!MainMenuActivity.BRICKEST_OFFLINE_MODE) {
+                String name = ownPlayer.getSelectedSpells().get(i);
+                spellBlock = new SpellBlock(screenX, screenY, xposition, screenY * 0.3, 150 / numberSpellBlocks * 3, 150 / numberSpellBlocks * 3, name);
 
-            spellBlock = new SpellBlock(screenX, screenY, xposition, screenY * 0.3, 150 / numberSpellBlocks * 3, 150 / numberSpellBlocks * 3, "spellblock" + i + 1);
+            } else {
+                spellBlock = new SpellBlock(screenX, screenY, xposition, screenY * 0.3, 150 / numberSpellBlocks * 3, 150 / numberSpellBlocks * 3, "spellblock" + i + 1);
+
+            }
             listeS.add(spellBlock);               // We add the spellBlocks
         }
 
@@ -206,7 +215,7 @@ public class Engine extends SurfaceView implements Runnable {
 
 
             //Information about the Player 1
-            canvas.drawText(player.getPseudo(), 20, (float) (screenY * 0.04), paint);
+            canvas.drawText(player.getLogin(), 20, (float) (screenY * 0.04), paint);
 
             //the paint (paintbrush) will now has a black color
             paint.setColor(Color.argb(255, 0, 0, 0));
@@ -225,7 +234,7 @@ public class Engine extends SurfaceView implements Runnable {
 
             //the paint (paintbrush) will now has a red color
             paint.setColor(Color.argb(255, 255, 76, 76));
-            canvas.drawText(foe.getPseudo(), screenX - 200, (float) (screenY * 0.04), paint);
+            canvas.drawText(foe.getLogin(), screenX - 200, (float) (screenY * 0.04), paint);
 
             //the paint (paintbrush) will now has a black color
             paint.setColor(Color.argb(255, 0, 0, 0));
@@ -241,7 +250,7 @@ public class Engine extends SurfaceView implements Runnable {
             for (int i = 1; i < 6; i++) {
                 double saut = screenY * 0.04;
                 if (history[i - 1].getHasMessage()) {
-                    if (history[i - 1].getPseudo().equals(player.getPseudo())) {
+                    if (history[i - 1].getPseudo().equals(player.getLogin())) {
                         paint.setColor(Color.argb(255, 0, 247, 255));
                     } else {
                         paint.setColor(Color.argb(255, 255, 76, 76));
@@ -417,6 +426,10 @@ public class Engine extends SurfaceView implements Runnable {
                         listeB.get(i).reverseXVelocity();
                         this.playBallBounceSound();
                         this.startVibration(100);
+
+                        //TODO replace this by sending the proper command to the server
+                        Log.e("ENGINE COLLISION", listeS.get(j).getSpell());
+
                         Log.d("SPELLBLOCK", "leftSide");
                         Log.d("VALUE LEFT", String.valueOf(listeS.get(j).getLeftSide().left - listeB.get(i).getRect().right));
                         Log.d("VALUE BOTTOM", String.valueOf(listeS.get(j).getBotSide().bottom - listeB.get(i).getRect().top));
@@ -424,11 +437,18 @@ public class Engine extends SurfaceView implements Runnable {
                         listeB.get(i).reverseXVelocity();
                         this.playBallBounceSound();
                         this.startVibration(100);
+
+                        //TODO replace this by sending the proper command to the server
+                        Log.e("ENGINE COLLISION", listeS.get(j).getSpell());
+
                         Log.d("SPELLBLOCK", "rightSide");
                     } else if ((listeS.get(j).getBotSide().bottom > listeB.get(i).getRect().top) && (listeB.get(i).getySpeed() < 0) && (minimumS == Math.abs(listeS.get(j).getBotSide().bottom - listeB.get(i).getRect().top))) {
                         listeB.get(i).reverseYVelocity();
                         this.playBallBounceSound();
                         this.startVibration(100);
+                        //TODO replace this by sending the proper command to the server
+                        Log.e("ENGINE COLLISION", listeS.get(j).getSpell());
+
                         Log.d("SPELLBLOCK", "botSide");
                         Log.d("VALUE RIGHT", String.valueOf(Math.abs(listeB.get(i).getRect().left - listeS.get(j).getRightSide().right)));
                         Log.d("VALUE LEFT", String.valueOf(Math.abs(listeB.get(i).getRect().right - listeS.get(j).getLeftSide().left)));
@@ -438,6 +458,8 @@ public class Engine extends SurfaceView implements Runnable {
                         Log.d("SPELLBLOCK", "topSide");
                         this.playBallBounceSound();
                         this.startVibration(100);
+                        //TODO replace this by sending the proper command to the server
+                        Log.e("ENGINE COLLISION", listeS.get(j).getSpell());
                     }
                 }
             }
@@ -537,7 +559,7 @@ public class Engine extends SurfaceView implements Runnable {
         ball2.setBallWidth(ball.getBallHeight());
 
         listeB.add(ball2);
-        addHistory(history, "diviseBall", true, (player.getPseudo()));
+        addHistory(history, "diviseBall", true, (player.getLogin()));
     }
 
     //Reduire la taille de la boule
@@ -551,7 +573,7 @@ public class Engine extends SurfaceView implements Runnable {
                 liste.get(i).setBallWidth(liste.get(i).getBallWidth() / 2);
             }
         }
-        addHistory(history, "reduireBall", true, (player.getPseudo()));
+        addHistory(history, "reduireBall", true, (player.getLogin()));
     }
 
     //Met à jour les cooldowns

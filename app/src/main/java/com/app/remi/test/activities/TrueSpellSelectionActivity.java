@@ -218,7 +218,7 @@ public class TrueSpellSelectionActivity extends Activity implements Displayable 
      *
      * @param view Context
      */
-    public void goToSpellSelectionActivit(View view) {
+    public void goToSpellSelectionActivity(View view) {
         this.spellListToSend = this.putSelectedSpellInArray();
         if (spellListToSend.size() < 3) {
             Toast.makeText(this, "Choose at least 3 spells", Toast.LENGTH_SHORT).show();
