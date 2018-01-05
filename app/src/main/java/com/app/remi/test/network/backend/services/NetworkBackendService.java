@@ -10,6 +10,7 @@ import android.util.Log;
 import com.app.remi.test.activities.ClassesActivity;
 import com.app.remi.test.activities.ConnectionActivity;
 import com.app.remi.test.activities.MainMenuActivity;
+import com.app.remi.test.activities.SpellSelectionActivity;
 import com.app.remi.test.activities.TrueSpellSelectionActivity;
 import com.app.remi.test.network.backend.ClientInterfaceTCP;
 import com.app.remi.test.network.backend.networkRunnable.BackgroundRunnableConnection;
@@ -116,13 +117,13 @@ public class NetworkBackendService extends Service {
         }
         String[] slicedMessage = message.split(",");
 
-        if (slicedMessage[0].equals("BLOGIN")) {                                       // Authentification
-            if (slicedMessage[1].equals("0")) {                                        // Authentification successful
+        if (slicedMessage[0].equals("BLOGIN")) {                                            // Authentification
+            if (slicedMessage[1].equals("0")) {                                             // Authentification successful
                 Intent intent = new Intent(ConnectionActivity.FILTER_CONNECTION);
                 intent.putExtra(MESSAGE_SEND_TAG, "0");
                 this.localBroadcastManager.sendBroadcast(intent);
                 this.setAuthentified(true);
-            } else {                                                                   // Authentification failed
+            } else {                                                                        // Authentification failed
                 Intent intent = new Intent(ConnectionActivity.FILTER_CONNECTION);
                 intent.putExtra(MESSAGE_SEND_TAG, slicedMessage[1]);
                 this.localBroadcastManager.sendBroadcast(intent);
@@ -134,15 +135,20 @@ public class NetworkBackendService extends Service {
             this.localBroadcastManager.sendBroadcast(intent);
         }
         else if (slicedMessage[0].equals("BCLASSESACK")) {                                  // Reception of acknowledgement of classes choice
-            this.sendMessageToServer("BSPELLSR");                       // Requesting list of spells available for this class
+            this.sendMessageToServer("BSPELLSR");                             // Requesting list of spells available for this class
         }
         else if (slicedMessage[0].equals("BSPELLSA")) {                                     // Reception of available spells
             Intent intent = new Intent(ClassesActivity.FILTER_CLASSES);
             intent.putExtra(MESSAGE_SEND_TAG, message);
             this.localBroadcastManager.sendBroadcast(intent);
         }
-        else if (message.equals("BSPELLSACK")) {                                     // Confirmation of spells selections
+        else if (message.equals("BSPELLSACK")) {                                            // Confirmation of spells selections
             Intent intent = new Intent(TrueSpellSelectionActivity.FILTER_SPELLS);
+            intent.putExtra(MESSAGE_SEND_TAG, message);
+            this.localBroadcastManager.sendBroadcast(intent);
+        }
+        else if (slicedMessage[0].equals("BMATCH")) {                                       // The server has found an opponent and started a game
+            Intent intent = new Intent(SpellSelectionActivity.FILTER_MATCHMAKING);
             intent.putExtra(MESSAGE_SEND_TAG, message);
             this.localBroadcastManager.sendBroadcast(intent);
         }

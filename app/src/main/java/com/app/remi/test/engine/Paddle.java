@@ -2,7 +2,7 @@ package com.app.remi.test.engine;
 
 import android.graphics.RectF;
 
-public class Barre {
+public class Paddle {
 
     //Hitbox of the paddle
     private RectF rect;
@@ -26,11 +26,11 @@ public class Barre {
     private int paddleMoving = STOPPED;
 
     /**
-     * The method Barre() sets the dimension of the paddle, its hitbox and its speed.
+     * The method Paddle() sets the dimension of the paddle, its hitbox and its speed.
      * @param screenX This is the length of the screen
      * @param screenY This is the height of the screen
      */
-    public Barre(int screenX, int screenY) {
+    public Paddle(int screenX, int screenY) {
         length = 130;
         height = 30;
 

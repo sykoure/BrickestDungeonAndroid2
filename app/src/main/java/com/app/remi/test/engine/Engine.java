@@ -2,9 +2,6 @@ package com.app.remi.test.engine;
 
 import android.content.Context;
 import android.content.Intent;
-import android.content.ReceiverCallNotAllowedException;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -22,7 +19,6 @@ import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.WindowManager;
 
-import com.app.remi.test.R;
 import com.app.remi.test.soundServices.BallBounceService;
 import com.app.remi.test.soundServices.BallDropService;
 import com.app.remi.test.soundServices.BallStartService;
@@ -34,7 +30,7 @@ import java.util.List;
 /**
  * Created by Remi on 25/10/2017.
  */
-public class Moteur extends SurfaceView implements Runnable {
+public class Engine extends SurfaceView implements Runnable {
 
     Thread gameThread = null;   // The Engine class thread
 
@@ -63,11 +59,11 @@ public class Moteur extends SurfaceView implements Runnable {
     Player foe;                 // This is the foe
 
     SpellBlock spellBlock;      // The spellBlock
-    Barre paddle;               // The paddle
-    Boule ball;                 // The ball
+    Paddle paddle;               // The paddle
+    Ball ball;                 // The ball
 
     List<SpellBlock> listeS = new ArrayList<SpellBlock>();  // List of spellblocks
-    List<Boule> listeB = new ArrayList<Boule>();            // List of balls
+    List<Ball> listeB = new ArrayList<Ball>();            // List of balls
     BattleMessage[] history;                                // History of the spells used
 
 
@@ -82,7 +78,7 @@ public class Moteur extends SurfaceView implements Runnable {
      * @param playWithSensor Boolean value, define the playstyle, activate or not the accelerometer, desactivate the touch screen.
      * @param sensorManager  The sensor manager used to manage the accelerometer
      */
-    public Moteur(Context context, Boolean playWithSensor, SensorManager sensorManager, int numberSpellBlocks) {
+    public Engine(Context context, Boolean playWithSensor, SensorManager sensorManager, int numberSpellBlocks,Player ownPlayer, Player oppPlayer) {
 
         super(context);
 
@@ -111,8 +107,11 @@ public class Moteur extends SurfaceView implements Runnable {
         screenX = size.x;
         screenY = size.y;
 
-        player = new Player(10, 0, "Warrior", "Player 1");
-        foe = new Player(10, 0, "Wizard", "Player 2");
+        //TODO remove when safe
+        //player = new Player(10, 0, "Warrior", "Player 1");
+        //foe = new Player(10, 0, "Wizard", "Player 2");
+        this.player = ownPlayer;
+        this.foe = oppPlayer;
 
         history = new BattleMessage[5];
         for (int i = 0; i < 5; i++) {
@@ -120,8 +119,8 @@ public class Moteur extends SurfaceView implements Runnable {
             history[i].setPseudo(null);
         }
 
-        paddle = new Barre(screenX, screenY);
-        ball = new Boule(screenX, screenY);
+        paddle = new Paddle(screenX, screenY);
+        ball = new Ball(screenX, screenY);
         listeB.add(ball);                        // We add the first ball²²
 
         for (int i = 0; i < numberSpellBlocks; i++) {
@@ -394,49 +393,49 @@ public class Moteur extends SurfaceView implements Runnable {
      */
     void collisions() {
         //collisions between the ball and the spellblocks
-        for(int i = 0;i < listeB.size();i++) {
-            for(int j = 0; j < listeS.size(); j++) {
+        for (int i = 0; i < listeB.size(); i++) {
+            for (int j = 0; j < listeS.size(); j++) {
                 float minimumS;
                 if (RectF.intersects(listeS.get(j).getRect(), listeB.get(i).getRect())) {
-                    minimumS = calculeMinimum(  Math.abs(listeB.get(i).getRect().right - listeS.get(j).getLeftSide().left),
-                                                Math.abs(listeB.get(i).getRect().left - listeS.get(j).getRightSide().right),
-                                                Math.abs(listeS.get(j).getBotSide().bottom - listeB.get(i).getRect().top),
-                                                Math.abs(listeB.get(i).getRect().bottom - listeS.get(j).getTopSide().top)
+                    minimumS = calculeMinimum(Math.abs(listeB.get(i).getRect().right - listeS.get(j).getLeftSide().left),
+                            Math.abs(listeB.get(i).getRect().left - listeS.get(j).getRightSide().right),
+                            Math.abs(listeS.get(j).getBotSide().bottom - listeB.get(i).getRect().top),
+                            Math.abs(listeB.get(i).getRect().bottom - listeS.get(j).getTopSide().top)
                     );
 
-                    Log.d("BLALL LEFT",String.valueOf(listeB.get(i).getRect().left));
-                    Log.d("BLALL RIGHT",String.valueOf(listeB.get(i).getRect().right));
-                    Log.d("BLALL TOP",String.valueOf(listeB.get(i).getRect().top));
-                    Log.d("BLALL BOTTOM",String.valueOf(listeB.get(i).getRect().bottom));
+                    Log.d("BLALL LEFT", String.valueOf(listeB.get(i).getRect().left));
+                    Log.d("BLALL RIGHT", String.valueOf(listeB.get(i).getRect().right));
+                    Log.d("BLALL TOP", String.valueOf(listeB.get(i).getRect().top));
+                    Log.d("BLALL BOTTOM", String.valueOf(listeB.get(i).getRect().bottom));
 
-                    Log.d("BLOCK LEFT",String.valueOf(listeS.get(j).getLeftSide().left));
-                    Log.d("BLOCK RIGHT",String.valueOf(listeS.get(j).getRightSide().right));
-                    Log.d("BLOCK TOP",String.valueOf(listeS.get(j).getTopSide().top));
-                    Log.d("BLOCK BOTTOM",String.valueOf(listeS.get(j).getBotSide().bottom));
+                    Log.d("BLOCK LEFT", String.valueOf(listeS.get(j).getLeftSide().left));
+                    Log.d("BLOCK RIGHT", String.valueOf(listeS.get(j).getRightSide().right));
+                    Log.d("BLOCK TOP", String.valueOf(listeS.get(j).getTopSide().top));
+                    Log.d("BLOCK BOTTOM", String.valueOf(listeS.get(j).getBotSide().bottom));
 
-                    if ((listeS.get(j).getLeftSide().left < listeB.get(i).getRect().right) && (listeB.get(i).getxSpeed() > 0)&&(minimumS == Math.abs(listeB.get(i).getRect().right - listeS.get(j).getLeftSide().left))) {
+                    if ((listeS.get(j).getLeftSide().left < listeB.get(i).getRect().right) && (listeB.get(i).getxSpeed() > 0) && (minimumS == Math.abs(listeB.get(i).getRect().right - listeS.get(j).getLeftSide().left))) {
                         listeB.get(i).reverseXVelocity();
                         this.playBallBounceSound();
                         this.startVibration(100);
-                        Log.d("SPELLBLOCK","leftSide");
-                        Log.d("VALUE LEFT",String.valueOf(listeS.get(j).getLeftSide().left - listeB.get(i).getRect().right));
-                        Log.d("VALUE BOTTOM",String.valueOf(listeS.get(j).getBotSide().bottom - listeB.get(i).getRect().top));
-                    } else if ((listeS.get(j).getRightSide().right > listeB.get(i).getRect().left) && (listeB.get(i).getxSpeed() < 0)&&(minimumS == Math.abs(listeB.get(i).getRect().left - listeS.get(j).getRightSide().right))) {
+                        Log.d("SPELLBLOCK", "leftSide");
+                        Log.d("VALUE LEFT", String.valueOf(listeS.get(j).getLeftSide().left - listeB.get(i).getRect().right));
+                        Log.d("VALUE BOTTOM", String.valueOf(listeS.get(j).getBotSide().bottom - listeB.get(i).getRect().top));
+                    } else if ((listeS.get(j).getRightSide().right > listeB.get(i).getRect().left) && (listeB.get(i).getxSpeed() < 0) && (minimumS == Math.abs(listeB.get(i).getRect().left - listeS.get(j).getRightSide().right))) {
                         listeB.get(i).reverseXVelocity();
                         this.playBallBounceSound();
                         this.startVibration(100);
-                        Log.d("SPELLBLOCK","rightSide");
-                    } else if ((listeS.get(j).getBotSide().bottom > listeB.get(i).getRect().top) && (listeB.get(i).getySpeed() < 0)&&(minimumS == Math.abs(listeS.get(j).getBotSide().bottom - listeB.get(i).getRect().top))) {
+                        Log.d("SPELLBLOCK", "rightSide");
+                    } else if ((listeS.get(j).getBotSide().bottom > listeB.get(i).getRect().top) && (listeB.get(i).getySpeed() < 0) && (minimumS == Math.abs(listeS.get(j).getBotSide().bottom - listeB.get(i).getRect().top))) {
                         listeB.get(i).reverseYVelocity();
                         this.playBallBounceSound();
                         this.startVibration(100);
-                        Log.d("SPELLBLOCK","botSide");
-                        Log.d("VALUE RIGHT",String.valueOf(Math.abs(listeB.get(i).getRect().left - listeS.get(j).getRightSide().right)));
-                        Log.d("VALUE LEFT",String.valueOf(Math.abs(listeB.get(i).getRect().right - listeS.get(j).getLeftSide().left)));
-                        Log.d("VALUE BOTTOM",String.valueOf(Math.abs(listeS.get(j).getBotSide().bottom - listeB.get(i).getRect().top)));
-                    } else if ((listeS.get(j).getTopSide().top < listeB.get(i).getRect().bottom) && (listeB.get(i).getySpeed() > 0)&&(minimumS == Math.abs(listeB.get(i).getRect().bottom - listeS.get(j).getTopSide().top))) {
+                        Log.d("SPELLBLOCK", "botSide");
+                        Log.d("VALUE RIGHT", String.valueOf(Math.abs(listeB.get(i).getRect().left - listeS.get(j).getRightSide().right)));
+                        Log.d("VALUE LEFT", String.valueOf(Math.abs(listeB.get(i).getRect().right - listeS.get(j).getLeftSide().left)));
+                        Log.d("VALUE BOTTOM", String.valueOf(Math.abs(listeS.get(j).getBotSide().bottom - listeB.get(i).getRect().top)));
+                    } else if ((listeS.get(j).getTopSide().top < listeB.get(i).getRect().bottom) && (listeB.get(i).getySpeed() > 0) && (minimumS == Math.abs(listeB.get(i).getRect().bottom - listeS.get(j).getTopSide().top))) {
                         listeB.get(i).reverseYVelocity();
-                        Log.d("SPELLBLOCK","topSide");
+                        Log.d("SPELLBLOCK", "topSide");
                         this.playBallBounceSound();
                         this.startVibration(100);
                     }
@@ -444,7 +443,7 @@ public class Moteur extends SurfaceView implements Runnable {
             }
 
             //Collision between the ball and the the paddle
-            if((RectF.intersects(paddle.getRect(),listeB.get(i).getRect()))&&(listeB.get(i).getySpeed() > 0)){
+            if ((RectF.intersects(paddle.getRect(), listeB.get(i).getRect())) && (listeB.get(i).getySpeed() > 0)) {
                 //TODO penser à prendre en compte la barre
                 listeB.get(i).reverseYVelocity();
                 Log.d("PADDLE", "PADDLE");
@@ -452,7 +451,7 @@ public class Moteur extends SurfaceView implements Runnable {
             }
 
             //If the ball is hitting the bottom of the screen
-            else if (((listeB.get(i).getySpeed()/fps)  + listeB.get(i).getRect().top > screenY)&&(listeB.get(i).getySpeed() > 0)){
+            else if (((listeB.get(i).getySpeed() / fps) + listeB.get(i).getRect().top > screenY) && (listeB.get(i).getySpeed() > 0)) {
                 player.loseLife(1);          // The user loses 1 hp
                 if (listeB.size() == 1) {
                     //update the ball location to put it on the paddle
@@ -472,16 +471,15 @@ public class Moteur extends SurfaceView implements Runnable {
 
 
             //if the ball hits the right, left or the top side of the screen
-            else if ((listeB.get(i).getRect().top - (listeB.get(i).getySpeed() / fps) - listeB.get(i).getBallHeight()< screenY * 0.2 )&&(listeB.get(i).getySpeed() < 0)) {
+            else if ((listeB.get(i).getRect().top - (listeB.get(i).getySpeed() / fps) - listeB.get(i).getBallHeight() < screenY * 0.2) && (listeB.get(i).getySpeed() < 0)) {
                 listeB.get(i).reverseYVelocity();
                 Log.d("SCREEN", "HUD");
                 this.playBallBounceSound();
-            }
-            else if ((listeB.get(i).getRect().left - (listeB.get(i).getxSpeed() / fps) - listeB.get(i).getBallWidth() < 0)&&(listeB.get(i).getxSpeed() < 0)) {
+            } else if ((listeB.get(i).getRect().left - (listeB.get(i).getxSpeed() / fps) - listeB.get(i).getBallWidth() < 0) && (listeB.get(i).getxSpeed() < 0)) {
                 listeB.get(i).reverseXVelocity();
                 Log.d("SCREEN", "LEFT SCREEN");
                 this.playBallBounceSound();
-            } else if ((listeB.get(i).getRect().right + (listeB.get(i).getxSpeed() /fps) > screenX)&&(listeB.get(i).getxSpeed() > 0)) {
+            } else if ((listeB.get(i).getRect().right + (listeB.get(i).getxSpeed() / fps) > screenX) && (listeB.get(i).getxSpeed() > 0)) {
                 listeB.get(i).reverseXVelocity();
                 Log.d("SCR1EEN", "RIGHT SCREEN");
                 this.playBallBounceSound();
@@ -490,10 +488,9 @@ public class Moteur extends SurfaceView implements Runnable {
     }
 
 
-
-        /**
-         * Call this method to launch the "onStartCommand" method of the associated service
-         */
+    /**
+     * Call this method to launch the "onStartCommand" method of the associated service
+     */
 
     void playBallBounceSound() {
         Intent intent = new Intent(this.mainActivityContext, BallBounceService.class);
@@ -528,9 +525,9 @@ public class Moteur extends SurfaceView implements Runnable {
     }
 
     // Division d'une balle
-    public void diviseBall(Boule ball) {
+    public void diviseBall(Ball ball) {
         // Creation de la boule n°2
-        Boule ball2 = new Boule(screenX, screenY);
+        Ball ball2 = new Ball(screenX, screenY);
 
         ball2.givePosition(ball2, ball);
         ball2.setySpeed(ball.getySpeed());
@@ -544,7 +541,7 @@ public class Moteur extends SurfaceView implements Runnable {
     }
 
     //Reduire la taille de la boule
-    public void reduireBoule(List<Boule> liste) {
+    public void reduireBoule(List<Ball> liste) {
         for (int i = 0; i < liste.size(); i++) {
             if (liste.get(i).getBallHeight() / 2 < liste.get(i).getBallHeightMin()) {
                 liste.get(i).setBallWidth(liste.get(i).getBallWidthMin());
@@ -580,14 +577,14 @@ public class Moteur extends SurfaceView implements Runnable {
         history[0].setMessageCombat(message);
     }
 
-    public float calculeMinimum(float nombre1,float nombre2,float nombre3,float nombre4){
-        if(nombre1 > nombre2){
-           nombre1 = nombre2;
+    public float calculeMinimum(float nombre1, float nombre2, float nombre3, float nombre4) {
+        if (nombre1 > nombre2) {
+            nombre1 = nombre2;
         }
-        if(nombre1 > nombre3){
+        if (nombre1 > nombre3) {
             nombre1 = nombre3;
         }
-        if(nombre1 > nombre4){
+        if (nombre1 > nombre4) {
             nombre1 = nombre4;
         }
         return nombre1;

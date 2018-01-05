@@ -4,11 +4,9 @@ package com.app.remi.test.engine;
  * Created by Remi on 24/09/2017.
  */
 
-import android.graphics.Rect;
 import android.graphics.RectF;
-import java.util.Random;
 
-public class Boule {
+public class Ball {
 
     //The hitbox of the ball
     private RectF rect;
@@ -26,11 +24,11 @@ public class Boule {
     private float ballHeightMin = 3;
 
     /**
-     * The method Boule() is setting the values of the object Boule, its hitbox and its speed
+     * The method Ball() is setting the values of the object Ball, its hitbox and its speed
      * @param screenX is the length of the screen
      * @param screenY is the height of the screen
      */
-    public Boule(int screenX, int screenY){
+    public Ball(int screenX, int screenY){
 
         xSpeed = 100;
         ySpeed = -400;
@@ -86,7 +84,7 @@ public class Boule {
         rect.bottom = y - 20 - ballHeight;
     }
 
-    public void givePosition(Boule b1,Boule b2){
+    public void givePosition(Ball b1, Ball b2){
         b1.rect.left = b2.rect.left;
         b1.rect.right = b2.rect.right;
         b1.rect.top = b2.rect.top;
