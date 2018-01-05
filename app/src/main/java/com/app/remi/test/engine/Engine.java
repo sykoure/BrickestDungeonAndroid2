@@ -64,6 +64,7 @@ public class Engine extends SurfaceView implements Runnable {
 
     List<SpellBlock> listeS = new ArrayList<SpellBlock>();  // List of spellblocks
     List<Ball> listeB = new ArrayList<Ball>();            // List of balls
+    List<Ball> removeBall = new ArrayList<>();
     BattleMessage[] history;                                // History of the spells used
 
 
@@ -167,6 +168,7 @@ public class Engine extends SurfaceView implements Runnable {
             checkCooldown(listeS.get(j));
         }
         collisions();
+        ballRemoved(removeBall);
     }
 
     /**
@@ -464,7 +466,7 @@ public class Engine extends SurfaceView implements Runnable {
                     paused = true;                      // Freeze the game
                     firstTouched = true;                // First time before a collision
                 } else {
-                    listeB.remove(listeB.get(i));
+                    removeBall.add(listeB.get(i));
                 }
                 listeB.get(i).reverseYVelocity();
             }
@@ -588,6 +590,15 @@ public class Engine extends SurfaceView implements Runnable {
             nombre1 = nombre4;
         }
         return nombre1;
+    }
+
+    void ballRemoved(List<Ball> liste){
+        for(int i = 0;i < liste.size();i++){
+            listeB.remove(liste.get(i));
+        }
+        for(int i = 0;i < liste.size();i++){
+            liste.get(i);
+        }
     }
 }
 

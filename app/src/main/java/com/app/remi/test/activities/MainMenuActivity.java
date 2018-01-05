@@ -27,7 +27,7 @@ import com.app.remi.test.network.backend.services.NetworkBackendService;
 public class MainMenuActivity extends Activity implements Displayable {
 
     public static final boolean BRICKEST_DEBUG_MODE = true;
-    public static final boolean BRICKEST_OFFLINE_MODE = true;
+    public static final boolean BRICKEST_OFFLINE_MODE = false;
     public final static String FILTER_MAIN_MENU = "com.app.remi.test.activities.MainMenuActivity.FILTER_MAIN_MENU";
     private Button goToConnectionActivity, goToEngine, forceConnectionButton;
     private ImageView titleview;
@@ -51,7 +51,7 @@ public class MainMenuActivity extends Activity implements Displayable {
         this.titleview = (ImageView) findViewById(R.id.titleView);
 
         this.localBroadcastManager = LocalBroadcastManager.getInstance(this);                                       // Get an instance of a broadcast manager
-        BroadcastReceiver myReceiver = new NetworkReceiver(this);                                        // Create a class and set in it the behavior when an information is received
+        BroadcastReceiver myReceiver = new NetworkReceiver(this);                                          // Create a class and set in it the behavior when an information is received
         IntentFilter intentFilter = new IntentFilter(FILTER_MAIN_MENU);                                             // The intentFilter action should match the action of the intent send
         localBroadcastManager.registerReceiver(myReceiver, intentFilter);                                           // We register the receiver for the localBroadcastManager
 
