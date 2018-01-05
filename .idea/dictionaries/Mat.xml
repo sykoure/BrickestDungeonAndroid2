@@ -2,6 +2,8 @@
   <dictionary name="Mat">
     <words>
       <w>authentification</w>
+      <w>authentified</w>
+      <w>sended</w>
     </words>
   </dictionary>
 </component>

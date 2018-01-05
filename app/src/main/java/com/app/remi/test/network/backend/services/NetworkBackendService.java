@@ -10,6 +10,7 @@ import android.util.Log;
 import com.app.remi.test.activities.ClassesActivity;
 import com.app.remi.test.activities.ConnectionActivity;
 import com.app.remi.test.activities.MainMenuActivity;
+import com.app.remi.test.activities.TrueSpellSelectionActivity;
 import com.app.remi.test.network.backend.ClientInterfaceTCP;
 import com.app.remi.test.network.backend.networkRunnable.BackgroundRunnableConnection;
 import com.app.remi.test.network.backend.networkRunnable.BackgroundRunnableDisconnection;
@@ -127,18 +128,26 @@ public class NetworkBackendService extends Service {
                 this.localBroadcastManager.sendBroadcast(intent);
             }
         }
-        if (slicedMessage[0].equals("BCLASSESA")) {                                    // Reception of available classes
+        else if (slicedMessage[0].equals("BCLASSESA")) {                                    // Reception of available classes
             Intent intent = new Intent(ConnectionActivity.FILTER_CONNECTION);
             intent.putExtra(MESSAGE_SEND_TAG, message);
             this.localBroadcastManager.sendBroadcast(intent);
         }
-        if (slicedMessage[0].equals("BCLASSESACK")) {                                  // Reception of acknowledgement of classes choice
+        else if (slicedMessage[0].equals("BCLASSESACK")) {                                  // Reception of acknowledgement of classes choice
             this.sendMessageToServer("BSPELLSR");                       // Requesting list of spells available for this class
         }
-        if (slicedMessage[0].equals("BSPELLSA")) {                                     // Reception of available spells
+        else if (slicedMessage[0].equals("BSPELLSA")) {                                     // Reception of available spells
             Intent intent = new Intent(ClassesActivity.FILTER_CLASSES);
             intent.putExtra(MESSAGE_SEND_TAG, message);
             this.localBroadcastManager.sendBroadcast(intent);
+        }
+        else if (message.equals("BSPELLSACK")) {                                     // Confirmation of spells selections
+            Intent intent = new Intent(TrueSpellSelectionActivity.FILTER_SPELLS);
+            intent.putExtra(MESSAGE_SEND_TAG, message);
+            this.localBroadcastManager.sendBroadcast(intent);
+        }
+        else{
+            Log.e("NETWORK_RECEPTION ",message);
         }
     }
 

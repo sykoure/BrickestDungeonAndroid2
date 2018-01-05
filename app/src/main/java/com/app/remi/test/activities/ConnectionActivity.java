@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
@@ -30,6 +31,9 @@ public class ConnectionActivity extends Activity implements Displayable {
 
     public final static String FILTER_CONNECTION = "com.app.remi.test.activities.ConnectionActivity.FILTER_CONNECTION";
     public final static String HERO_LIST_TAG = "com.app.remi.test.activities.ConnectionActivity.HERO_LIST_TAG";
+    public final static String LOGIN_TAG = "com.app.remi.test.activities.ConnectionActivity.LOGIN_TAG";
+    public final static String PASSWORD_TAG = "com.app.remi.test.activities.ConnectionActivity.PASSWORD_TAG";
+
 
     private LocalBroadcastManager localBroadcastManager;
     private EditText loginField, passwordField;
@@ -51,6 +55,11 @@ public class ConnectionActivity extends Activity implements Displayable {
         BroadcastReceiver myReceiver = new NetworkReceiver(this);                                        // Create a class and set in it the behavior when an information is received
         IntentFilter intentFilter = new IntentFilter(FILTER_CONNECTION);                                            // The intentFilter action should match the action of the intent send
         localBroadcastManager.registerReceiver(myReceiver, intentFilter);                                           // We register the receiver for the localBroadcastManager
+
+        SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);                                   // We set the login and password on screen with last validated password/login
+        this.loginField.setText(sharedPref.getString(LOGIN_TAG,"login"));
+        this.passwordField.setText(sharedPref.getString(PASSWORD_TAG,""));
+
 
 
     }
@@ -127,6 +136,12 @@ public class ConnectionActivity extends Activity implements Displayable {
             for (int index = 1; index < slicedMessage.length; index++) {                                   // Parsing of received classes (Heroes)
                 heroList.add(slicedMessage[index].toLowerCase());
             }
+
+            SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);                      // If the connection is authentified we save the login and password
+            SharedPreferences.Editor editor = sharedPref.edit();
+            editor.putString(LOGIN_TAG, this.loginField.getText().toString());
+            editor.putString(PASSWORD_TAG, this.passwordField.getText().toString());
+            editor.commit();
             //Toast.makeText(this, heroList.toString(), Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(this, ClassesActivity.class);
             intent.putExtra(HERO_LIST_TAG, heroList);                                                      // We put in the intent the list of available classes

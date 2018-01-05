@@ -226,4 +226,13 @@ public class ClassesActivity extends Activity implements Displayable {
         intent.putExtra(TrueSpellSelectionActivity.TAG_LIST_SPELL, spellsList);                        // We put in the intent the list of available classes
         startActivity(intent);
     }
+    /***
+     * The service is only unbound onDestroy, this allow the service to persist between activities
+     */
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbindService(mConnection);
+        mBound = false;
+    }
 }

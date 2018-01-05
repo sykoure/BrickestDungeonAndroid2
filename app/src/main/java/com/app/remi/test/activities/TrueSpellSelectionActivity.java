@@ -1,28 +1,45 @@
 package com.app.remi.test.activities;
 
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.os.Bundle;
+import android.os.IBinder;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.app.remi.test.R;
+import com.app.remi.test.network.backend.Displayable;
+import com.app.remi.test.network.backend.NetworkReceiver;
+import com.app.remi.test.network.backend.services.NetworkBackendService;
 
 import java.util.ArrayList;
 
 /**
  * Activity where the user will select a list of spells to use in further games.
  */
-public class TrueSpellSelectionActivity extends Activity {
+public class TrueSpellSelectionActivity extends Activity implements Displayable {
     private ImageView spellImagaView1, spellImagaView2, spellImagaView3, spellImagaView4, spellImagaView5, spellImagaView6;
     private Button goToMatchMakingActivityButton;
     private ArrayList<String> listSpellsName;
     private ArrayList<ImageView> listSpellsImage;
     private ArrayList<Boolean> listSelectedImageView;
     private ArrayList<Boolean> listVisibleImageView;
+    ArrayList<String> spellListToSend;
     public static final String TAG_LIST_SPELL = "com.app.remi.test.TrueSpellSelectionActivity.TAG_LIST_SPELL";
+    public final static String FILTER_SPELLS = "com.app.remi.test.activities.TrueSpellSelectionActivity.FILTER_SPELLS";
+
+
+    private LocalBroadcastManager localBroadcastManager;
+    private NetworkBackendService networkBackendService;
+    private boolean mBound = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,8 +71,42 @@ public class TrueSpellSelectionActivity extends Activity {
         this.listInstantiation();
         this.setSpellImageVisibility();
         this.setSpellImageContent();
+
+        this.localBroadcastManager = LocalBroadcastManager.getInstance(this);                                       // Get an instance of a broadcast manager
+        BroadcastReceiver myReceiver = new NetworkReceiver(this);                                        // Create a class and set in it the behavior when an information is received
+        IntentFilter intentFilter = new IntentFilter(FILTER_SPELLS);                                                // The intentFilter action should match the action of the intent send
+        localBroadcastManager.registerReceiver(myReceiver, intentFilter);                                           // We register the receiver for the localBroadcastManager
+
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        Intent intent = new Intent(this, NetworkBackendService.class);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+
+    }
+
+    /**
+     * Defines callbacks for service binding, passed to bindService()
+     * Source : https://developer.android.com/guide/components/bound-services.html#Binder
+     */
+    private ServiceConnection mConnection = new ServiceConnection() {
+
+        @Override
+        public void onServiceConnected(ComponentName className,
+                                       IBinder service) {
+            // We've bound to LocalService, cast the IBinder and get LocalService instance
+            NetworkBackendService.LocalBinder binder = (NetworkBackendService.LocalBinder) service;
+            networkBackendService = binder.getService();
+            mBound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName arg0) {
+            mBound = false;
+        }
+    };
 
     /**
      * Instantiate everyList of this activity
@@ -168,13 +219,39 @@ public class TrueSpellSelectionActivity extends Activity {
      * @param view Context
      */
     public void goToSpellSelectionActivit(View view) {
-        ArrayList<String> spellListToSend = this.putSelectedSpellInArray();
+        this.spellListToSend = this.putSelectedSpellInArray();
         if (spellListToSend.size() < 3) {
             Toast.makeText(this, "Choose at least 3 spells", Toast.LENGTH_SHORT).show();
         } else {
-            Intent intent = new Intent(this, SpellSelectionActivity.class);
-            intent.putExtra(TAG_LIST_SPELL, spellListToSend);
-            startActivity(intent);
+
+            String stringToSend = "BSPELLSC";
+            for (int index = 0; index < spellListToSend.size(); index++) {
+                stringToSend += "," + spellListToSend.get(index);
+            }
+            networkBackendService.sendMessageToServer(stringToSend);
+
         }
+    }
+
+    /**
+     * When the service receive an acknowledgement of the chosen spells, it will call this method and start the next activity
+     *
+     * @param textReceived Will be "BSPELLSACK"
+     */
+    @Override
+    public void handleReception(String textReceived) {
+        Intent intent = new Intent(this, SpellSelectionActivity.class);
+        intent.putExtra(TAG_LIST_SPELL, this.spellListToSend);
+        startActivity(intent);
+    }
+
+    /***
+     * The service is only unbound onDestroy, this allow the service to persist between activities
+     */
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        unbindService(mConnection);
+        mBound = false;
     }
 }
