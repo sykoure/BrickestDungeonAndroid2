@@ -1,21 +1,59 @@
 package com.app.remi.test.engine;
 
+import java.util.ArrayList;
+
 /**
  * Created by Remi on 31/12/2017.
  */
 
 public class Player {
 
-    private int life;
-    private int shield;
+    private int life, shield, ballsNb;
+    private float ballsSpeed, ballsSize, buttonSize, paddleSize;
     private String nameClass;
-    private String pseudo;
+    private String login;
+    private ArrayList<String> selectedSpells;
 
-    public Player(int life,int shield,String nameClass,String pseudo){
+
+    /**
+     * Used for opponent structure and offline mode
+     *
+     * @param life      life point of the player
+     * @param shield    Number of shields
+     * @param nameClass Name of the selected class
+     * @param login     Login of the player
+     */
+    public Player(int life, int shield, String nameClass, String login) {
         this.life = life;
         this.shield = shield;
         this.nameClass = nameClass;
-        this.pseudo = pseudo;
+        this.login = login;
+    }
+
+    /**
+     * Real constructor
+     *
+     * @param life           life point of the player
+     * @param shield         Number of shields
+     * @param ballsNb        Number of balls
+     * @param ballsSpeed     Modifier of the balls speed
+     * @param ballsSize      Modifier of the balls size
+     * @param buttonSize     Modifier of the buttons size
+     * @param paddleSize     Modifier of the paddle size
+     * @param nameClass      Name of the selected class
+     * @param login          Login of the player
+     * @param selectedSpells List of spells selected by the player
+     */
+    public Player(int life, int shield, int ballsNb, float ballsSpeed, float ballsSize, float buttonSize, float paddleSize, String nameClass, String login, ArrayList<String> selectedSpells) {
+        this.life = life;
+        this.shield = shield;
+        this.ballsSpeed = ballsSpeed;
+        this.ballsSize = ballsSize;
+        this.buttonSize = buttonSize;
+        this.paddleSize = paddleSize;
+        this.nameClass = nameClass;
+        this.login = login;
+        this.selectedSpells = selectedSpells;
     }
 
     public String getNameClass() {
@@ -42,29 +80,75 @@ public class Player {
         this.life = life;
     }
 
-    public void loseLife(int damage){
-        if(this.life < damage){
+    public void loseLife(int damage) {
+        if (this.life < damage) {
             this.life = 0;
-        }
-        else {
+        } else {
             this.life = this.life - damage;
         }
     }
 
-    public void loseShield(int damage){
-        if(this.shield < damage){
+    public void loseShield(int damage) {
+        if (this.shield < damage) {
             this.shield = 0;
-        }
-        else {
+        } else {
             this.shield = this.shield - damage;
         }
     }
 
-    public String getPseudo() {
-        return pseudo;
+    public String getLogin() {
+        return login;
     }
 
-    public void setPseudo(String pseudo) {
-        this.pseudo = pseudo;
+    public void setLogin(String login) {
+        this.login = login;
+    }
+
+    public int getBallsNb() {
+        return ballsNb;
+    }
+
+    public void setBallsNb(int ballsNb) {
+        this.ballsNb = ballsNb;
+    }
+
+    public float getBallsSpeed() {
+        return ballsSpeed;
+    }
+
+    public void setBallsSpeed(float ballsSpeed) {
+        this.ballsSpeed = ballsSpeed;
+    }
+
+    public float getBallsSize() {
+        return ballsSize;
+    }
+
+    public void setBallsSize(float ballsSize) {
+        this.ballsSize = ballsSize;
+    }
+
+    public float getButtonSize() {
+        return buttonSize;
+    }
+
+    public void setButtonSize(float buttonSize) {
+        this.buttonSize = buttonSize;
+    }
+
+    public float getPaddleSize() {
+        return paddleSize;
+    }
+
+    public void setPaddleSize(float paddleSize) {
+        this.paddleSize = paddleSize;
+    }
+
+    public ArrayList<String> getSelectedSpells() {
+        return selectedSpells;
+    }
+
+    public void setSelectedSpells(ArrayList<String> selectedSpells) {
+        this.selectedSpells = selectedSpells;
     }
 }
