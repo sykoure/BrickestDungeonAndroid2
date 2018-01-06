@@ -4,18 +4,36 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@drawable/background1"
     tools:context="com.app.remi.test.activities.TrueSpellSelectionActivity">
+
+    <TextView
+        android:id="@+id/spellTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:text="Choose Your Spells"
+        android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        app:layout_constraintBottom_toTopOf="@+id/spellImageView2"
+        app:layout_constraintEnd_toEndOf="@+id/spellImageView2"
+        app:layout_constraintHorizontal_bias="0.544"
+        app:layout_constraintStart_toStartOf="@+id/spellImageView2"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.75" />
 
     <ImageView
         android:id="@+id/spellImageView1"
-        android:layout_width="89dp"
-        android:layout_height="119dp"
+        android:layout_width="108dp"
+        android:layout_height="142dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:onClick="behaviorSpellImage1"
         app:layout_constraintBottom_toBottomOf="@+id/spellImageView2"
         app:layout_constraintEnd_toStartOf="@+id/spellImageView2"
+        app:layout_constraintHorizontal_bias="0.571"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@+id/spellImageView2"
         app:layout_constraintVertical_bias="0.0"
@@ -23,8 +41,8 @@
 
     <ImageView
         android:id="@+id/spellImageView2"
-        android:layout_width="89dp"
-        android:layout_height="119dp"
+        android:layout_width="108dp"
+        android:layout_height="142dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
@@ -32,23 +50,22 @@
         android:onClick="behaviorSpellImage2"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.501"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.122"
+        app:layout_constraintVertical_bias="0.152"
         app:srcCompat="@drawable/defense" />
 
     <ImageView
         android:id="@+id/spellImageView3"
-        android:layout_width="89dp"
-        android:layout_height="119dp"
+        android:layout_width="108dp"
+        android:layout_height="142dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:onClick="behaviorSpellImage3"
         app:layout_constraintBottom_toBottomOf="@+id/spellImageView2"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.476"
+        app:layout_constraintHorizontal_bias="0.428"
         app:layout_constraintStart_toEndOf="@+id/spellImageView2"
         app:layout_constraintTop_toTopOf="@+id/spellImageView2"
         app:layout_constraintVertical_bias="1.0"
@@ -56,8 +73,8 @@
 
     <ImageView
         android:id="@+id/spellImageView4"
-        android:layout_width="89dp"
-        android:layout_height="119dp"
+        android:layout_width="108dp"
+        android:layout_height="142dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:onClick="behaviorSpellImage4"
@@ -71,8 +88,8 @@
 
     <ImageView
         android:id="@+id/spellImageView5"
-        android:layout_width="89dp"
-        android:layout_height="119dp"
+        android:layout_width="108dp"
+        android:layout_height="142dp"
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
@@ -82,13 +99,13 @@
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/spellImageView2"
         app:layout_constraintTop_toBottomOf="@+id/spellImageView2"
-        app:layout_constraintVertical_bias="0.232"
+        app:layout_constraintVertical_bias="0.247"
         app:srcCompat="@drawable/defense" />
 
     <ImageView
         android:id="@+id/spellImageView6"
-        android:layout_width="89dp"
-        android:layout_height="119dp"
+        android:layout_width="108dp"
+        android:layout_height="142dp"
         android:layout_marginEnd="8dp"
         android:layout_marginTop="8dp"
         android:onClick="behaviorSpellImage6"
@@ -113,6 +130,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/spellImageView5"
         app:layout_constraintStart_toStartOf="@+id/spellImageView5"
-        app:layout_constraintTop_toBottomOf="@+id/spellImageView5" />
+        app:layout_constraintTop_toBottomOf="@+id/spellImageView5"
+        app:layout_constraintVertical_bias="0.556" />
 
 </android.support.constraint.ConstraintLayout>

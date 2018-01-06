@@ -13,6 +13,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.remi.test.R;
@@ -28,6 +29,7 @@ import java.util.ArrayList;
 public class TrueSpellSelectionActivity extends Activity implements Displayable {
     private ImageView spellImagaView1, spellImagaView2, spellImagaView3, spellImagaView4, spellImagaView5, spellImagaView6;
     private Button goToMatchMakingActivityButton;
+    private TextView spellTextView;
     private ArrayList<String> listSpellsName;
     private ArrayList<ImageView> listSpellsImage;
     private ArrayList<Boolean> listSelectedImageView;
@@ -53,6 +55,7 @@ public class TrueSpellSelectionActivity extends Activity implements Displayable 
         this.spellImagaView5 = (ImageView) findViewById(R.id.spellImageView5);
         this.spellImagaView6 = (ImageView) findViewById(R.id.spellImageView6);
         this.goToMatchMakingActivityButton = (Button) findViewById(R.id.goToSpellbutton);
+        this.spellTextView = (TextView) findViewById(R.id.spellTextView);
 
         // All the spells start unchecked
         this.spellImagaView1.setImageAlpha(90);
