@@ -29,6 +29,8 @@ public class MainActivity extends Activity implements Displayable {
 
     // Engine will be used as a view
     public final static String FILTER_GAME = "com.app.remi.test.activities.MainActivity.FILTER_GAME";
+    public static final String TAG_FIGHT_RESULT = "com.app.remi.test.activities.MainActivity.TAG_FIGHT_RESULT";
+
     private Engine engine;
     private LocalBroadcastManager localBroadcastManager;
     private NetworkBackendService networkBackendService;
@@ -207,6 +209,12 @@ public class MainActivity extends Activity implements Displayable {
             int oppHp = Integer.parseInt(oppPlayerData[0]);
             int oppShield = Integer.parseInt(oppPlayerData[1]);
             this.engine.changePlayersInfos(hp, shield, ballsNb, ballsSpeed, ballsSize, buttonSize, paddleSize, oppHp, oppShield);
+        }
+        else{
+            // TODO instead go to Matchmaking activity (currently SpellSelectionActivity)
+            Intent intent = new Intent(this,MainMenuActivity.class);
+            intent.putExtra(TAG_FIGHT_RESULT,textReceived);
+            startActivity(intent);
         }
     }
 

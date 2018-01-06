@@ -67,7 +67,7 @@ public class SpellSelectionActivity extends Activity implements Displayable {
 
         this.localBroadcastManager = LocalBroadcastManager.getInstance(this);                                       // Get an instance of a broadcast manager
         BroadcastReceiver myReceiver = new NetworkReceiver(this);                                        // Create a class and set in it the behavior when an information is received
-        IntentFilter intentFilter = new IntentFilter(FILTER_MATCHMAKING);                                                // The intentFilter action should match the action of the intent send
+        IntentFilter intentFilter = new IntentFilter(FILTER_MATCHMAKING);                                           // The intentFilter action should match the action of the intent send
         localBroadcastManager.registerReceiver(myReceiver, intentFilter);                                           // We register the receiver for the localBroadcastManager
 
     }

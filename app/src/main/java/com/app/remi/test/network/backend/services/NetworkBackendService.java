@@ -153,7 +153,7 @@ public class NetworkBackendService extends Service {
             intent.putExtra(MESSAGE_SEND_TAG, message);
             this.localBroadcastManager.sendBroadcast(intent);
         }
-        else if (slicedMessage[0].equals("BREF")) {                                         // The server send new player infos
+        else if (slicedMessage[0].equals("BREF") || message.equals("BWIN") || message.equals("BLOSE")) {    // The server send new player info or notify the result of the fight
             Intent intent = new Intent(MainActivity.FILTER_GAME);
             intent.putExtra(MESSAGE_SEND_TAG, message);
             this.localBroadcastManager.sendBroadcast(intent);
