@@ -21,6 +21,7 @@ import android.view.WindowManager;
 import android.widget.Toast;
 
 import com.app.remi.test.activities.MainMenuActivity;
+import com.app.remi.test.network.backend.services.NetworkBackendService;
 import com.app.remi.test.soundServices.BallBounceService;
 import com.app.remi.test.soundServices.BallDropService;
 import com.app.remi.test.soundServices.BallStartService;
@@ -75,13 +76,14 @@ public class Engine extends SurfaceView implements Runnable {
     private float initialSensorValue;       // The value with which the first sensor value will be compared
     private Context mainActivityContext;    // The Context of the mainActivity used for Services
     private Vibrator vibrator;              // Reference to the vibrator manager
+    private NetworkBackendService networkBackendService; // Reference to the network service
 
     /**
-     * @param context
+     * @param context        Activity holding this view
      * @param playWithSensor Boolean value, define the playstyle, activate or not the accelerometer, desactivate the touch screen.
      * @param sensorManager  The sensor manager used to manage the accelerometer
      */
-    public Engine(Context context, Boolean playWithSensor, SensorManager sensorManager, int numberSpellBlocks, Player ownPlayer, Player oppPlayer) {
+    public Engine(Context context, Boolean playWithSensor, SensorManager sensorManager, int numberSpellBlocks, Player ownPlayer, Player oppPlayer, NetworkBackendService networkBackendService) {
 
         super(context);
 
@@ -91,12 +93,12 @@ public class Engine extends SurfaceView implements Runnable {
         initialSensorValue = 0;                     // initialSensorValue is always set a 0 the first time, it allow to detect difference in Z axis positions
         if (playWithSensor) {
             // We initialise the sensor only if the toggleButton has been checked
-            Sensor accelerometre = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
+            Sensor accelerometer = sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER);
             // Here we choose the behavior for the sensor and his delay
-            sensorManager.registerListener(mSensorEventListener, accelerometre, SensorManager.SENSOR_DELAY_UI);
+            sensorManager.registerListener(mSensorEventListener, accelerometer, SensorManager.SENSOR_DELAY_UI);
         }
         this.vibrator = (Vibrator) this.mainActivityContext.getSystemService(Context.VIBRATOR_SERVICE); // Instantiation of a vibrator manager
-
+        this.networkBackendService = networkBackendService;
 
         this.ourHolder = getHolder();   //Initializing the ourHolder objecet
         this.paint = new Paint();       //Initializing the paint object
@@ -110,9 +112,6 @@ public class Engine extends SurfaceView implements Runnable {
         screenX = size.x;
         screenY = size.y;
 
-        //TODO remove when safe
-        //player = new Player(10, 0, "Warrior", "Player 1");
-        //foe = new Player(10, 0, "Wizard", "Player 2");
         this.player = ownPlayer;
         this.foe = oppPlayer;
 
@@ -429,8 +428,8 @@ public class Engine extends SurfaceView implements Runnable {
                         this.playBallBounceSound();
                         this.startVibration(100);
 
-                        //TODO replace this by sending the proper command to the server
-                        Log.e("ENGINE COLLISION", listeS.get(j).getSpell());
+                        if (!MainMenuActivity.BRICKEST_OFFLINE_MODE)
+                            networkBackendService.sendMessageToServer("BFIGHT," + listeS.get(j).getSpell());
 
                         Log.d("SPELLBLOCK", "leftSide");
                         Log.d("VALUE LEFT", String.valueOf(listeS.get(j).getLeftSide().left - listeB.get(i).getRect().right));
@@ -440,16 +439,17 @@ public class Engine extends SurfaceView implements Runnable {
                         this.playBallBounceSound();
                         this.startVibration(100);
 
-                        //TODO replace this by sending the proper command to the server
-                        Log.e("ENGINE COLLISION", listeS.get(j).getSpell());
+                        if (!MainMenuActivity.BRICKEST_OFFLINE_MODE)
+                            networkBackendService.sendMessageToServer("BFIGHT," + listeS.get(j).getSpell());
 
                         Log.d("SPELLBLOCK", "rightSide");
                     } else if ((listeS.get(j).getBotSide().bottom > listeB.get(i).getRect().top) && (listeB.get(i).getySpeed() < 0) && (minimumS == Math.abs(listeS.get(j).getBotSide().bottom - listeB.get(i).getRect().top))) {
                         listeB.get(i).reverseYVelocity();
                         this.playBallBounceSound();
                         this.startVibration(100);
-                        //TODO replace this by sending the proper command to the server
-                        Log.e("ENGINE COLLISION", listeS.get(j).getSpell());
+
+                        if (!MainMenuActivity.BRICKEST_OFFLINE_MODE)
+                            networkBackendService.sendMessageToServer("BFIGHT," + listeS.get(j).getSpell());
 
                         Log.d("SPELLBLOCK", "botSide");
                         Log.d("VALUE RIGHT", String.valueOf(Math.abs(listeB.get(i).getRect().left - listeS.get(j).getRightSide().right)));
@@ -460,8 +460,10 @@ public class Engine extends SurfaceView implements Runnable {
                         Log.d("SPELLBLOCK", "topSide");
                         this.playBallBounceSound();
                         this.startVibration(100);
-                        //TODO replace this by sending the proper command to the server
-                        Log.e("ENGINE COLLISION", listeS.get(j).getSpell());
+
+                        if (!MainMenuActivity.BRICKEST_OFFLINE_MODE)
+                            networkBackendService.sendMessageToServer("BFIGHT," + listeS.get(j).getSpell());
+
                     }
                 }
             }
@@ -548,6 +550,7 @@ public class Engine extends SurfaceView implements Runnable {
         }
     }
 
+    // TODO translate this
     // Division d'une balle
     public void diviseBall(Ball ball) {
         // Creation de la boule n°2
@@ -564,6 +567,7 @@ public class Engine extends SurfaceView implements Runnable {
         addHistory(history, "diviseBall", true, (player.getLogin()));
     }
 
+    // TODO translate this
     //Reduire la taille de la boule
     public void reduireBoule(List<Ball> liste) {
         for (int i = 0; i < liste.size(); i++) {
@@ -578,6 +582,7 @@ public class Engine extends SurfaceView implements Runnable {
         addHistory(history, "reduireBall", true, (player.getLogin()));
     }
 
+    // TODO translate this
     //Met à jour les cooldowns
     public void checkCooldown(SpellBlock spellBlock) {
         if (spellBlock.getCooldown() > 0) {
@@ -601,6 +606,7 @@ public class Engine extends SurfaceView implements Runnable {
         history[0].setMessageCombat(message);
     }
 
+    // TODO translate this
     public float calculeMinimum(float nombre1, float nombre2, float nombre3, float nombre4) {
         if (nombre1 > nombre2) {
             nombre1 = nombre2;
@@ -614,13 +620,30 @@ public class Engine extends SurfaceView implements Runnable {
         return nombre1;
     }
 
-    void ballRemoved(List<Ball> liste){
-        for(int i = 0;i < liste.size();i++){
+    // TODO Add public/private
+    void ballRemoved(List<Ball> liste) {
+        for (int i = 0; i < liste.size(); i++) {
             listeB.remove(liste.get(i));
         }
-        for(int i = 0;i < liste.size();i++){
+        for (int i = 0; i < liste.size(); i++) {
             liste.get(i);
         }
+    }
+
+    /**
+     * Update data about the players
+     * New data are received by the server
+     */
+    public void changePlayersInfos(int ownHp,int ownShield, int ownBallsNb, float ownBallSpeed, float ownBallsSize, float ownButtonSize, float ownPaddleSize,int oppHp,int oppShield){
+        this.player.setLife(ownHp);
+        this.player.setShield(ownShield);
+        this.player.setBallsNb(ownBallsNb);
+        this.player.setBallsSpeed(ownBallSpeed);
+        this.player.setBallsSize(ownBallsSize);
+        this.player.setButtonSize(ownButtonSize);
+        this.player.setPaddleSize(ownPaddleSize);
+        this.foe.setLife(oppHp);
+        this.foe.setShield(oppShield);
     }
 }
 

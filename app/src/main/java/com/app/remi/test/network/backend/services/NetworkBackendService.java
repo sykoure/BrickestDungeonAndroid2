@@ -9,6 +9,7 @@ import android.util.Log;
 
 import com.app.remi.test.activities.ClassesActivity;
 import com.app.remi.test.activities.ConnectionActivity;
+import com.app.remi.test.activities.MainActivity;
 import com.app.remi.test.activities.MainMenuActivity;
 import com.app.remi.test.activities.SpellSelectionActivity;
 import com.app.remi.test.activities.TrueSpellSelectionActivity;
@@ -149,6 +150,11 @@ public class NetworkBackendService extends Service {
         }
         else if (slicedMessage[0].equals("BMATCH")) {                                       // The server has found an opponent and started a game
             Intent intent = new Intent(SpellSelectionActivity.FILTER_MATCHMAKING);
+            intent.putExtra(MESSAGE_SEND_TAG, message);
+            this.localBroadcastManager.sendBroadcast(intent);
+        }
+        else if (slicedMessage[0].equals("BREF")) {                                         // The server send new player infos
+            Intent intent = new Intent(MainActivity.FILTER_GAME);
             intent.putExtra(MESSAGE_SEND_TAG, message);
             this.localBroadcastManager.sendBroadcast(intent);
         }
