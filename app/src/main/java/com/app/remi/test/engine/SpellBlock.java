@@ -127,4 +127,68 @@ public class SpellBlock {
     public void setCooldownDuration(float cooldownDuration) {
         this.cooldownDuration = cooldownDuration;
     }
+
+    public void setLeftSide(RectF leftSide) {
+        this.leftSide = leftSide;
+    }
+
+    public void setRightSide(RectF rightSide) {
+        this.rightSide = rightSide;
+    }
+
+    public void setTopSide(RectF topSide) {
+        this.topSide = topSide;
+    }
+
+    public void setBotSide(RectF botSide) {
+        this.botSide = botSide;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public double getxPosition() {
+        return xPosition;
+    }
+
+    public void setxPosition(double xPosition) {
+        this.xPosition = xPosition;
+    }
+
+    public double getyPosition() {
+        return yPosition;
+    }
+
+    public void setyPosition(double yPosition) {
+        this.yPosition = yPosition;
+    }
+
+    public int getxScreen() {
+        return xScreen;
+    }
+
+    public void setxScreen(int xScreen) {
+        this.xScreen = xScreen;
+    }
+
+    public int getyScreen() {
+        return yScreen;
+    }
+
+    public void setyScreen(int yScreen) {
+        this.yScreen = yScreen;
+    }
 }

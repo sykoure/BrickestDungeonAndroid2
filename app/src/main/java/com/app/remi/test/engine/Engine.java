@@ -2,6 +2,8 @@ package com.app.remi.test.engine;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -20,6 +22,7 @@ import android.view.SurfaceView;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import com.app.remi.test.R;
 import com.app.remi.test.activities.MainMenuActivity;
 import com.app.remi.test.network.backend.services.NetworkBackendService;
 import com.app.remi.test.soundServices.BallBounceService;
@@ -130,7 +133,9 @@ public class Engine extends SurfaceView implements Runnable {
             double xposition = screenX * 0.1 + (i * (70 / numberSpellBlocks * 3) + (i * (150 / numberSpellBlocks * 3)));
             if (!MainMenuActivity.BRICKEST_OFFLINE_MODE) {
                 String name = ownPlayer.getSelectedSpells().get(i);
+
                 spellBlock = new SpellBlock(screenX, screenY, xposition, screenY * 0.3, 150 / numberSpellBlocks * 3, 150 / numberSpellBlocks * 3, name);
+
 
             } else {
                 spellBlock = new SpellBlock(screenX, screenY, xposition, screenY * 0.3, 150 / numberSpellBlocks * 3, 150 / numberSpellBlocks * 3, "spellblock" + i + 1);
@@ -204,8 +209,16 @@ public class Engine extends SurfaceView implements Runnable {
             for (int i = 0; i < listeB.size(); i++)
                 canvas.drawRect(listeB.get(i).getRect(), paint);
 
-            for (int i = 0; i < listeS.size(); i++)
+            for (int i = 0; i < listeS.size(); i++) {
                 canvas.drawRect(listeS.get(i).getRect(), paint);
+                if(!MainMenuActivity.BRICKEST_OFFLINE_MODE) {
+                    // Drawing of the spells blocks sprites
+                    String spriteName = listeS.get(i).getSpell() + "_sprite";
+                    Bitmap bitmapSpell = BitmapFactory.decodeResource(getResources(), getResources().getIdentifier(spriteName, "drawable", mainActivityContext.getPackageName()));
+                    canvas.drawBitmap(bitmapSpell, null, listeS.get(i).getRect(), null);
+                }
+
+            }
 
             //this is the HUD
             canvas.drawRect(0, (float) (screenY * 0.2), screenX, 0, paint);
