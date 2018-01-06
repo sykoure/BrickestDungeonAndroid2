@@ -34,7 +34,7 @@ public class Ball {
 
         xSpeed = 100;
         ySpeed = -400;
-        sommeSpeed = Math.abs(xSpeed+ySpeed);
+        sommeSpeed = 500;
 
         rect = new RectF();
 

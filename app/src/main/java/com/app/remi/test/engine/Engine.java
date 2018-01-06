@@ -64,8 +64,8 @@ public class Engine extends SurfaceView implements Runnable {
     Player player;              // This is the current player
     Player foe;                 // This is the foe
 
-    SpellBlock spellBlock;      // The spellBlock
-    Paddle paddle;               // The paddle
+    SpellBlock spellBlock;     // The spellBlock
+    Paddle paddle;             // The paddle
     Ball ball;                 // The ball
 
     List<SpellBlock> listeS = new ArrayList<SpellBlock>();  // List of spellblocks
@@ -183,6 +183,8 @@ public class Engine extends SurfaceView implements Runnable {
         }
         collisions();
         ballRemoved(removeBall);
+        Log.w("paddle",String.valueOf((paddle.getLength()/2) + paddle.getX()));
+        Log.w("paddle",String.valueOf((ball.getRect().right + ball.getRect().left)/2));
     }
 
     /**
@@ -349,7 +351,7 @@ public class Engine extends SurfaceView implements Runnable {
                         paddle.setMovementState(paddle.RIGHT, screenX);
                         leftTouched = false;
                         if (firstTouched) {
-                            ball.setySpeed(-200);
+                            ball.setySpeed(-300);
                             ball.setxSpeed(200);
                             firstTouched = false;
                         }
@@ -358,7 +360,7 @@ public class Engine extends SurfaceView implements Runnable {
                         paddle.setMovementState(paddle.LEFT, screenX);
                         leftTouched = true;
                         if (firstTouched) {
-                            ball.setySpeed(-200);
+                            ball.setySpeed(-300);
                             ball.setxSpeed(-200);
                             firstTouched = false;
                         }
@@ -393,6 +395,7 @@ public class Engine extends SurfaceView implements Runnable {
          * @param sensorEvent
          */
         public void onSensorChanged(SensorEvent sensorEvent) {
+
             if (sensorEvent.values[0] != initialSensorValue) {
                 String toDisplay = "Accelerometer Z Value : " + sensorEvent.values[0];
                 Log.d("ACCELEROMETRE", toDisplay);
@@ -465,6 +468,7 @@ public class Engine extends SurfaceView implements Runnable {
             //Collision between the ball and the the paddle
             if ((RectF.intersects(paddle.getRect(), listeB.get(i).getRect())) && (listeB.get(i).getySpeed() > 0)) {
                 //TODO penser à prendre en compte la barre
+                changeTrajectories(listeB.get(i));
                 listeB.get(i).reverseYVelocity();
                 Log.d("PADDLE", "PADDLE");
                 this.playBallBounceSound();
@@ -647,6 +651,34 @@ public class Engine extends SurfaceView implements Runnable {
         for (int i = 0; i < liste.size(); i++) {
             liste.get(i);
         }
+    }
+
+    public void changeTrajectories(Ball ball){
+        float percentage;
+        if((paddle.getLength()/2) + paddle.getX() <= (ball.getRect().right + ball.getRect().left)/2){
+            percentage = 100 - (((paddle.getRect().right) - (ball.getRect().right + ball.getRect().left)/2) * 100)/ (paddle.getLength()/2);
+            Log.w("XSPEED",String.valueOf(ball.getxSpeed()));
+            Log.w("calcul",String.valueOf((ball.getxSpeed() + percentage * ball.getSommeSpeed())/2));
+            ball.setxSpeed((ball.getxSpeed() + percentage * ball.getSommeSpeed())/200);
+            Log.w("XSPEED",String.valueOf(ball.getxSpeed()));
+            Log.w("YSPEED",String.valueOf(ball.getySpeed()));
+            ball.setySpeed(ball.getSommeSpeed() - Math.abs(ball.getxSpeed()));
+            Log.w("YSPEED",String.valueOf(ball.getySpeed()));
+            Log.w("RIGHT","RIGHT");
+        }
+        else{
+            percentage = ((((paddle.getLength()/2) + paddle.getX()) - (ball.getRect().right + ball.getRect().left)/2) * 100)/ (paddle.getLength()/2);
+            Log.w("XSPEED",String.valueOf(ball.getxSpeed()));
+            Log.w("calcul",String.valueOf((ball.getxSpeed() + percentage * ball.getSommeSpeed())/2));
+            ball.setxSpeed((ball.getxSpeed() + percentage * (0-ball.getSommeSpeed()))/200);
+            Log.w("XSPEED",String.valueOf(ball.getxSpeed()));
+            Log.w("YSPEED",String.valueOf(ball.getySpeed()));
+            ball.setySpeed(ball.getSommeSpeed() - Math.abs(ball.getxSpeed()));
+            Log.w("YSPEED",String.valueOf(ball.getySpeed()));
+            Log.w("RIGHT","LEFT");
+        }
+
+        Log.w("pourcentage",String.valueOf(percentage));
     }
 
     /**
