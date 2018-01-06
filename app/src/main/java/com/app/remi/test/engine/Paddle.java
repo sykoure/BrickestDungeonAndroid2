@@ -10,6 +10,8 @@ public class Paddle {
     //The dimension of the paddle
     private float length;
     private float height;
+    public final static float SIZEMAX = 260;
+    public final static float SIZEMIN = 50;
 
     //Position of the paddle
     private float x;
@@ -107,5 +109,53 @@ public class Paddle {
      */
     public void setSpeedSensor(float speed) {
         this.speed = speed * 13;
+    }
+
+    public void setRect(RectF rect) {
+        this.rect = rect;
+    }
+
+    public int getLEFT() {
+        return LEFT;
+    }
+
+    public void setLength(float length) {
+        this.length = length;
+    }
+
+    public void setHeight(float height) {
+        this.height = height;
+    }
+
+    public void setX(float x) {
+        this.x = x;
+    }
+
+    public void setY(float y) {
+        this.y = y;
+    }
+
+    public float getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(float speed) {
+        this.speed = speed;
+    }
+
+    public int getSTOPPED() {
+        return STOPPED;
+    }
+
+    public int getRIGHT() {
+        return RIGHT;
+    }
+
+    public int getPaddleMoving() {
+        return paddleMoving;
+    }
+
+    public void setPaddleMoving(int paddleMoving) {
+        this.paddleMoving = paddleMoving;
     }
 }

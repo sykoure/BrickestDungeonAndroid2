@@ -14,8 +14,10 @@ public class Ball {
     //Speed of the ball
     private float xSpeed;
     private float ySpeed;
-    private float xSpeedMax = 800;
-    private float ySpeedMax = 800;
+    private float sommeSpeed;
+    public final static  float SPEEDMAX = 1500;
+    public final static  float SPEEDMIN = 250;
+
 
     //Dimension of the ball
     private float ballWidth = 10;
@@ -32,6 +34,7 @@ public class Ball {
 
         xSpeed = 100;
         ySpeed = -400;
+        sommeSpeed = Math.abs(xSpeed+ySpeed);
 
         rect = new RectF();
 
@@ -145,11 +148,12 @@ public class Ball {
         return ballHeightMin;
     }
 
-    public float getxSpeedMax() {
-        return xSpeedMax;
+    public float getSommeSpeed() {
+        return sommeSpeed;
     }
 
-    public float getySpeedMax() {
-        return ySpeedMax;
+    public void setSommeSpeed(float sommeSpeed) {
+        this.sommeSpeed = sommeSpeed;
     }
+
 }

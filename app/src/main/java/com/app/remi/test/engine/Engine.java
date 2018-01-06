@@ -130,7 +130,6 @@ public class Engine extends SurfaceView implements Runnable {
         ball = new Ball(screenX, screenY);
         listeB.add(ball);                        // We add the first ball²²
 
-        // TODO check if there is no interference, to be changed by " i < ownPlayer.getSelectedSpells().size() "
         for (int i = 0; i < numberSpellBlocks; i++) {
             double xposition = screenX * 0.1 + (i * (70 / numberSpellBlocks * 3) + (i * (150 / numberSpellBlocks * 3)));
             if (!MainMenuActivity.BRICKEST_OFFLINE_MODE) {
@@ -264,20 +263,20 @@ public class Engine extends SurfaceView implements Runnable {
             //We will now paint the history
 
             for (int i = 1; i < 6; i++) {
-                double saut = screenY * 0.04;
+                double gap = screenY * 0.04;
                 if (history[i - 1].getHasMessage()) {
                     if (history[i - 1].getPseudo().equals(player.getLogin())) {
                         paint.setColor(Color.argb(255, 0, 247, 255));
                     } else {
                         paint.setColor(Color.argb(255, 255, 76, 76));
                     }
-                    canvas.drawText(history[i - 1].getPseudo(), (float) (screenX * 0.3), (float) (saut) * i, paint);
+                    canvas.drawText(history[i - 1].getPseudo(), (float) (screenX * 0.3), (float) (gap) * i, paint);
 
                     paint.setColor(Color.argb(255, 0, 0, 0));
-                    canvas.drawText("=>", (float) (screenX * 0.45), (float) (saut) * i, paint);
+                    canvas.drawText("=>", (float) (screenX * 0.45), (float) (gap) * i, paint);
 
                     paint.setColor(Color.argb(255, 0, 255, 0));
-                    canvas.drawText(history[i - 1].getMessageCombat(), (float) (screenX * 0.5), (float) (saut) * i, paint);
+                    canvas.drawText(history[i - 1].getMessageCombat(), (float) (screenX * 0.5), (float) (gap) * i, paint);
                 }
             }
 
@@ -394,7 +393,6 @@ public class Engine extends SurfaceView implements Runnable {
          * @param sensorEvent
          */
         public void onSensorChanged(SensorEvent sensorEvent) {
-            // Que faire en cas d'évènements sur le capteur ?
             if (sensorEvent.values[0] != initialSensorValue) {
                 String toDisplay = "Accelerometer Z Value : " + sensorEvent.values[0];
                 Log.d("ACCELEROMETRE", toDisplay);
@@ -422,21 +420,11 @@ public class Engine extends SurfaceView implements Runnable {
             for (int j = 0; j < listeS.size(); j++) {
                 float minimumS;
                 if (RectF.intersects(listeS.get(j).getRect(), listeB.get(i).getRect())) {
-                    minimumS = calculeMinimum(Math.abs(listeB.get(i).getRect().right - listeS.get(j).getLeftSide().left),
+                    minimumS = minimumCalcul(Math.abs(listeB.get(i).getRect().right - listeS.get(j).getLeftSide().left),
                             Math.abs(listeB.get(i).getRect().left - listeS.get(j).getRightSide().right),
                             Math.abs(listeS.get(j).getBotSide().bottom - listeB.get(i).getRect().top),
                             Math.abs(listeB.get(i).getRect().bottom - listeS.get(j).getTopSide().top)
                     );
-
-                    Log.d("BLALL LEFT", String.valueOf(listeB.get(i).getRect().left));
-                    Log.d("BLALL RIGHT", String.valueOf(listeB.get(i).getRect().right));
-                    Log.d("BLALL TOP", String.valueOf(listeB.get(i).getRect().top));
-                    Log.d("BLALL BOTTOM", String.valueOf(listeB.get(i).getRect().bottom));
-
-                    Log.d("BLOCK LEFT", String.valueOf(listeS.get(j).getLeftSide().left));
-                    Log.d("BLOCK RIGHT", String.valueOf(listeS.get(j).getRightSide().right));
-                    Log.d("BLOCK TOP", String.valueOf(listeS.get(j).getTopSide().top));
-                    Log.d("BLOCK BOTTOM", String.valueOf(listeS.get(j).getBotSide().bottom));
 
                     if ((listeS.get(j).getLeftSide().left < listeB.get(i).getRect().right) && (listeB.get(i).getxSpeed() > 0) && (minimumS == Math.abs(listeB.get(i).getRect().right - listeS.get(j).getLeftSide().left))) {
                         listeB.get(i).reverseXVelocity();
@@ -446,9 +434,6 @@ public class Engine extends SurfaceView implements Runnable {
                         if (!MainMenuActivity.BRICKEST_OFFLINE_MODE)
                             networkBackendService.sendMessageToServer("BFIGHT," + listeS.get(j).getSpell());
 
-                        Log.d("SPELLBLOCK", "leftSide");
-                        Log.d("VALUE LEFT", String.valueOf(listeS.get(j).getLeftSide().left - listeB.get(i).getRect().right));
-                        Log.d("VALUE BOTTOM", String.valueOf(listeS.get(j).getBotSide().bottom - listeB.get(i).getRect().top));
                     } else if ((listeS.get(j).getRightSide().right > listeB.get(i).getRect().left) && (listeB.get(i).getxSpeed() < 0) && (minimumS == Math.abs(listeB.get(i).getRect().left - listeS.get(j).getRightSide().right))) {
                         listeB.get(i).reverseXVelocity();
                         this.playBallBounceSound();
@@ -457,7 +442,6 @@ public class Engine extends SurfaceView implements Runnable {
                         if (!MainMenuActivity.BRICKEST_OFFLINE_MODE)
                             networkBackendService.sendMessageToServer("BFIGHT," + listeS.get(j).getSpell());
 
-                        Log.d("SPELLBLOCK", "rightSide");
                     } else if ((listeS.get(j).getBotSide().bottom > listeB.get(i).getRect().top) && (listeB.get(i).getySpeed() < 0) && (minimumS == Math.abs(listeS.get(j).getBotSide().bottom - listeB.get(i).getRect().top))) {
                         listeB.get(i).reverseYVelocity();
                         this.playBallBounceSound();
@@ -466,13 +450,8 @@ public class Engine extends SurfaceView implements Runnable {
                         if (!MainMenuActivity.BRICKEST_OFFLINE_MODE)
                             networkBackendService.sendMessageToServer("BFIGHT," + listeS.get(j).getSpell());
 
-                        Log.d("SPELLBLOCK", "botSide");
-                        Log.d("VALUE RIGHT", String.valueOf(Math.abs(listeB.get(i).getRect().left - listeS.get(j).getRightSide().right)));
-                        Log.d("VALUE LEFT", String.valueOf(Math.abs(listeB.get(i).getRect().right - listeS.get(j).getLeftSide().left)));
-                        Log.d("VALUE BOTTOM", String.valueOf(Math.abs(listeS.get(j).getBotSide().bottom - listeB.get(i).getRect().top)));
                     } else if ((listeS.get(j).getTopSide().top < listeB.get(i).getRect().bottom) && (listeB.get(i).getySpeed() > 0) && (minimumS == Math.abs(listeB.get(i).getRect().bottom - listeS.get(j).getTopSide().top))) {
                         listeB.get(i).reverseYVelocity();
-                        Log.d("SPELLBLOCK", "topSide");
                         this.playBallBounceSound();
                         this.startVibration(100);
 
@@ -505,7 +484,8 @@ public class Engine extends SurfaceView implements Runnable {
                     paused = true;                      // Freeze the game
                     firstTouched = true;                // First time before a collision
                 } else {
-                    removeBall.add(listeB.get(i));
+                    if(listeB.size() != listeS.size()+1)
+                        removeBall.add(listeB.get(i));
                 }
                 listeB.get(i).reverseYVelocity();
             }
@@ -565,10 +545,9 @@ public class Engine extends SurfaceView implements Runnable {
         }
     }
 
-    // TODO translate this
-    // Division d'une balle
-    public void diviseBall(Ball ball) {
-        // Creation de la boule n°2
+    // Split the ball
+    public void splitBall(Ball ball,int indexSpell) {
+        // New Ball with different trajectories
         Ball ball2 = new Ball(screenX, screenY);
 
         ball2.givePosition(ball2, ball);
@@ -579,12 +558,12 @@ public class Engine extends SurfaceView implements Runnable {
         ball2.setBallWidth(ball.getBallHeight());
 
         listeB.add(ball2);
-        addHistory(history, "diviseBall", true, (player.getLogin()));
+        addHistory(history, listeS.get(indexSpell).getSpell(), true, (player.getLogin()));
     }
 
-    // TODO translate this
-    //Reduire la taille de la boule
-    public void reduireBoule(List<Ball> liste) {
+
+    // Reduce the size of the balls
+    public void reduceBall(List<Ball> liste,int indexSpell) {
         for (int i = 0; i < liste.size(); i++) {
             if (liste.get(i).getBallHeight() / 2 < liste.get(i).getBallHeightMin()) {
                 liste.get(i).setBallWidth(liste.get(i).getBallWidthMin());
@@ -594,11 +573,38 @@ public class Engine extends SurfaceView implements Runnable {
                 liste.get(i).setBallWidth(liste.get(i).getBallWidth() / 2);
             }
         }
-        addHistory(history, "reduireBall", true, (player.getLogin()));
+        addHistory(history, listeS.get(indexSpell).getSpell(), true, (player.getLogin()));
     }
 
-    // TODO translate this
-    //Met à jour les cooldowns
+    // Change paddle size
+    public void changePaddleSize(Paddle paddle1,float multiplicateur,int indexSpell){
+        if((Paddle.SIZEMAX >= paddle1.getLength() * multiplicateur)&&(multiplicateur >= 1)){
+            paddle1.setLength(paddle1.getLength() * multiplicateur);
+        }
+        else if((Paddle.SIZEMIN <= paddle1.getLength() * multiplicateur)&&(multiplicateur <= 1)){
+            paddle1.setLength(paddle1.getLength() * multiplicateur);
+        }
+        addHistory(history, listeS.get(indexSpell).getSpell(), true, (player.getLogin()));
+    }
+
+    // Change ball Size
+    public void changeBallSize(List<Ball> liste,float multiplicateur,int indexSpell){
+        for (int i = 0; i < liste.size(); i++) {
+            if((listeB.get(i).getSommeSpeed() * multiplicateur <= Ball.SPEEDMAX)&&(multiplicateur >= 1)){
+                listeB.get(i).setSommeSpeed(listeB.get(i).getSommeSpeed() * multiplicateur);
+                listeB.get(i).setxSpeed(listeB.get(i).getxSpeed() * multiplicateur);
+                listeB.get(i).setySpeed(listeB.get(i).getySpeed() * multiplicateur);
+            }
+            else if((listeB.get(i).getSommeSpeed() * multiplicateur >= Ball.SPEEDMIN)&&(multiplicateur <= 1)){
+                listeB.get(i).setSommeSpeed(listeB.get(i).getSommeSpeed() * multiplicateur);
+                listeB.get(i).setxSpeed(listeB.get(i).getxSpeed() * multiplicateur);
+                listeB.get(i).setySpeed(listeB.get(i).getySpeed() * multiplicateur);
+            }
+        }
+        addHistory(history, listeS.get(indexSpell).getSpell(), true, (player.getLogin()));
+    }
+
+    // Update the cooldowns
     public void checkCooldown(SpellBlock spellBlock) {
         if (spellBlock.getCooldown() > 0) {
             spellBlock.setCooldown(spellBlock.getCooldown() - 1 / (float) fps); //Reduit le cooldown de 1 par seconde
@@ -621,22 +627,20 @@ public class Engine extends SurfaceView implements Runnable {
         history[0].setMessageCombat(message);
     }
 
-    // TODO translate this
-    public float calculeMinimum(float nombre1, float nombre2, float nombre3, float nombre4) {
-        if (nombre1 > nombre2) {
-            nombre1 = nombre2;
+    public float minimumCalcul(float number1, float number2, float number3, float number4) {
+        if (number1 > number2) {
+            number1 = number2;
         }
-        if (nombre1 > nombre3) {
-            nombre1 = nombre3;
+        if (number1 > number3) {
+            number1 = number3;
         }
-        if (nombre1 > nombre4) {
-            nombre1 = nombre4;
+        if (number1 > number4) {
+            number1 = number4;
         }
-        return nombre1;
+        return number1;
     }
 
-    // TODO Add public/private
-    void ballRemoved(List<Ball> liste) {
+    public void ballRemoved(List<Ball> liste) {
         for (int i = 0; i < liste.size(); i++) {
             listeB.remove(liste.get(i));
         }
