@@ -101,7 +101,9 @@ public class Engine extends SurfaceView implements Runnable {
             sensorManager.registerListener(mSensorEventListener, accelerometer, SensorManager.SENSOR_DELAY_UI);
         }
         this.vibrator = (Vibrator) this.mainActivityContext.getSystemService(Context.VIBRATOR_SERVICE); // Instantiation of a vibrator manager
-        this.networkBackendService = networkBackendService;
+
+        if (!MainMenuActivity.BRICKEST_OFFLINE_MODE)
+            this.networkBackendService = networkBackendService;
 
         this.ourHolder = getHolder();   //Initializing the ourHolder objecet
         this.paint = new Paint();       //Initializing the paint object
@@ -211,7 +213,7 @@ public class Engine extends SurfaceView implements Runnable {
 
             for (int i = 0; i < listeS.size(); i++) {
                 canvas.drawRect(listeS.get(i).getRect(), paint);
-                if(!MainMenuActivity.BRICKEST_OFFLINE_MODE) {
+                if (!MainMenuActivity.BRICKEST_OFFLINE_MODE) {
                     // Drawing of the spells blocks sprites
                     String spriteName = listeS.get(i).getSpell() + "_sprite";
                     Bitmap bitmapSpell = BitmapFactory.decodeResource(getResources(), getResources().getIdentifier(spriteName, "drawable", mainActivityContext.getPackageName()));
@@ -647,7 +649,7 @@ public class Engine extends SurfaceView implements Runnable {
      * Update data about the players
      * New data are received by the server
      */
-    public void changePlayersInfos(int ownHp,int ownShield, int ownBallsNb, float ownBallSpeed, float ownBallsSize, float ownButtonSize, float ownPaddleSize,int oppHp,int oppShield){
+    public void changePlayersInfos(int ownHp, int ownShield, int ownBallsNb, float ownBallSpeed, float ownBallsSize, float ownButtonSize, float ownPaddleSize, int oppHp, int oppShield) {
         this.player.setLife(ownHp);
         this.player.setShield(ownShield);
         this.player.setBallsNb(ownBallsNb);

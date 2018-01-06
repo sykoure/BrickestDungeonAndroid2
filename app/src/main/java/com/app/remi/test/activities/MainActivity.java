@@ -45,9 +45,13 @@ public class MainActivity extends Activity implements Displayable {
     protected void onStart() {
         super.onStart();
 
-        Intent intentService = new Intent(this, NetworkBackendService.class);
-        bindService(intentService, mConnection, Context.BIND_AUTO_CREATE);
-
+        if (!MainMenuActivity.BRICKEST_OFFLINE_MODE) {
+            Intent intentService = new Intent(this, NetworkBackendService.class);
+            bindService(intentService, mConnection, Context.BIND_AUTO_CREATE);
+        }
+        else{
+            MainActivity.this.startGame();
+        }
 
     }
 
@@ -171,13 +175,13 @@ public class MainActivity extends Activity implements Displayable {
             BroadcastReceiver myReceiver = new NetworkReceiver(this);                                        // Create a class and set in it the behavior when an information is received
             IntentFilter intentFilter = new IntentFilter(FILTER_GAME);                                                  // The intentFilter action should match the action of the intent send
             localBroadcastManager.registerReceiver(myReceiver, intentFilter);                                           // We register the receiver for the localBroadcastManager
+            engine = new Engine(this, playWithSensor, sensorManager, number, ownPlayer, oppPlayer, networkBackendService);
 
         } else {
             ownPlayer = new Player(10, 10, "offLineClass", "Yourself");
             oppPlayer = new Player(10, 10, "offLineClass", "Opponent");
-        }
-        if (this.networkBackendService == null) {
-            Log.e("MainActivity", "networkBackendService is NULL");
+            engine = new Engine(this, playWithSensor, sensorManager, number, ownPlayer, oppPlayer, null);
+
         }
         engine = new Engine(this, playWithSensor, sensorManager, number, ownPlayer, oppPlayer, networkBackendService);
         setContentView(engine);
@@ -209,11 +213,10 @@ public class MainActivity extends Activity implements Displayable {
             int oppHp = Integer.parseInt(oppPlayerData[0]);
             int oppShield = Integer.parseInt(oppPlayerData[1]);
             this.engine.changePlayersInfos(hp, shield, ballsNb, ballsSpeed, ballsSize, buttonSize, paddleSize, oppHp, oppShield);
-        }
-        else{
+        } else {
             // TODO instead go to Matchmaking activity (currently SpellSelectionActivity)
-            Intent intent = new Intent(this,MainMenuActivity.class);
-            intent.putExtra(TAG_FIGHT_RESULT,textReceived);
+            Intent intent = new Intent(this, MainMenuActivity.class);
+            intent.putExtra(TAG_FIGHT_RESULT, textReceived);
             startActivity(intent);
         }
     }
