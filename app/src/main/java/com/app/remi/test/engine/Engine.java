@@ -467,9 +467,7 @@ public class Engine extends SurfaceView implements Runnable {
 
             //Collision between the ball and the the paddle
             if ((RectF.intersects(paddle.getRect(), listeB.get(i).getRect())) && (listeB.get(i).getySpeed() > 0)) {
-                //TODO penser à prendre en compte la barre
                 changeTrajectories(listeB.get(i));
-                listeB.get(i).reverseYVelocity();
                 Log.d("PADDLE", "PADDLE");
                 this.playBallBounceSound();
             }
@@ -696,6 +694,9 @@ public class Engine extends SurfaceView implements Runnable {
         }
 
         Log.w("pourcentage",String.valueOf(percentage));
+        if(ball.getySpeed() > 0) {
+            ball.reverseYVelocity();
+        }
     }
 
     /**
