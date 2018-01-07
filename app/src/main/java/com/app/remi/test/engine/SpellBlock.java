@@ -54,7 +54,7 @@ public class SpellBlock {
         this.width = width;
         this.height = height;
 
-        //We set the hitbox sides of the SpellBlcok
+        //We set the hitbox sides of the SpellBlock
         rect = new RectF((float)xPosition, (float)yPosition, (float)xPosition + width,(float) yPosition +height);
         leftSide = new RectF((float)xPosition,(float)yPosition+1,(float)xPosition+3,(float)yPosition+height-1);
         rightSide = new RectF((float)xPosition + width - 3,(float)yPosition+1,(float)xPosition + width,(float)yPosition+height-1);
