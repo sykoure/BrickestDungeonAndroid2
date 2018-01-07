@@ -80,6 +80,7 @@ public class Player {
         this.life = life;
     }
 
+    @Deprecated
     public void loseLife(int damage) {
         if (this.life < damage) {
             this.life = 0;
@@ -87,7 +88,7 @@ public class Player {
             this.life = this.life - damage;
         }
     }
-
+    @Deprecated
     public void loseShield(int damage) {
         if (this.shield < damage) {
             this.shield = 0;

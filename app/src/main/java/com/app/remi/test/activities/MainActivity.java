@@ -48,8 +48,7 @@ public class MainActivity extends Activity implements Displayable {
         if (!MainMenuActivity.BRICKEST_OFFLINE_MODE) {
             Intent intentService = new Intent(this, NetworkBackendService.class);
             bindService(intentService, mConnection, Context.BIND_AUTO_CREATE);
-        }
-        else{
+        } else {
             MainActivity.this.startGame();
         }
 
@@ -213,6 +212,11 @@ public class MainActivity extends Activity implements Displayable {
             int oppHp = Integer.parseInt(oppPlayerData[0]);
             int oppShield = Integer.parseInt(oppPlayerData[1]);
             this.engine.changePlayersInfos(hp, shield, ballsNb, ballsSpeed, ballsSize, buttonSize, paddleSize, oppHp, oppShield);
+            /*
+            for (int index = 1; index < ballsNb; index++) {
+                this.engine.splitBall();
+            }*/
+
         } else {
             // TODO instead go to Matchmaking activity (currently SpellSelectionActivity)
             Intent intent = new Intent(this, MainMenuActivity.class);

@@ -476,7 +476,6 @@ public class Engine extends SurfaceView implements Runnable {
 
             //If the ball is hitting the bottom of the screen
             else if (((listeB.get(i).getySpeed() / fps) + listeB.get(i).getRect().top > screenY) && (listeB.get(i).getySpeed() > 0)) {
-                player.loseLife(1);          // The user loses 1 hp
                 if (listeB.size() == 1) {
                     //update the ball location to put it on the paddle
                     RectF rect = new RectF(paddle.getX() + (paddle.getLength() / 2) - (listeB.get(i).getBallWidth() / 2)
@@ -488,10 +487,11 @@ public class Engine extends SurfaceView implements Runnable {
                     paused = true;                      // Freeze the game
                     firstTouched = true;                // First time before a collision
                 } else {
-                    if(listeB.size() != listeS.size()+1)
+                    if (listeB.size() != listeS.size() + 1)
                         removeBall.add(listeB.get(i));
                 }
                 listeB.get(i).reverseYVelocity();
+                this.networkBackendService.sendMessageToServer("BFALL");
             }
 
 
@@ -550,7 +550,8 @@ public class Engine extends SurfaceView implements Runnable {
     }
 
     // Split the ball
-    public void splitBall(Ball ball,int indexSpell) {
+    @Deprecated
+    public void splitBall(Ball ball, int indexSpell) {
         // New Ball with different trajectories
         Ball ball2 = new Ball(screenX, screenY);
 
@@ -565,9 +566,27 @@ public class Engine extends SurfaceView implements Runnable {
         addHistory(history, listeS.get(indexSpell).getSpell(), true, (player.getLogin()));
     }
 
+    /**
+     * Create a new ball in the same position as the first ball of the list
+     */
+    public void splitBall() {
+        // New Ball with different trajectories
+        Ball ball2 = new Ball(screenX, screenY);
+
+        ball2.givePosition(ball2, this.listeB.get(0));
+        ball2.setySpeed(this.listeB.get(0).getySpeed());
+        ball2.setxSpeed(this.listeB.get(0).getxSpeed());
+        ball2.reverseXVelocity();
+        ball2.setBallHeight(this.listeB.get(0).getBallHeight());
+        ball2.setBallWidth(this.listeB.get(0).getBallHeight());
+
+        this.listeB.add(ball2);
+        this.player.setBallsNb(this.player.getBallsNb() + 1);
+    }
+
 
     // Reduce the size of the balls
-    public void reduceBall(List<Ball> liste,int indexSpell) {
+    public void reduceBall(List<Ball> liste, int indexSpell) {
         for (int i = 0; i < liste.size(); i++) {
             if (liste.get(i).getBallHeight() / 2 < liste.get(i).getBallHeightMin()) {
                 liste.get(i).setBallWidth(liste.get(i).getBallWidthMin());
@@ -581,25 +600,23 @@ public class Engine extends SurfaceView implements Runnable {
     }
 
     // Change paddle size
-    public void changePaddleSize(Paddle paddle1,float multiplicateur,int indexSpell){
-        if((Paddle.SIZEMAX >= paddle1.getLength() * multiplicateur)&&(multiplicateur >= 1)){
+    public void changePaddleSize(Paddle paddle1, float multiplicateur, int indexSpell) {
+        if ((Paddle.SIZEMAX >= paddle1.getLength() * multiplicateur) && (multiplicateur >= 1)) {
             paddle1.setLength(paddle1.getLength() * multiplicateur);
-        }
-        else if((Paddle.SIZEMIN <= paddle1.getLength() * multiplicateur)&&(multiplicateur <= 1)){
+        } else if ((Paddle.SIZEMIN <= paddle1.getLength() * multiplicateur) && (multiplicateur <= 1)) {
             paddle1.setLength(paddle1.getLength() * multiplicateur);
         }
         addHistory(history, listeS.get(indexSpell).getSpell(), true, (player.getLogin()));
     }
 
     // Change ball Size
-    public void changeBallSize(List<Ball> liste,float multiplicateur,int indexSpell){
+    public void changeBallSize(List<Ball> liste, float multiplicateur, int indexSpell) {
         for (int i = 0; i < liste.size(); i++) {
-            if((listeB.get(i).getSommeSpeed() * multiplicateur <= Ball.SPEEDMAX)&&(multiplicateur >= 1)){
+            if ((listeB.get(i).getSommeSpeed() * multiplicateur <= Ball.SPEEDMAX) && (multiplicateur >= 1)) {
                 listeB.get(i).setSommeSpeed(listeB.get(i).getSommeSpeed() * multiplicateur);
                 listeB.get(i).setxSpeed(listeB.get(i).getxSpeed() * multiplicateur);
                 listeB.get(i).setySpeed(listeB.get(i).getySpeed() * multiplicateur);
-            }
-            else if((listeB.get(i).getSommeSpeed() * multiplicateur >= Ball.SPEEDMIN)&&(multiplicateur <= 1)){
+            } else if ((listeB.get(i).getSommeSpeed() * multiplicateur >= Ball.SPEEDMIN) && (multiplicateur <= 1)) {
                 listeB.get(i).setSommeSpeed(listeB.get(i).getSommeSpeed() * multiplicateur);
                 listeB.get(i).setxSpeed(listeB.get(i).getxSpeed() * multiplicateur);
                 listeB.get(i).setySpeed(listeB.get(i).getySpeed() * multiplicateur);
