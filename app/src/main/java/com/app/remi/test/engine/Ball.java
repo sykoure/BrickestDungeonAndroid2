@@ -32,8 +32,8 @@ public class Ball {
      */
     public Ball(int screenX, int screenY){
 
-        xSpeed = 100;
-        ySpeed = -400;
+        xSpeed = 200;
+        ySpeed = -300;
         sommeSpeed = 500;
 
         rect = new RectF();

@@ -466,7 +466,8 @@ public class Engine extends SurfaceView implements Runnable {
             }
 
             //Collision between the ball and the the paddle
-            if ((RectF.intersects(paddle.getRect(), listeB.get(i).getRect())) && (listeB.get(i).getySpeed() > 0)) {
+            //if ((RectF.intersects(paddle.getRect(), listeB.get(i).getRect())) && (listeB.get(i).getySpeed() > 0)) {
+            if (((listeB.get(i).getySpeed() / fps) + listeB.get(i).getRect().top > paddle.getRect().top) && (listeB.get(i).getySpeed() > 0)&&(listeB.get(i).getRect().left >= paddle.getRect().left)&&(listeB.get(i).getRect().right <= paddle.getRect().right)){
                 changeTrajectories(listeB.get(i));
                 Log.d("PADDLE", "PADDLE");
                 this.playBallBounceSound();
