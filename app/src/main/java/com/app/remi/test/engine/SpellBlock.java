@@ -54,6 +54,7 @@ public class SpellBlock {
         this.width = width;
         this.height = height;
 
+        //We set the hitbox sides of the SpellBlcok
         rect = new RectF((float)xPosition, (float)yPosition, (float)xPosition + width,(float) yPosition +height);
         leftSide = new RectF((float)xPosition,(float)yPosition+1,(float)xPosition+3,(float)yPosition+height-1);
         rightSide = new RectF((float)xPosition + width - 3,(float)yPosition+1,(float)xPosition + width,(float)yPosition+height-1);
@@ -66,14 +67,6 @@ public class SpellBlock {
      */
     public RectF getRect() {
         return rect;
-    }
-
-    /**
-     * Set the new hitbox of the spellblock
-     * @param rect is the new hitbox of the SpellBlock
-     */
-    public void setRect(RectF rect) {
-        this.rect = rect;
     }
 
     /**
@@ -104,91 +97,38 @@ public class SpellBlock {
         return botSide;
     }
 
+    /**
+     * Return the spell of the spellBlock
+     * @return spell
+     */
     public String getSpell(){
         return spell;
     }
 
-    public void setSpell(String spell){
-        this.spell = spell;
-    }
-
+    /**
+     * Return the cooldown of the spell block which is the remaining time for the block in order to
+     * use its spell again
+     * @return cooldown
+     */
     public float getCooldown() {
         return cooldown;
     }
 
+    /**
+     * This method is useful to modify the cooldown and prevent the player use a spell before some time
+     * @param cooldown
+     */
     public void setCooldown(float cooldown) {
         this.cooldown = cooldown;
     }
 
+    /**
+     * This method is used when the player hits a spellblock with the ball, in that case, we modify the cooldown
+     * of a spellblock with its cooldownDuration
+     * @return cooldownDuration
+     */
     public float getCooldownDuration() {
         return cooldownDuration;
     }
 
-    public void setCooldownDuration(float cooldownDuration) {
-        this.cooldownDuration = cooldownDuration;
-    }
-
-    public void setLeftSide(RectF leftSide) {
-        this.leftSide = leftSide;
-    }
-
-    public void setRightSide(RectF rightSide) {
-        this.rightSide = rightSide;
-    }
-
-    public void setTopSide(RectF topSide) {
-        this.topSide = topSide;
-    }
-
-    public void setBotSide(RectF botSide) {
-        this.botSide = botSide;
-    }
-
-    public int getWidth() {
-        return width;
-    }
-
-    public void setWidth(int width) {
-        this.width = width;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
-    public void setHeight(int height) {
-        this.height = height;
-    }
-
-    public double getxPosition() {
-        return xPosition;
-    }
-
-    public void setxPosition(double xPosition) {
-        this.xPosition = xPosition;
-    }
-
-    public double getyPosition() {
-        return yPosition;
-    }
-
-    public void setyPosition(double yPosition) {
-        this.yPosition = yPosition;
-    }
-
-    public int getxScreen() {
-        return xScreen;
-    }
-
-    public void setxScreen(int xScreen) {
-        this.xScreen = xScreen;
-    }
-
-    public int getyScreen() {
-        return yScreen;
-    }
-
-    public void setyScreen(int yScreen) {
-        this.yScreen = yScreen;
-    }
 }

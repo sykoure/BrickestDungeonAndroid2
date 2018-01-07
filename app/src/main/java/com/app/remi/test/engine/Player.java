@@ -6,7 +6,13 @@ import java.util.ArrayList;
  * Created by Remi on 31/12/2017.
  */
 
+
+/**
+ * This class is only a date class, it will be useful to stock information about the two players
+ * during a game.
+ */
 public class Player {
+
 
     private int life, shield, ballsNb;
     private float ballsSpeed, ballsSize, buttonSize, paddleSize;

@@ -22,8 +22,8 @@ public class Ball {
     //Dimension of the ball
     private float ballWidth = 10;
     private float ballHeight = 10;
-    private float ballWidthMin = 3;
-    private float ballHeightMin = 3;
+    public final static float BALLWIDTHMIN = 3;
+    public final static float BALLHEIGTHMIN = 3;
 
     /**
      * The method Ball() is setting the values of the object Ball, its hitbox and its speed
@@ -87,6 +87,11 @@ public class Ball {
         rect.bottom = y - 20 - ballHeight;
     }
 
+    /**
+     * We give the position of the ball b1 to the ball b2
+     * @param b1 is the first ball
+     * @param b2 is the second ball
+     */
     public void givePosition(Ball b1, Ball b2){
         b1.rect.left = b2.rect.left;
         b1.rect.right = b2.rect.right;
@@ -124,34 +129,50 @@ public class Ball {
         this.ySpeed = ySpeed;
     }
 
+    /**
+     * Get the ySpeed of the ball
+     * @return the ySpeed
+     */
     public float getySpeed(){
         return this.ySpeed;
     }
 
+    /**
+     * Get the xSpeed of the ball
+     * @return the xSpeed
+     */
     public float getxSpeed(){
         return this.xSpeed;
     }
 
+    /**
+     * This method allows us to modify the ball width
+     * @param ballWidth
+     */
     public void setBallWidth(float ballWidth){
         this.ballWidth = ballWidth;
     }
 
+    /**
+     * This method allows us to modify the ball height
+     * @param ballHeight
+     */
     public void setBallHeight(float ballHeight){
         this.ballHeight = ballHeight;
     }
 
-    public float getBallWidthMin() {
-        return ballWidthMin;
-    }
-
-    public float getBallHeightMin() {
-        return ballHeightMin;
-    }
-
+    /**
+     * this method return the sommeSpeed which is the addition of the xSpeed and the ySpeed
+     * @return sommeSpeed
+     */
     public float getSommeSpeed() {
         return sommeSpeed;
     }
 
+    /**
+     * This method allows us to modify the sommeSpeed, when the player activate a spell like acceleroBall for exemple
+     * @param sommeSpeed
+     */
     public void setSommeSpeed(float sommeSpeed) {
         this.sommeSpeed = sommeSpeed;
     }

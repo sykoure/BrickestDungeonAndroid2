@@ -68,14 +68,14 @@ public class Engine extends SurfaceView implements Runnable {
     Paddle paddle;             // The paddle
     Ball ball;                 // The ball
 
-    List<SpellBlock> listeS = new ArrayList<SpellBlock>();  // List of spellblocks
-    List<Ball> listeB = new ArrayList<Ball>();            // List of balls
-    List<Ball> removeBall = new ArrayList<>();
-    BattleMessage[] history;                                // History of the spells used
+    List<SpellBlock> listeS = new ArrayList<SpellBlock>();          // List of spellblocks
+    List<Ball> listeB = new ArrayList<Ball>();                // List of balls
+    List<Ball> removeBall = new ArrayList<>();             // List of the balls which need to be removed after the method collision()
+    BattleMessage[] history;                               // History of the spells used
 
 
     private int numberSpellBlocks;          // The number of spellBlocks
-    private Boolean playWithSensor;
+    private Boolean playWithSensor;         // If the player has to use the sensor or a touche on the screen to move the paddle
     private float initialSensorValue;       // The value with which the first sensor value will be compared
     private Context mainActivityContext;    // The Context of the mainActivity used for Services
     private Vibrator vibrator;              // Reference to the vibrator manager
@@ -90,9 +90,9 @@ public class Engine extends SurfaceView implements Runnable {
 
         super(context);
 
-        this.numberSpellBlocks = numberSpellBlocks;
+        this.numberSpellBlocks = numberSpellBlocks; // We set the number of spellblock
         this.mainActivityContext = context;         // We will need the context for many services
-        this.playWithSensor = playWithSensor;
+        this.playWithSensor = playWithSensor;       // We set the boolean playWithSensor
         initialSensorValue = 0;                     // initialSensorValue is always set a 0 the first time, it allow to detect difference in Z axis positions
         if (playWithSensor) {
             // We initialise the sensor only if the toggleButton has been checked
@@ -102,6 +102,7 @@ public class Engine extends SurfaceView implements Runnable {
         }
         this.vibrator = (Vibrator) this.mainActivityContext.getSystemService(Context.VIBRATOR_SERVICE); // Instantiation of a vibrator manager
 
+        //If we are playing online, we set the networkBackendService
         if (!MainMenuActivity.BRICKEST_OFFLINE_MODE)
             this.networkBackendService = networkBackendService;
 
@@ -120,16 +121,18 @@ public class Engine extends SurfaceView implements Runnable {
         this.player = ownPlayer;
         this.foe = oppPlayer;
 
+        //We initialize the list which will be the history of the spell that was used
         history = new BattleMessage[5];
         for (int i = 0; i < 5; i++) {
             history[i] = new BattleMessage("");
             history[i].setPseudo(null);
         }
 
-        paddle = new Paddle(screenX, screenY);
-        ball = new Ball(screenX, screenY);
-        listeB.add(ball);                        // We add the first ball²²
+        paddle = new Paddle(screenX, screenY);      // We set the paddle position
+        ball = new Ball(screenX, screenY);          // We initialize the first ball
+        listeB.add(ball);                           // We add the first ball to the list of balls
 
+        // Depending of the number of spellblock, the size and the position for each one will be different
         for (int i = 0; i < numberSpellBlocks; i++) {
             double xposition = screenX * 0.1 + (i * (70 / numberSpellBlocks * 3) + (i * (150 / numberSpellBlocks * 3)));
             if (!MainMenuActivity.BRICKEST_OFFLINE_MODE) {
@@ -145,23 +148,35 @@ public class Engine extends SurfaceView implements Runnable {
             listeS.add(spellBlock);               // We add the spellBlocks
         }
 
-        reset(0);                     // We put the position of the ball
+        reset(0);                               // We put the position of the ball
     }
 
+    /**
+     * This method allows us to reset the position of a ball that is in the list of balls
+     * @param i is the index of the ball in its list
+     */
     public void reset(int i) {
         listeB.get(i).reset(screenX, screenY);
     }
 
+    /**
+     * run() is the method call automatically since our class is  implemented by the the interface runnable
+     */
     @Override
     public void run() {
         while (playing) {
             long startFrameTime = System.currentTimeMillis();
+            // If the variable false isnt false, we keep updating the game
             if (!paused) {
                 update();
             }
+            // We use the draw() method even if the game is paused
             draw();
             timeThisFrame = System.currentTimeMillis() - startFrameTime;
             if (timeThisFrame >= 1) {
+                /* The fps is apploximately equal to 30 which means that the game is updating and
+                 * draw 30 times per second
+                */
                 fps = 1000 / timeThisFrame;
             }
 
@@ -173,6 +188,8 @@ public class Engine extends SurfaceView implements Runnable {
      * This method will launch the method update() for each objects and the method collisions()
      */
     public void update() {
+
+        // We start the method by updating all the objects(the paddle, the balls and the spellblocks)
         paddle.update(fps, screenX);
 
         for (int i = 0; i < listeB.size(); i++) {
@@ -181,10 +198,8 @@ public class Engine extends SurfaceView implements Runnable {
         for (int j = 0; j < listeS.size(); j++) {
             checkCooldown(listeS.get(j));
         }
-        collisions();
-        ballRemoved(removeBall);
-        Log.w("paddle",String.valueOf((paddle.getLength()/2) + paddle.getX()));
-        Log.w("paddle",String.valueOf((ball.getRect().right + ball.getRect().left)/2));
+        collisions();               // Then, we check the collisions of the balls
+        ballRemoved(removeBall);    // And we remove all the balls in the list removeBall
     }
 
     /**
@@ -212,6 +227,7 @@ public class Engine extends SurfaceView implements Runnable {
             for (int i = 0; i < listeB.size(); i++)
                 canvas.drawRect(listeB.get(i).getRect(), paint);
 
+            //We are puttint the spellblocks and their sprite in the canvas
             for (int i = 0; i < listeS.size(); i++) {
                 canvas.drawRect(listeS.get(i).getRect(), paint);
                 if (!MainMenuActivity.BRICKEST_OFFLINE_MODE) {
@@ -283,7 +299,7 @@ public class Engine extends SurfaceView implements Runnable {
             }
 
 
-            //we are drawing each side for the Spellblocks
+            // We are drawing each side for the Spellblocks
             for (int i = 0; i < listeS.size(); i++) {
                 paint.setColor(Color.argb(255, 0, 255, 255));
                 canvas.drawRect(listeS.get(i).getLeftSide(), paint);
@@ -294,6 +310,10 @@ public class Engine extends SurfaceView implements Runnable {
                 paint.setColor(Color.argb(255, 0, 255, 0));
                 canvas.drawRect(listeS.get(i).getTopSide(), paint);
 
+
+                /* We are putting in the canvas the cooldowns representation which is a blue rectangle
+                 * superimposed on the spellblocks
+                 */
                 if (listeS.get(i).getCooldown() > 0) {
                     paint.setColor(Color.argb(255, 0, 0, 200));
                     canvas.drawRect(listeS.get(i).getRect().left,
@@ -302,7 +322,6 @@ public class Engine extends SurfaceView implements Runnable {
                             listeS.get(i).getRect().bottom
                             , paint
                     );
-                    //Log.w("WARNING",String.valueOf(listeS.get(i).getCooldown()));
                 }
             }
             paint.setColor(Color.argb(255, 249, 129, 0));
@@ -350,6 +369,7 @@ public class Engine extends SurfaceView implements Runnable {
                     if (motionEvent.getX() > screenX / 2) {
                         paddle.setMovementState(paddle.RIGHT, screenX);
                         leftTouched = false;
+                        //The player serves the ball to the right
                         if (firstTouched) {
                             ball.setySpeed(-300);
                             ball.setxSpeed(200);
@@ -359,6 +379,7 @@ public class Engine extends SurfaceView implements Runnable {
                     } else {
                         paddle.setMovementState(paddle.LEFT, screenX);
                         leftTouched = true;
+                        //The player serves the ball to the left
                         if (firstTouched) {
                             ball.setySpeed(-300);
                             ball.setxSpeed(-200);
@@ -367,7 +388,7 @@ public class Engine extends SurfaceView implements Runnable {
                     }
                 }
 
-                paused = false;
+                paused = false;         // game is not freeze anymore
                 break;
 
             //If the player is not touching the phone anymore
@@ -406,11 +427,6 @@ public class Engine extends SurfaceView implements Runnable {
                 }
                 initialSensorValue = sensorEvent.values[0];
             }
-            /*
-            else {
-                paddle.setMovementState(paddle.STOPPED, screenX);
-            }*/
-
         }
     };
 
@@ -418,17 +434,21 @@ public class Engine extends SurfaceView implements Runnable {
      * This method is checking the collisions between the ball and the others object
      */
     void collisions() {
-        //collisions between the ball and the spellblocks
+        //collisions between the ball and the spellblocks for each ball in the list and each spellblock in the list
         for (int i = 0; i < listeB.size(); i++) {
             for (int j = 0; j < listeS.size(); j++) {
-                float minimumS;
+                float minimumS;                     //minimumS is the minimum length between one of the four sides of the spellBlock and the ball
+
+                //If the hitbox of a ball and the hitbox of a ball are interacting
                 if (RectF.intersects(listeS.get(j).getRect(), listeB.get(i).getRect())) {
+                    //We calculate the minimum (which is a absolute value since it can be negative
                     minimumS = minimumCalcul(Math.abs(listeB.get(i).getRect().right - listeS.get(j).getLeftSide().left),
                             Math.abs(listeB.get(i).getRect().left - listeS.get(j).getRightSide().right),
                             Math.abs(listeS.get(j).getBotSide().bottom - listeB.get(i).getRect().top),
                             Math.abs(listeB.get(i).getRect().bottom - listeS.get(j).getTopSide().top)
                     );
 
+                    // If the ball touches the left side of a spellblock
                     if ((listeS.get(j).getLeftSide().left < listeB.get(i).getRect().right) && (listeB.get(i).getxSpeed() > 0) && (minimumS == Math.abs(listeB.get(i).getRect().right - listeS.get(j).getLeftSide().left))) {
                         listeB.get(i).reverseXVelocity();
                         this.playBallBounceSound();
@@ -437,7 +457,9 @@ public class Engine extends SurfaceView implements Runnable {
                         if (!MainMenuActivity.BRICKEST_OFFLINE_MODE)
                             networkBackendService.sendMessageToServer("BFIGHT," + listeS.get(j).getSpell());
 
-                    } else if ((listeS.get(j).getRightSide().right > listeB.get(i).getRect().left) && (listeB.get(i).getxSpeed() < 0) && (minimumS == Math.abs(listeB.get(i).getRect().left - listeS.get(j).getRightSide().right))) {
+                    }
+                    // If the ball touches the right side of a spellblock
+                    else if ((listeS.get(j).getRightSide().right > listeB.get(i).getRect().left) && (listeB.get(i).getxSpeed() < 0) && (minimumS == Math.abs(listeB.get(i).getRect().left - listeS.get(j).getRightSide().right))) {
                         listeB.get(i).reverseXVelocity();
                         this.playBallBounceSound();
                         this.startVibration(100);
@@ -445,7 +467,9 @@ public class Engine extends SurfaceView implements Runnable {
                         if (!MainMenuActivity.BRICKEST_OFFLINE_MODE)
                             networkBackendService.sendMessageToServer("BFIGHT," + listeS.get(j).getSpell());
 
-                    } else if ((listeS.get(j).getBotSide().bottom > listeB.get(i).getRect().top) && (listeB.get(i).getySpeed() < 0) && (minimumS == Math.abs(listeS.get(j).getBotSide().bottom - listeB.get(i).getRect().top))) {
+                    }
+                    // If the ball touches the bottom side of a spellblock
+                    else if ((listeS.get(j).getBotSide().bottom > listeB.get(i).getRect().top) && (listeB.get(i).getySpeed() < 0) && (minimumS == Math.abs(listeS.get(j).getBotSide().bottom - listeB.get(i).getRect().top))) {
                         listeB.get(i).reverseYVelocity();
                         this.playBallBounceSound();
                         this.startVibration(100);
@@ -453,7 +477,9 @@ public class Engine extends SurfaceView implements Runnable {
                         if (!MainMenuActivity.BRICKEST_OFFLINE_MODE)
                             networkBackendService.sendMessageToServer("BFIGHT," + listeS.get(j).getSpell());
 
-                    } else if ((listeS.get(j).getTopSide().top < listeB.get(i).getRect().bottom) && (listeB.get(i).getySpeed() > 0) && (minimumS == Math.abs(listeB.get(i).getRect().bottom - listeS.get(j).getTopSide().top))) {
+                    }
+                    // If the ball touches the top side of a spellblock
+                    else if ((listeS.get(j).getTopSide().top < listeB.get(i).getRect().bottom) && (listeB.get(i).getySpeed() > 0) && (minimumS == Math.abs(listeB.get(i).getRect().bottom - listeS.get(j).getTopSide().top))) {
                         listeB.get(i).reverseYVelocity();
                         this.playBallBounceSound();
                         this.startVibration(100);
@@ -466,10 +492,9 @@ public class Engine extends SurfaceView implements Runnable {
             }
 
             //Collision between the ball and the the paddle
-            //if ((RectF.intersects(paddle.getRect(), listeB.get(i).getRect())) && (listeB.get(i).getySpeed() > 0)) {
             if (((listeB.get(i).getySpeed() / fps) + listeB.get(i).getRect().top > paddle.getRect().top) && (listeB.get(i).getySpeed() > 0)&&(listeB.get(i).getRect().left >= paddle.getRect().left)&&(listeB.get(i).getRect().right <= paddle.getRect().right)){
+                // The trajectories of the ball are modified relative to the place where the collision happened
                 changeTrajectories(listeB.get(i));
-                Log.d("PADDLE", "PADDLE");
                 this.playBallBounceSound();
             }
 
@@ -483,11 +508,11 @@ public class Engine extends SurfaceView implements Runnable {
                             , screenY - paddle.getHeight() - listeB.get(i).getBallHeight() + 10);
                     listeB.get(i).setRect(rect);
                     this.playBallDropSound();
-                    paused = true;                      // Freeze the game
-                    firstTouched = true;                // First time before a collision
+                    paused = true;                          // Freeze the game
+                    firstTouched = true;                    // First time before a collision
                 } else {
                     if (listeB.size() != listeS.size() + 1)
-                        removeBall.add(listeB.get(i));
+                        removeBall.add(listeB.get(i));      // We add the current ball to the removeBall list
                 }
                 listeB.get(i).reverseYVelocity();
                 this.networkBackendService.sendMessageToServer("BFALL");
@@ -497,15 +522,12 @@ public class Engine extends SurfaceView implements Runnable {
             //if the ball hits the right, left or the top side of the screen
             else if ((listeB.get(i).getRect().top - (listeB.get(i).getySpeed() / fps) - listeB.get(i).getBallHeight() < screenY * 0.2) && (listeB.get(i).getySpeed() < 0)) {
                 listeB.get(i).reverseYVelocity();
-                Log.d("SCREEN", "HUD");
                 this.playBallBounceSound();
             } else if ((listeB.get(i).getRect().left - (listeB.get(i).getxSpeed() / fps) - listeB.get(i).getBallWidth() < 0) && (listeB.get(i).getxSpeed() < 0)) {
                 listeB.get(i).reverseXVelocity();
-                Log.d("SCREEN", "LEFT SCREEN");
                 this.playBallBounceSound();
             } else if ((listeB.get(i).getRect().right + (listeB.get(i).getxSpeed() / fps) > screenX) && (listeB.get(i).getxSpeed() > 0)) {
                 listeB.get(i).reverseXVelocity();
-                Log.d("SCR1EEN", "RIGHT SCREEN");
                 this.playBallBounceSound();
             }
         }
@@ -548,7 +570,11 @@ public class Engine extends SurfaceView implements Runnable {
         }
     }
 
-    // Split the ball
+    /**
+     * This method split the ball into two balls
+     * @param ball is the ball which is going to be splitted
+     * @param indexSpell is the index of the spellblock
+     */
     @Deprecated
     public void splitBall(Ball ball, int indexSpell) {
         // New Ball with different trajectories
@@ -584,12 +610,16 @@ public class Engine extends SurfaceView implements Runnable {
     }
 
 
-    // Reduce the size of the balls
+    /**
+     * Reduce the size of the balls in the list of balls
+     * @param liste is the list of balls
+     * @param indexSpell is the index of the spellblock
+     */
     public void reduceBall(List<Ball> liste, int indexSpell) {
         for (int i = 0; i < liste.size(); i++) {
-            if (liste.get(i).getBallHeight() / 2 < liste.get(i).getBallHeightMin()) {
-                liste.get(i).setBallWidth(liste.get(i).getBallWidthMin());
-                liste.get(i).setBallHeight(liste.get(i).getBallHeightMin());
+            if (liste.get(i).getBallHeight() / 2 < liste.get(i).BALLHEIGTHMIN) {
+                liste.get(i).setBallWidth(liste.get(i).BALLWIDTHMIN);
+                liste.get(i).setBallHeight(liste.get(i).BALLHEIGTHMIN);
             } else {
                 liste.get(i).setBallHeight(liste.get(i).getBallHeight() / 2);
                 liste.get(i).setBallWidth(liste.get(i).getBallWidth() / 2);
@@ -598,55 +628,86 @@ public class Engine extends SurfaceView implements Runnable {
         addHistory(history, listeS.get(indexSpell).getSpell(), true, (player.getLogin()));
     }
 
-    // Change paddle size
-    public void changePaddleSize(Paddle paddle1, float multiplicateur, int indexSpell) {
-        if ((Paddle.SIZEMAX >= paddle1.getLength() * multiplicateur) && (multiplicateur >= 1)) {
-            paddle1.setLength(paddle1.getLength() * multiplicateur);
-        } else if ((Paddle.SIZEMIN <= paddle1.getLength() * multiplicateur) && (multiplicateur <= 1)) {
-            paddle1.setLength(paddle1.getLength() * multiplicateur);
+    /**
+     * This method changes the paddleSize
+     * @param paddle1 is the paddle
+     * @param multiplier is the variable that will be determinate the new size of the paddle
+     * @param indexSpell is the index of the spellblock
+     */
+    public void changePaddleSize(Paddle paddle1, float multiplier, int indexSpell) {
+        if ((Paddle.SIZEMAX >= paddle1.getLength() * multiplier) && (multiplier >= 1)) {
+            paddle1.setLength(paddle1.getLength() * multiplier);
+        } else if ((Paddle.SIZEMIN <= paddle1.getLength() * multiplier) && (multiplier <= 1)) {
+            paddle1.setLength(paddle1.getLength() * multiplier);
         }
         addHistory(history, listeS.get(indexSpell).getSpell(), true, (player.getLogin()));
     }
 
-    // Change ball Size
-    public void changeBallSize(List<Ball> liste, float multiplicateur, int indexSpell) {
+    /**
+     * This method changes the speed of the balls
+     * @param liste is the list of balls
+     * @param multiplier is the variable that will be determinate the new speed of the balls
+     * @param indexSpell is the index of the spellblock
+     */
+    public void changeBallSpeed(List<Ball> liste, float multiplier, int indexSpell) {
         for (int i = 0; i < liste.size(); i++) {
-            if ((listeB.get(i).getSommeSpeed() * multiplicateur <= Ball.SPEEDMAX) && (multiplicateur >= 1)) {
-                listeB.get(i).setSommeSpeed(listeB.get(i).getSommeSpeed() * multiplicateur);
-                listeB.get(i).setxSpeed(listeB.get(i).getxSpeed() * multiplicateur);
-                listeB.get(i).setySpeed(listeB.get(i).getySpeed() * multiplicateur);
-            } else if ((listeB.get(i).getSommeSpeed() * multiplicateur >= Ball.SPEEDMIN) && (multiplicateur <= 1)) {
-                listeB.get(i).setSommeSpeed(listeB.get(i).getSommeSpeed() * multiplicateur);
-                listeB.get(i).setxSpeed(listeB.get(i).getxSpeed() * multiplicateur);
-                listeB.get(i).setySpeed(listeB.get(i).getySpeed() * multiplicateur);
+            if ((listeB.get(i).getSommeSpeed() * multiplier <= Ball.SPEEDMAX) && (multiplier >= 1)) {
+                listeB.get(i).setSommeSpeed(listeB.get(i).getSommeSpeed() * multiplier);
+                listeB.get(i).setxSpeed(listeB.get(i).getxSpeed() * multiplier);
+                listeB.get(i).setySpeed(listeB.get(i).getySpeed() * multiplier);
+            } else if ((listeB.get(i).getSommeSpeed() * multiplier >= Ball.SPEEDMIN) && (multiplier <= 1)) {
+                listeB.get(i).setSommeSpeed(listeB.get(i).getSommeSpeed() * multiplier);
+                listeB.get(i).setxSpeed(listeB.get(i).getxSpeed() * multiplier);
+                listeB.get(i).setySpeed(listeB.get(i).getySpeed() * multiplier);
             }
         }
         addHistory(history, listeS.get(indexSpell).getSpell(), true, (player.getLogin()));
     }
 
-    // Update the cooldowns
+    /**
+     * This method update the cooldowns for each spellblock
+     * @param spellBlock is the spellblock which the cooldowns will be update
+     */
     public void checkCooldown(SpellBlock spellBlock) {
         if (spellBlock.getCooldown() > 0) {
-            spellBlock.setCooldown(spellBlock.getCooldown() - 1 / (float) fps); //Reduit le cooldown de 1 par seconde
+            spellBlock.setCooldown(spellBlock.getCooldown() - 1 / (float) fps); //Reduce the cooldown by per second
         } else {
             spellBlock.setCooldown(0);
         }
     }
 
-    // Update the history
+    /**
+     * This is a management of the history, this method add a Battle
+     * @param history is the table of BattleMessage
+     * @param message is the spell of the new BattleMessage
+     * @param bool    is the hasMessage of the new BattleMessage
+     * @param pseudo  is the pseudo of the new BattleMessage
+     */
     public void addHistory(BattleMessage[] history, String message, Boolean bool, String pseudo) {
         int i = 4;
+        /* while i is greater than 0, the BattleMessage in the history at the index i is equal of
+         * the BattleMessage in the history at the index i-1
+         */
         while (i > 0) {
             history[i].setPseudo(history[i - 1].getPseudo());
             history[i].setHasMessage(history[i - 1].getHasMessage());
             history[i].setMessageCombat(history[i - 1].getMessageCombat());
             i--;
         }
+        //Then we add the new BattleMessage in the history at the index 0
         history[0].setPseudo(pseudo);
         history[0].setHasMessage(bool);
         history[0].setMessageCombat(message);
     }
 
+    /**
+     * This method calculate the minimum between four values
+     * @param number1 is the first value
+     * @param number2 is the second value
+     * @param number3 is the third value
+     * @param number4 is the fourth value
+     * @return the minimum between them
+     */
     public float minimumCalcul(float number1, float number2, float number3, float number4) {
         if (number1 > number2) {
             number1 = number2;
@@ -660,41 +721,35 @@ public class Engine extends SurfaceView implements Runnable {
         return number1;
     }
 
-    public void ballRemoved(List<Ball> liste) {
-        for (int i = 0; i < liste.size(); i++) {
-            listeB.remove(liste.get(i));
+    /**
+     * This is the method called after the collision one, this will delete the ball in the list removeBall
+     * @param list is the list of ball
+     */
+    public void ballRemoved(List<Ball> list) {
+        for (int i = 0; i < list.size(); i++) {
+            listeB.remove(list.get(i));
         }
-        for (int i = 0; i < liste.size(); i++) {
-            liste.get(i);
+        for (int i = 0; i < list.size(); i++) {
+            list.get(i);
         }
     }
 
     public void changeTrajectories(Ball ball){
         float percentage;
+        //if the ball is hitting the right part of the part(the area after the middle of the paddle)
         if((paddle.getLength()/2) + paddle.getX() <= (ball.getRect().right + ball.getRect().left)/2){
             percentage = 100 - (((paddle.getRect().right) - (ball.getRect().right + ball.getRect().left)/2) * 100)/ (paddle.getLength()/2);
-            Log.w("XSPEED",String.valueOf(ball.getxSpeed()));
-            Log.w("calcul",String.valueOf((ball.getxSpeed() + percentage * ball.getSommeSpeed())/2));
             ball.setxSpeed((ball.getxSpeed() + percentage * ball.getSommeSpeed())/200);
-            Log.w("XSPEED",String.valueOf(ball.getxSpeed()));
-            Log.w("YSPEED",String.valueOf(ball.getySpeed()));
             ball.setySpeed(ball.getSommeSpeed() - Math.abs(ball.getxSpeed()));
-            Log.w("YSPEED",String.valueOf(ball.getySpeed()));
-            Log.w("RIGHT","RIGHT");
         }
+        //if the ball is hitting the left part of the part(the area before the middle of the paddle)
         else{
             percentage = ((((paddle.getLength()/2) + paddle.getX()) - (ball.getRect().right + ball.getRect().left)/2) * 100)/ (paddle.getLength()/2);
-            Log.w("XSPEED",String.valueOf(ball.getxSpeed()));
-            Log.w("calcul",String.valueOf((ball.getxSpeed() + percentage * ball.getSommeSpeed())/2));
             ball.setxSpeed((ball.getxSpeed() + percentage * (0-ball.getSommeSpeed()))/200);
-            Log.w("XSPEED",String.valueOf(ball.getxSpeed()));
-            Log.w("YSPEED",String.valueOf(ball.getySpeed()));
             ball.setySpeed(ball.getSommeSpeed() - Math.abs(ball.getxSpeed()));
-            Log.w("YSPEED",String.valueOf(ball.getySpeed()));
-            Log.w("RIGHT","LEFT");
         }
 
-        Log.w("pourcentage",String.valueOf(percentage));
+        //Then if the ball was falling, the ball is now bouncing back up to the top of the screen
         if(ball.getySpeed() > 0) {
             ball.reverseYVelocity();
         }
