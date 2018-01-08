@@ -106,7 +106,7 @@ public class Engine extends SurfaceView implements Runnable {
         if (!MainMenuActivity.BRICKEST_OFFLINE_MODE)
             this.networkBackendService = networkBackendService;
 
-        this.ourHolder = getHolder();   //Initializing the ourHolder objecet
+        this.ourHolder = getHolder();   //Initializing the ourHolder object
         this.paint = new Paint();       //Initializing the paint object
 
         // Retrieving the screen size
@@ -454,8 +454,32 @@ public class Engine extends SurfaceView implements Runnable {
                         this.playBallBounceSound();
                         this.startVibration(100);
 
-                        if (!MainMenuActivity.BRICKEST_OFFLINE_MODE)
+                        if (!MainMenuActivity.BRICKEST_OFFLINE_MODE) {
                             networkBackendService.sendMessageToServer("BFIGHT," + listeS.get(j).getSpell());
+                        }
+                        else {
+                            switch(j){
+                                case 0:
+                                    if(listeS.get(j).getCooldown() == 0) {
+                                        listeS.get(j).setCooldown(listeS.get(j).getCooldownDuration());
+                                        changeBallSpeed(listeB, 1.2, j);
+                                    }
+                                    break;
+                                case 1:
+                                    if(listeS.get(j).getCooldown() == 0) {
+                                        listeS.get(j).setCooldown(listeS.get(j).getCooldownDuration());
+                                        splitBall(listeB.get(i), j);
+                                    }
+                                    break;
+                                case 2:
+                                    if(listeS.get(j).getCooldown() == 0) {
+                                        listeS.get(j).setCooldown(listeS.get(j).getCooldownDuration());
+                                        reduceBall(listeB, j);
+                                    }
+                                    break;
+
+                            }
+                        }
 
                     }
                     // If the ball touches the right side of a spellblock
@@ -464,9 +488,31 @@ public class Engine extends SurfaceView implements Runnable {
                         this.playBallBounceSound();
                         this.startVibration(100);
 
-                        if (!MainMenuActivity.BRICKEST_OFFLINE_MODE)
+                        if (!MainMenuActivity.BRICKEST_OFFLINE_MODE) {
                             networkBackendService.sendMessageToServer("BFIGHT," + listeS.get(j).getSpell());
-
+                        }
+                        else{
+                            switch(j){
+                                case 0:
+                                    if(listeS.get(j).getCooldown() == 0) {
+                                        listeS.get(j).setCooldown(listeS.get(j).getCooldownDuration());
+                                        changeBallSpeed(listeB, 1.2, j);
+                                    }
+                                    break;
+                                case 1:
+                                    if(listeS.get(j).getCooldown() == 0) {
+                                        listeS.get(j).setCooldown(listeS.get(j).getCooldownDuration());
+                                        splitBall(listeB.get(i), j);
+                                    }
+                                    break;
+                                case 2:
+                                    if(listeS.get(j).getCooldown() == 0) {
+                                        listeS.get(j).setCooldown(listeS.get(j).getCooldownDuration());
+                                        reduceBall(listeB, j);
+                                    }
+                                    break;
+                            }
+                        }
                     }
                     // If the ball touches the bottom side of a spellblock
                     else if ((listeS.get(j).getBotSide().bottom > listeB.get(i).getRect().top) && (listeB.get(i).getySpeed() < 0) && (minimumS == Math.abs(listeS.get(j).getBotSide().bottom - listeB.get(i).getRect().top))) {
@@ -474,9 +520,31 @@ public class Engine extends SurfaceView implements Runnable {
                         this.playBallBounceSound();
                         this.startVibration(100);
 
-                        if (!MainMenuActivity.BRICKEST_OFFLINE_MODE)
+                        if (!MainMenuActivity.BRICKEST_OFFLINE_MODE) {
                             networkBackendService.sendMessageToServer("BFIGHT," + listeS.get(j).getSpell());
-
+                        }
+                        else{
+                            switch(j){
+                                case 0:
+                                    if(listeS.get(j).getCooldown() == 0) {
+                                        listeS.get(j).setCooldown(listeS.get(j).getCooldownDuration());
+                                        changeBallSpeed(listeB, 1.2, j);
+                                    }
+                                    break;
+                                case 1:
+                                    if(listeS.get(j).getCooldown() == 0) {
+                                        listeS.get(j).setCooldown(listeS.get(j).getCooldownDuration());
+                                        splitBall(listeB.get(i), j);
+                                    }
+                                    break;
+                                case 2:
+                                    if(listeS.get(j).getCooldown() == 0) {
+                                        listeS.get(j).setCooldown(listeS.get(j).getCooldownDuration());
+                                        reduceBall(listeB, j);
+                                    }
+                                    break;
+                            }
+                        }
                     }
                     // If the ball touches the top side of a spellblock
                     else if ((listeS.get(j).getTopSide().top < listeB.get(i).getRect().bottom) && (listeB.get(i).getySpeed() > 0) && (minimumS == Math.abs(listeB.get(i).getRect().bottom - listeS.get(j).getTopSide().top))) {
@@ -484,9 +552,31 @@ public class Engine extends SurfaceView implements Runnable {
                         this.playBallBounceSound();
                         this.startVibration(100);
 
-                        if (!MainMenuActivity.BRICKEST_OFFLINE_MODE)
+                        if (!MainMenuActivity.BRICKEST_OFFLINE_MODE) {
                             networkBackendService.sendMessageToServer("BFIGHT," + listeS.get(j).getSpell());
-
+                        }
+                        else{
+                            switch(j){
+                                case 0:
+                                    if(listeS.get(j).getCooldown() == 0) {
+                                        listeS.get(j).setCooldown(listeS.get(j).getCooldownDuration());
+                                        changeBallSpeed(listeB, 1.2, j);
+                                    }
+                                    break;
+                                case 1:
+                                    if(listeS.get(j).getCooldown() == 0) {
+                                        listeS.get(j).setCooldown(listeS.get(j).getCooldownDuration());
+                                        splitBall(listeB.get(i), j);
+                                    }
+                                    break;
+                                case 2:
+                                    if(listeS.get(j).getCooldown() == 0) {
+                                        listeS.get(j).setCooldown(listeS.get(j).getCooldownDuration());
+                                        reduceBall(listeB, j);
+                                    }
+                                    break;
+                            }
+                        }
                     }
                 }
             }
@@ -515,7 +605,12 @@ public class Engine extends SurfaceView implements Runnable {
                         removeBall.add(listeB.get(i));      // We add the current ball to the removeBall list
                 }
                 listeB.get(i).reverseYVelocity();
-                this.networkBackendService.sendMessageToServer("BFALL");
+                if (!MainMenuActivity.BRICKEST_OFFLINE_MODE) {
+                    this.networkBackendService.sendMessageToServer("BFALL");
+                }
+                else{
+                    player.loseLife(1);
+                }
             }
 
 
@@ -588,7 +683,7 @@ public class Engine extends SurfaceView implements Runnable {
         ball2.setBallWidth(ball.getBallHeight());
 
         listeB.add(ball2);
-        addHistory(history, listeS.get(indexSpell).getSpell(), true, (player.getLogin()));
+        addHistory(history,"splitBall", true, (player.getLogin()));
     }
 
     /**
@@ -625,7 +720,7 @@ public class Engine extends SurfaceView implements Runnable {
                 liste.get(i).setBallWidth(liste.get(i).getBallWidth() / 2);
             }
         }
-        addHistory(history, listeS.get(indexSpell).getSpell(), true, (player.getLogin()));
+        addHistory(history,"reduceBall", true, (player.getLogin()));
     }
 
     /**
@@ -634,11 +729,11 @@ public class Engine extends SurfaceView implements Runnable {
      * @param multiplier is the variable that will be determinate the new size of the paddle
      * @param indexSpell is the index of the spellblock
      */
-    public void changePaddleSize(Paddle paddle1, float multiplier, int indexSpell) {
+    public void changePaddleSize(Paddle paddle1, double multiplier, int indexSpell) {
         if ((Paddle.SIZEMAX >= paddle1.getLength() * multiplier) && (multiplier >= 1)) {
-            paddle1.setLength(paddle1.getLength() * multiplier);
+            paddle1.setLength((float)(paddle1.getLength() * multiplier));
         } else if ((Paddle.SIZEMIN <= paddle1.getLength() * multiplier) && (multiplier <= 1)) {
-            paddle1.setLength(paddle1.getLength() * multiplier);
+            paddle1.setLength((float)(paddle1.getLength() * multiplier));
         }
         addHistory(history, listeS.get(indexSpell).getSpell(), true, (player.getLogin()));
     }
@@ -649,19 +744,19 @@ public class Engine extends SurfaceView implements Runnable {
      * @param multiplier is the variable that will be determinate the new speed of the balls
      * @param indexSpell is the index of the spellblock
      */
-    public void changeBallSpeed(List<Ball> liste, float multiplier, int indexSpell) {
+    public void changeBallSpeed(List<Ball> liste, double multiplier, int indexSpell) {
         for (int i = 0; i < liste.size(); i++) {
             if ((listeB.get(i).getSommeSpeed() * multiplier <= Ball.SPEEDMAX) && (multiplier >= 1)) {
-                listeB.get(i).setSommeSpeed(listeB.get(i).getSommeSpeed() * multiplier);
-                listeB.get(i).setxSpeed(listeB.get(i).getxSpeed() * multiplier);
-                listeB.get(i).setySpeed(listeB.get(i).getySpeed() * multiplier);
+                listeB.get(i).setSommeSpeed((float)(listeB.get(i).getSommeSpeed() * multiplier));
+                listeB.get(i).setxSpeed((float)(listeB.get(i).getxSpeed() * multiplier));
+                listeB.get(i).setySpeed((float)(listeB.get(i).getySpeed() * multiplier));
             } else if ((listeB.get(i).getSommeSpeed() * multiplier >= Ball.SPEEDMIN) && (multiplier <= 1)) {
-                listeB.get(i).setSommeSpeed(listeB.get(i).getSommeSpeed() * multiplier);
-                listeB.get(i).setxSpeed(listeB.get(i).getxSpeed() * multiplier);
-                listeB.get(i).setySpeed(listeB.get(i).getySpeed() * multiplier);
+                listeB.get(i).setSommeSpeed((float)(listeB.get(i).getSommeSpeed() * multiplier));
+                listeB.get(i).setxSpeed((float)(listeB.get(i).getxSpeed() * multiplier));
+                listeB.get(i).setySpeed((float)(listeB.get(i).getySpeed() * multiplier));
             }
         }
-        addHistory(history, listeS.get(indexSpell).getSpell(), true, (player.getLogin()));
+        addHistory(history, "acceleroBall", true, (player.getLogin()));
     }
 
     /**
