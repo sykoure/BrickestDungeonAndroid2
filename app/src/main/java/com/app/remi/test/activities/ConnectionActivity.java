@@ -25,7 +25,6 @@ import java.util.ArrayList;
 
 /**
  * Activity used to identify the player
- * TODO add loosing screen management
  */
 public class ConnectionActivity extends Activity implements Displayable {
 
@@ -57,9 +56,8 @@ public class ConnectionActivity extends Activity implements Displayable {
         localBroadcastManager.registerReceiver(myReceiver, intentFilter);                                           // We register the receiver for the localBroadcastManager
 
         SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);                                   // We set the login and password on screen with last validated password/login
-        this.loginField.setText(sharedPref.getString(LOGIN_TAG,"login"));
-        this.passwordField.setText(sharedPref.getString(PASSWORD_TAG,""));
-
+        this.loginField.setText(sharedPref.getString(LOGIN_TAG, "login"));
+        this.passwordField.setText(sharedPref.getString(PASSWORD_TAG, ""));
 
 
     }

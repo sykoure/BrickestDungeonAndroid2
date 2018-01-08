@@ -216,12 +216,11 @@ public class TrueSpellSelectionActivity extends Activity implements Displayable 
     }
 
     /**
-     * This will start the next activity and give it the list of selected spells
-     * Makes sure the user chose at least 3 spells
-     *
+     * This will send the chosen spells to the server
+     * Behavior for the button
      * @param view Context
      */
-    public void goToSpellSelectionActivity(View view) {
+    public void behaviorSelectionSpells(View view) {
         this.spellListToSend = this.putSelectedSpellInArray();
         if (spellListToSend.size() < 3) {
             Toast.makeText(this, "Choose at least 3 spells", Toast.LENGTH_SHORT).show();

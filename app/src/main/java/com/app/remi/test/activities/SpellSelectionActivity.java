@@ -26,7 +26,7 @@ import com.app.remi.test.network.backend.services.NetworkBackendService;
 import java.util.ArrayList;
 
 /**
- * Matchmaking activity activity
+ * Matchmaking activity
  * The client can choose here to play with the accelerometer
  * Bad naming due to early implementation
  * TODO rename properly

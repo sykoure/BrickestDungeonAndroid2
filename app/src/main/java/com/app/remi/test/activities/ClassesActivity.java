@@ -24,7 +24,6 @@ import java.util.ArrayList;
 
 /**
  * Activity where the player choose his class for his future games
- * TODO add the connection and the choosing part
  */
 public class ClassesActivity extends Activity implements Displayable {
 
@@ -211,6 +210,7 @@ public class ClassesActivity extends Activity implements Displayable {
     /**
      * Reception of the list of spells available for the chosen classes
      * Parse it and pass it to the next activity
+     *
      * @param textReceived
      */
     @Override
@@ -226,6 +226,7 @@ public class ClassesActivity extends Activity implements Displayable {
         intent.putExtra(TrueSpellSelectionActivity.TAG_LIST_SPELL, spellsList);                        // We put in the intent the list of available classes
         startActivity(intent);
     }
+
     /***
      * The service is only unbound onDestroy, this allow the service to persist between activities
      */
