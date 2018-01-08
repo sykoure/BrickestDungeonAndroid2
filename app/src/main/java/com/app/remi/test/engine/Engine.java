@@ -601,7 +601,7 @@ public class Engine extends SurfaceView implements Runnable {
                     paused = true;                          // Freeze the game
                     firstTouched = true;                    // First time before a collision
                 } else {
-                    if (listeB.size() != listeS.size() + 1)
+                    if (listeB.size() != 1)
                         removeBall.add(listeB.get(i));      // We add the current ball to the removeBall list
                 }
                 listeB.get(i).reverseYVelocity();
