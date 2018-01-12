@@ -87,7 +87,6 @@ public class ClientInterfaceTCP {
 
         } catch (UnknownHostException e) {
             System.err.println("Hote inconnu");
-            System.exit(1);
             return false;
         } catch (IOException e) {
             e.printStackTrace();
