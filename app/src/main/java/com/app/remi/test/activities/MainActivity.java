@@ -231,7 +231,9 @@ public class MainActivity extends Activity implements Displayable {
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        unbindService(mConnection);
-        mBound = false;
+        if(!MainMenuActivity.BRICKEST_OFFLINE_MODE) {
+            unbindService(mConnection);
+            mBound = false;
+        }
     }
 }
