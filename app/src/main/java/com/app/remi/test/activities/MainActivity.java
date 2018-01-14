@@ -219,7 +219,7 @@ public class MainActivity extends Activity implements Displayable {
 
         } else {
             // TODO instead go to Matchmaking activity (currently SpellSelectionActivity)
-            Intent intent = new Intent(this, MainMenuActivity.class);
+            Intent intent = new Intent(this, SpellSelectionActivity.class);
             intent.putExtra(TAG_FIGHT_RESULT, textReceived);
             startActivity(intent);
         }

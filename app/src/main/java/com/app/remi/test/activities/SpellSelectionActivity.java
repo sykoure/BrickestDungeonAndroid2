@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.ServiceConnection;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
@@ -24,6 +25,8 @@ import com.app.remi.test.network.backend.NetworkReceiver;
 import com.app.remi.test.network.backend.services.NetworkBackendService;
 
 import java.util.ArrayList;
+import java.util.HashSet;
+import java.util.Set;
 
 /**
  * Matchmaking activity
@@ -36,7 +39,7 @@ public class SpellSelectionActivity extends Activity implements Displayable {
     //Button that will launch the game
     private Button startButton;
     //The textViews
-    private TextView accelerometerTextView;
+    private TextView accelerometerTextView, matchResultTextView;
     //The button to allow or not the player to use the accelerometer
     private ToggleButton accelerometerToggleButton;
 
@@ -60,10 +63,9 @@ public class SpellSelectionActivity extends Activity implements Displayable {
         //all the views
         startButton = (Button) findViewById(R.id.nextScreenButton);
         accelerometerTextView = (TextView) findViewById(R.id.accelerometerTextView);
+        matchResultTextView = (TextView) findViewById(R.id.matchResultTextView);
         accelerometerToggleButton = (ToggleButton) findViewById(R.id.accelerometerToggleButton);
 
-        this.spellsList = getIntent().getStringArrayListExtra(TrueSpellSelectionActivity.TAG_LIST_SPELL);
-        Log.d("SPELL_SELECTION : ", this.spellsList.toString());
 
         this.localBroadcastManager = LocalBroadcastManager.getInstance(this);                                       // Get an instance of a broadcast manager
         BroadcastReceiver myReceiver = new NetworkReceiver(this);                                        // Create a class and set in it the behavior when an information is received
@@ -75,6 +77,30 @@ public class SpellSelectionActivity extends Activity implements Displayable {
     @Override
     protected void onStart() {
         super.onStart();
+
+        if (getIntent().getStringExtra(MainActivity.TAG_FIGHT_RESULT) == null) {                                    // If the activity has not been restarted by the MainActivity
+            this.spellsList = getIntent().getStringArrayListExtra(TrueSpellSelectionActivity.TAG_LIST_SPELL);
+            Log.d("SPELL_SELECTION : ", this.spellsList.toString());
+
+            SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
+            SharedPreferences.Editor editor = sharedPref.edit();
+            Set<String> spellsSet = new HashSet<>();
+            spellsSet.addAll(this.spellsList);                                                                      // Conversion of the array list into a set to allow the usage of SharedPreferences
+            editor.putStringSet(TAG_SPELL_LIST, spellsSet);
+            editor.commit();
+        } else {                                                                                                    // The activity has been started by the MainActivity
+            SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);                               // We retrieve the list of spells previously saved
+            Set<String> spellsSet = sharedPref.getStringSet(TAG_SPELL_LIST, null);
+            Log.d("SPELLS RETRIEVED", spellsSet.toString());
+            this.spellsList = new ArrayList<>();
+            this.spellsList.addAll(spellsSet);
+            if (getIntent().getStringExtra(MainActivity.TAG_FIGHT_RESULT).equals("BWIN")) {                         // Display the result of the match
+                this.matchResultTextView.setText("YOU WON");
+            } else {
+                this.matchResultTextView.setText("YOU LOST");
+            }
+        }
+
         Intent intent = new Intent(this, NetworkBackendService.class);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
 
@@ -137,7 +163,7 @@ public class SpellSelectionActivity extends Activity implements Displayable {
 
         intent.putExtra(TAG_PLAYER_OWN_INFO, own_player_info);
         intent.putExtra(TAG_PLAYER_OPP_INFO, opp_player_info);
-        intent.putExtra(TAG_SPELL_LIST,this.spellsList); // Retrieving of the list of spells
+        intent.putExtra(TAG_SPELL_LIST, this.spellsList); // Retrieving of the list of spells
         intent.putExtra("SPELL_BLOCKS_NUMBER", this.spellsList.size());
         intent.putExtra(SpellSelectionActivity.MATCHMAKING_SPELLS_LIST, this.spellsList);
         intent.putExtra("BOOLEAN_CHECK", buttonState);
