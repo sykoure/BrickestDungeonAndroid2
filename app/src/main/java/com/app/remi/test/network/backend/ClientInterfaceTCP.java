@@ -28,7 +28,8 @@ public class ClientInterfaceTCP {
         this.flux_sortie = null;
         this.flux_entree = null;
         this.portNumber = 5000;
-        this.address = "dankest.ddns.net";
+        //this.address = "dankest.ddns.net";
+        this.address = "b3n.ddns.net";
         this.isConnected = false;
         this.networkBackendService = networkBackendService;
     }

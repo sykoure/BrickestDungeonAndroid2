@@ -236,4 +236,11 @@ public class MainActivity extends Activity implements Displayable {
             mBound = false;
         }
     }
+
+    /**
+     * Disable the back button when the user is in a game
+     */
+    @Override
+    public void onBackPressed() {
+    }
 }

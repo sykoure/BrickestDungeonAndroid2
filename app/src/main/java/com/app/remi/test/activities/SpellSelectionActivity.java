@@ -36,16 +36,18 @@ import java.util.Set;
  */
 public class SpellSelectionActivity extends Activity implements Displayable {
 
-    //Button that will launch the game
+    // Button that will launch the game
     private Button startButton;
-    //The textViews
+    // The textViews
     private TextView accelerometerTextView, matchResultTextView;
-    //The button to allow or not the player to use the accelerometer
+    // The button to allow or not the player to use the accelerometer
     private ToggleButton accelerometerToggleButton;
 
     private LocalBroadcastManager localBroadcastManager;
     private NetworkBackendService networkBackendService;
     private boolean mBound = false;
+    // Allow the usage of the back button
+    private boolean canGoBack;
 
     private ArrayList<String> spellsList;
     public final static String MATCHMAKING_SPELLS_LIST = "com.app.remi.test.activities.SpellSelectionActivity";
@@ -72,13 +74,9 @@ public class SpellSelectionActivity extends Activity implements Displayable {
         IntentFilter intentFilter = new IntentFilter(FILTER_MATCHMAKING);                                           // The intentFilter action should match the action of the intent send
         localBroadcastManager.registerReceiver(myReceiver, intentFilter);                                           // We register the receiver for the localBroadcastManager
 
-    }
-
-    @Override
-    protected void onStart() {
-        super.onStart();
 
         if (getIntent().getStringExtra(MainActivity.TAG_FIGHT_RESULT) == null) {                                    // If the activity has not been restarted by the MainActivity
+            this.canGoBack = true;
             this.spellsList = getIntent().getStringArrayListExtra(TrueSpellSelectionActivity.TAG_LIST_SPELL);
             Log.d("SPELL_SELECTION : ", this.spellsList.toString());
 
@@ -89,6 +87,7 @@ public class SpellSelectionActivity extends Activity implements Displayable {
             editor.putStringSet(TAG_SPELL_LIST, spellsSet);
             editor.commit();
         } else {                                                                                                    // The activity has been started by the MainActivity
+            this.canGoBack = false;
             SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);                               // We retrieve the list of spells previously saved
             Set<String> spellsSet = sharedPref.getStringSet(TAG_SPELL_LIST, null);
             Log.d("SPELLS RETRIEVED", spellsSet.toString());
@@ -100,6 +99,12 @@ public class SpellSelectionActivity extends Activity implements Displayable {
                 this.matchResultTextView.setText("YOU LOST");
             }
         }
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
 
         Intent intent = new Intent(this, NetworkBackendService.class);
         bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
@@ -180,4 +185,18 @@ public class SpellSelectionActivity extends Activity implements Displayable {
         mBound = false;
     }
 
+    /**
+     * The user can only go back when the previous screen is not the engine
+     * If the last screen was the engine, the user back button send him back to title screen
+     */
+    @Override
+    public void onBackPressed() {
+        if (this.canGoBack) {
+            super.onBackPressed();
+        }
+        else{
+            Intent intent = new Intent(this,MainMenuActivity.class);
+            startActivity(intent);
+        }
+    }
 }
