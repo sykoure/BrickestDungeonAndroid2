@@ -216,6 +216,12 @@ public class MainActivity extends Activity implements Displayable {
             for (int index = 1; index < ballsNb; index++) {
                 this.engine.splitBall();
             }*/
+            if(ballsSpeed != 1.0){
+                this.engine.changeBallSpeed(ballsSpeed);
+            }
+            if(ballsSize != 1.0){
+                this.engine.changeBallSize(ballsSize);
+            }
 
         } else {
             // TODO instead go to Matchmaking activity (currently SpellSelectionActivity)

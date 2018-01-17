@@ -24,6 +24,8 @@ public class Ball {
     private float ballHeight = 10;
     public final static float BALLWIDTHMIN = 3;
     public final static float BALLHEIGTHMIN = 3;
+    public final static float BALLWIDTHMAX = 50;
+    public final static float BALLHEIGTHMAX = 50;
 
     /**
      * The method Ball() is setting the values of the object Ball, its hitbox and its speed

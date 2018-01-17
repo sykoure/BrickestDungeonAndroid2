@@ -153,6 +153,7 @@ public class Engine extends SurfaceView implements Runnable {
 
     /**
      * This method allows us to reset the position of a ball that is in the list of balls
+     *
      * @param i is the index of the ball in its list
      */
     public void reset(int i) {
@@ -456,23 +457,22 @@ public class Engine extends SurfaceView implements Runnable {
 
                         if (!MainMenuActivity.BRICKEST_OFFLINE_MODE) {
                             networkBackendService.sendMessageToServer("BFIGHT," + listeS.get(j).getSpell());
-                        }
-                        else {
-                            switch(j){
+                        } else {
+                            switch (j) {
                                 case 0:
-                                    if(listeS.get(j).getCooldown() == 0) {
+                                    if (listeS.get(j).getCooldown() == 0) {
                                         listeS.get(j).setCooldown(listeS.get(j).getCooldownDuration());
                                         changeBallSpeed(listeB, 1.2, j);
                                     }
                                     break;
                                 case 1:
-                                    if(listeS.get(j).getCooldown() == 0) {
+                                    if (listeS.get(j).getCooldown() == 0) {
                                         listeS.get(j).setCooldown(listeS.get(j).getCooldownDuration());
                                         splitBall(listeB.get(i), j);
                                     }
                                     break;
                                 case 2:
-                                    if(listeS.get(j).getCooldown() == 0) {
+                                    if (listeS.get(j).getCooldown() == 0) {
                                         listeS.get(j).setCooldown(listeS.get(j).getCooldownDuration());
                                         reduceBall(listeB, j);
                                     }
@@ -490,23 +490,22 @@ public class Engine extends SurfaceView implements Runnable {
 
                         if (!MainMenuActivity.BRICKEST_OFFLINE_MODE) {
                             networkBackendService.sendMessageToServer("BFIGHT," + listeS.get(j).getSpell());
-                        }
-                        else{
-                            switch(j){
+                        } else {
+                            switch (j) {
                                 case 0:
-                                    if(listeS.get(j).getCooldown() == 0) {
+                                    if (listeS.get(j).getCooldown() == 0) {
                                         listeS.get(j).setCooldown(listeS.get(j).getCooldownDuration());
                                         changeBallSpeed(listeB, 1.2, j);
                                     }
                                     break;
                                 case 1:
-                                    if(listeS.get(j).getCooldown() == 0) {
+                                    if (listeS.get(j).getCooldown() == 0) {
                                         listeS.get(j).setCooldown(listeS.get(j).getCooldownDuration());
                                         splitBall(listeB.get(i), j);
                                     }
                                     break;
                                 case 2:
-                                    if(listeS.get(j).getCooldown() == 0) {
+                                    if (listeS.get(j).getCooldown() == 0) {
                                         listeS.get(j).setCooldown(listeS.get(j).getCooldownDuration());
                                         reduceBall(listeB, j);
                                     }
@@ -522,23 +521,22 @@ public class Engine extends SurfaceView implements Runnable {
 
                         if (!MainMenuActivity.BRICKEST_OFFLINE_MODE) {
                             networkBackendService.sendMessageToServer("BFIGHT," + listeS.get(j).getSpell());
-                        }
-                        else{
-                            switch(j){
+                        } else {
+                            switch (j) {
                                 case 0:
-                                    if(listeS.get(j).getCooldown() == 0) {
+                                    if (listeS.get(j).getCooldown() == 0) {
                                         listeS.get(j).setCooldown(listeS.get(j).getCooldownDuration());
                                         changeBallSpeed(listeB, 1.2, j);
                                     }
                                     break;
                                 case 1:
-                                    if(listeS.get(j).getCooldown() == 0) {
+                                    if (listeS.get(j).getCooldown() == 0) {
                                         listeS.get(j).setCooldown(listeS.get(j).getCooldownDuration());
                                         splitBall(listeB.get(i), j);
                                     }
                                     break;
                                 case 2:
-                                    if(listeS.get(j).getCooldown() == 0) {
+                                    if (listeS.get(j).getCooldown() == 0) {
                                         listeS.get(j).setCooldown(listeS.get(j).getCooldownDuration());
                                         reduceBall(listeB, j);
                                     }
@@ -554,23 +552,22 @@ public class Engine extends SurfaceView implements Runnable {
 
                         if (!MainMenuActivity.BRICKEST_OFFLINE_MODE) {
                             networkBackendService.sendMessageToServer("BFIGHT," + listeS.get(j).getSpell());
-                        }
-                        else{
-                            switch(j){
+                        } else {
+                            switch (j) {
                                 case 0:
-                                    if(listeS.get(j).getCooldown() == 0) {
+                                    if (listeS.get(j).getCooldown() == 0) {
                                         listeS.get(j).setCooldown(listeS.get(j).getCooldownDuration());
                                         changeBallSpeed(listeB, 1.2, j);
                                     }
                                     break;
                                 case 1:
-                                    if(listeS.get(j).getCooldown() == 0) {
+                                    if (listeS.get(j).getCooldown() == 0) {
                                         listeS.get(j).setCooldown(listeS.get(j).getCooldownDuration());
                                         splitBall(listeB.get(i), j);
                                     }
                                     break;
                                 case 2:
-                                    if(listeS.get(j).getCooldown() == 0) {
+                                    if (listeS.get(j).getCooldown() == 0) {
                                         listeS.get(j).setCooldown(listeS.get(j).getCooldownDuration());
                                         reduceBall(listeB, j);
                                     }
@@ -582,7 +579,7 @@ public class Engine extends SurfaceView implements Runnable {
             }
 
             //Collision between the ball and the the paddle
-            if (((listeB.get(i).getySpeed() / fps) + listeB.get(i).getRect().top > paddle.getRect().top) && (listeB.get(i).getySpeed() > 0)&&(listeB.get(i).getRect().left >= paddle.getRect().left)&&(listeB.get(i).getRect().right <= paddle.getRect().right)){
+            if (((listeB.get(i).getySpeed() / fps) + listeB.get(i).getRect().top > paddle.getRect().top) && (listeB.get(i).getySpeed() > 0) && (listeB.get(i).getRect().left >= paddle.getRect().left) && (listeB.get(i).getRect().right <= paddle.getRect().right)) {
                 // The trajectories of the ball are modified relative to the place where the collision happened
                 changeTrajectories(listeB.get(i));
                 this.playBallBounceSound();
@@ -607,8 +604,7 @@ public class Engine extends SurfaceView implements Runnable {
                 listeB.get(i).reverseYVelocity();
                 if (!MainMenuActivity.BRICKEST_OFFLINE_MODE) {
                     this.networkBackendService.sendMessageToServer("BFALL");
-                }
-                else{
+                } else {
                     player.loseLife(1);
                 }
             }
@@ -667,7 +663,8 @@ public class Engine extends SurfaceView implements Runnable {
 
     /**
      * This method split the ball into two balls
-     * @param ball is the ball which is going to be splitted
+     *
+     * @param ball       is the ball which is going to be splitted
      * @param indexSpell is the index of the spellblock
      */
     @Deprecated
@@ -683,7 +680,7 @@ public class Engine extends SurfaceView implements Runnable {
         ball2.setBallWidth(ball.getBallHeight());
 
         listeB.add(ball2);
-        addHistory(history,"splitBall", true, (player.getLogin()));
+        addHistory(history, "splitBall", true, (player.getLogin()));
     }
 
     /**
@@ -707,7 +704,8 @@ public class Engine extends SurfaceView implements Runnable {
 
     /**
      * Reduce the size of the balls in the list of balls
-     * @param liste is the list of balls
+     * TODO remane changeBallSize
+     * @param liste      is the list of balls
      * @param indexSpell is the index of the spellblock
      */
     public void reduceBall(List<Ball> liste, int indexSpell) {
@@ -720,47 +718,94 @@ public class Engine extends SurfaceView implements Runnable {
                 liste.get(i).setBallWidth(liste.get(i).getBallWidth() / 2);
             }
         }
-        addHistory(history,"reduceBall", true, (player.getLogin()));
+        addHistory(history, "reduceBall", true, (player.getLogin()));
+    }
+
+    /**
+     * Reduce the size of the balls in the list of balls
+
+     * @param multiplier is the variable that will be determinate the new speed of the balls
+     */
+    public void changeBallSize(float multiplier) {
+        for (int i = 0; i < this.listeB.size(); i++) {
+            if (listeB.get(i).getBallHeight() * multiplier < listeB.get(i).BALLHEIGTHMIN) {
+                listeB.get(i).setBallWidth(listeB.get(i).BALLWIDTHMIN);
+                listeB.get(i).setBallHeight(listeB.get(i).BALLHEIGTHMIN);
+            }
+            else if(listeB.get(i).getBallHeight() * multiplier > listeB.get(i).BALLHEIGTHMAX){
+                listeB.get(i).setBallWidth(listeB.get(i).BALLWIDTHMAX);
+                listeB.get(i).setBallHeight(listeB.get(i).BALLHEIGTHMAX);
+            }
+            else {
+                listeB.get(i).setBallHeight(listeB.get(i).getBallHeight() * multiplier);
+                listeB.get(i).setBallWidth(listeB.get(i).getBallWidth() * multiplier);
+            }
+        }
+        addHistory(history, "reduceBall", true, (player.getLogin()));
     }
 
     /**
      * This method changes the paddleSize
-     * @param paddle1 is the paddle
+     *
+     * @param paddle1    is the paddle
      * @param multiplier is the variable that will be determinate the new size of the paddle
      * @param indexSpell is the index of the spellblock
      */
     public void changePaddleSize(Paddle paddle1, double multiplier, int indexSpell) {
         if ((Paddle.SIZEMAX >= paddle1.getLength() * multiplier) && (multiplier >= 1)) {
-            paddle1.setLength((float)(paddle1.getLength() * multiplier));
+            paddle1.setLength((float) (paddle1.getLength() * multiplier));
         } else if ((Paddle.SIZEMIN <= paddle1.getLength() * multiplier) && (multiplier <= 1)) {
-            paddle1.setLength((float)(paddle1.getLength() * multiplier));
+            paddle1.setLength((float) (paddle1.getLength() * multiplier));
         }
         addHistory(history, listeS.get(indexSpell).getSpell(), true, (player.getLogin()));
     }
 
     /**
      * This method changes the speed of the balls
-     * @param liste is the list of balls
+     * Only used on offline mode
+     *
+     * @param liste      is the list of balls
      * @param multiplier is the variable that will be determinate the new speed of the balls
      * @param indexSpell is the index of the spellblock
      */
     public void changeBallSpeed(List<Ball> liste, double multiplier, int indexSpell) {
         for (int i = 0; i < liste.size(); i++) {
             if ((listeB.get(i).getSommeSpeed() * multiplier <= Ball.SPEEDMAX) && (multiplier >= 1)) {
-                listeB.get(i).setSommeSpeed((float)(listeB.get(i).getSommeSpeed() * multiplier));
-                listeB.get(i).setxSpeed((float)(listeB.get(i).getxSpeed() * multiplier));
-                listeB.get(i).setySpeed((float)(listeB.get(i).getySpeed() * multiplier));
+                listeB.get(i).setSommeSpeed((float) (listeB.get(i).getSommeSpeed() * multiplier));
+                listeB.get(i).setxSpeed((float) (listeB.get(i).getxSpeed() * multiplier));
+                listeB.get(i).setySpeed((float) (listeB.get(i).getySpeed() * multiplier));
             } else if ((listeB.get(i).getSommeSpeed() * multiplier >= Ball.SPEEDMIN) && (multiplier <= 1)) {
-                listeB.get(i).setSommeSpeed((float)(listeB.get(i).getSommeSpeed() * multiplier));
-                listeB.get(i).setxSpeed((float)(listeB.get(i).getxSpeed() * multiplier));
-                listeB.get(i).setySpeed((float)(listeB.get(i).getySpeed() * multiplier));
+                listeB.get(i).setSommeSpeed((float) (listeB.get(i).getSommeSpeed() * multiplier));
+                listeB.get(i).setxSpeed((float) (listeB.get(i).getxSpeed() * multiplier));
+                listeB.get(i).setySpeed((float) (listeB.get(i).getySpeed() * multiplier));
             }
         }
         addHistory(history, "acceleroBall", true, (player.getLogin()));
     }
 
     /**
+     * This method changes the speed of the balls
+     * Only used on online mode
+     *
+     * @param multiplier is the variable that will be determinate the new speed of the balls
+     */
+    public void changeBallSpeed(float multiplier) {
+        for (int i = 0; i < this.listeB.size(); i++) {
+            if ((listeB.get(i).getSommeSpeed() * multiplier <= Ball.SPEEDMAX) && (multiplier >= 1)) {
+                listeB.get(i).setSommeSpeed( (listeB.get(i).getSommeSpeed() * multiplier));
+                listeB.get(i).setxSpeed(listeB.get(i).getxSpeed() * multiplier);
+                listeB.get(i).setySpeed(listeB.get(i).getySpeed() * multiplier);
+            } else if ((listeB.get(i).getSommeSpeed() * multiplier >= Ball.SPEEDMIN) && (multiplier <= 1)) {
+                listeB.get(i).setSommeSpeed(listeB.get(i).getSommeSpeed() * multiplier);
+                listeB.get(i).setxSpeed(listeB.get(i).getxSpeed() * multiplier);
+                listeB.get(i).setySpeed(listeB.get(i).getySpeed() * multiplier);
+            }
+        }
+    }
+
+    /**
      * This method update the cooldowns for each spellblock
+     *
      * @param spellBlock is the spellblock which the cooldowns will be update
      */
     public void checkCooldown(SpellBlock spellBlock) {
@@ -773,6 +818,7 @@ public class Engine extends SurfaceView implements Runnable {
 
     /**
      * This is a management of the history, this method add a Battle
+     *
      * @param history is the table of BattleMessage
      * @param message is the spell of the new BattleMessage
      * @param bool    is the hasMessage of the new BattleMessage
@@ -797,6 +843,7 @@ public class Engine extends SurfaceView implements Runnable {
 
     /**
      * This method calculate the minimum between four values
+     *
      * @param number1 is the first value
      * @param number2 is the second value
      * @param number3 is the third value
@@ -818,6 +865,7 @@ public class Engine extends SurfaceView implements Runnable {
 
     /**
      * This is the method called after the collision one, this will delete the ball in the list removeBall
+     *
      * @param list is the list of ball
      */
     public void ballRemoved(List<Ball> list) {
@@ -829,23 +877,23 @@ public class Engine extends SurfaceView implements Runnable {
         }
     }
 
-    public void changeTrajectories(Ball ball){
+    public void changeTrajectories(Ball ball) {
         float percentage;
         //if the ball is hitting the right part of the part(the area after the middle of the paddle)
-        if((paddle.getLength()/2) + paddle.getX() <= (ball.getRect().right + ball.getRect().left)/2){
-            percentage = 100 - (((paddle.getRect().right) - (ball.getRect().right + ball.getRect().left)/2) * 100)/ (paddle.getLength()/2);
-            ball.setxSpeed((ball.getxSpeed() + percentage * ball.getSommeSpeed())/200);
+        if ((paddle.getLength() / 2) + paddle.getX() <= (ball.getRect().right + ball.getRect().left) / 2) {
+            percentage = 100 - (((paddle.getRect().right) - (ball.getRect().right + ball.getRect().left) / 2) * 100) / (paddle.getLength() / 2);
+            ball.setxSpeed((ball.getxSpeed() + percentage * ball.getSommeSpeed()) / 200);
             ball.setySpeed(ball.getSommeSpeed() - Math.abs(ball.getxSpeed()));
         }
         //if the ball is hitting the left part of the part(the area before the middle of the paddle)
-        else{
-            percentage = ((((paddle.getLength()/2) + paddle.getX()) - (ball.getRect().right + ball.getRect().left)/2) * 100)/ (paddle.getLength()/2);
-            ball.setxSpeed((ball.getxSpeed() + percentage * (0-ball.getSommeSpeed()))/200);
+        else {
+            percentage = ((((paddle.getLength() / 2) + paddle.getX()) - (ball.getRect().right + ball.getRect().left) / 2) * 100) / (paddle.getLength() / 2);
+            ball.setxSpeed((ball.getxSpeed() + percentage * (0 - ball.getSommeSpeed())) / 200);
             ball.setySpeed(ball.getSommeSpeed() - Math.abs(ball.getxSpeed()));
         }
 
         //Then if the ball was falling, the ball is now bouncing back up to the top of the screen
-        if(ball.getySpeed() > 0) {
+        if (ball.getySpeed() > 0) {
             ball.reverseYVelocity();
         }
     }
