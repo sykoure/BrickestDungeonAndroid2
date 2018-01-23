@@ -20,10 +20,13 @@ import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import android.view.SurfaceView;
 import android.view.WindowManager;
-import android.widget.Toast;
 
-import com.app.remi.test.R;
 import com.app.remi.test.activities.MainMenuActivity;
+import com.app.remi.test.data.Ball;
+import com.app.remi.test.data.BattleMessage;
+import com.app.remi.test.data.Paddle;
+import com.app.remi.test.data.Player;
+import com.app.remi.test.data.SpellBlock;
 import com.app.remi.test.network.backend.services.NetworkBackendService;
 import com.app.remi.test.soundServices.BallBounceService;
 import com.app.remi.test.soundServices.BallDropService;
@@ -148,16 +151,7 @@ public class Engine extends SurfaceView implements Runnable {
             listeS.add(spellBlock);               // We add the spellBlocks
         }
 
-        reset(0);                               // We put the position of the ball
-    }
-
-    /**
-     * This method allows us to reset the position of a ball that is in the list of balls
-     *
-     * @param i is the index of the ball in its list
-     */
-    public void reset(int i) {
-        listeB.get(i).reset(screenX, screenY);
+        resetBall(screenX,screenY,listeB.get(0));                 // We put the position of the ball
     }
 
     /**
@@ -191,10 +185,11 @@ public class Engine extends SurfaceView implements Runnable {
     public void update() {
 
         // We start the method by updating all the objects(the paddle, the balls and the spellblocks)
-        paddle.update(fps, screenX);
+        updatePaddle(fps,screenX);
 
         for (int i = 0; i < listeB.size(); i++) {
-            listeB.get(i).update(fps);
+            //listeB.get(i).update(fps,listeB.get(i));
+            updateBall(fps,listeB.get(i));
         }
         for (int j = 0; j < listeS.size(); j++) {
             checkCooldown(listeS.get(j));
@@ -368,7 +363,8 @@ public class Engine extends SurfaceView implements Runnable {
                 //if the player is touching the left part of the screen or the right part of the screen
                 if (!playWithSensor) {
                     if (motionEvent.getX() > screenX / 2) {
-                        paddle.setMovementState(paddle.RIGHT, screenX);
+                        //paddle.setMovementState(2, screenX);
+                        setMovementStatePaddle(2,screenX);
                         leftTouched = false;
                         //The player serves the ball to the right
                         if (firstTouched) {
@@ -378,7 +374,8 @@ public class Engine extends SurfaceView implements Runnable {
                         }
 
                     } else {
-                        paddle.setMovementState(paddle.LEFT, screenX);
+                        //paddle.setMovementState(paddle.LEFT, screenX);
+                        setMovementStatePaddle(1,screenX);
                         leftTouched = true;
                         //The player serves the ball to the left
                         if (firstTouched) {
@@ -395,7 +392,8 @@ public class Engine extends SurfaceView implements Runnable {
             //If the player is not touching the phone anymore
             case MotionEvent.ACTION_UP:
                 if (!playWithSensor) {
-                    paddle.setMovementState(paddle.STOPPED, screenX);
+                    //paddle.setMovementState(paddle.STOPPED, screenX);
+                    setMovementStatePaddle(0,screenX);
                 }
                 break;
         }
@@ -422,9 +420,9 @@ public class Engine extends SurfaceView implements Runnable {
                 String toDisplay = "Accelerometer Z Value : " + sensorEvent.values[0];
                 Log.d("ACCELEROMETRE", toDisplay);
                 if (sensorEvent.values[0] <= 0) {
-                    paddle.setMovementState(paddle.RIGHT, screenX);
+                    setMovementStatePaddle(2, screenX);
                 } else {
-                    paddle.setMovementState(paddle.LEFT, screenX);
+                    setMovementStatePaddle(1, screenX);
                 }
                 initialSensorValue = sensorEvent.values[0];
             }
@@ -912,6 +910,72 @@ public class Engine extends SurfaceView implements Runnable {
         this.player.setPaddleSize(ownPaddleSize);
         this.foe.setLife(oppHp);
         this.foe.setShield(oppShield);
+    }
+
+    /**
+     * The method update() is fixing the position of the hitbox (and so the ball) fps times per second
+     * @param fps the number of time the hitbox will be updated
+     * @param ball is the ball that will be updated
+     */
+    public void updateBall(long fps,Ball ball){
+        ball.getRect().left = ball.getRect().left + (ball.getxSpeed() / fps);
+        ball.getRect().top = ball.getRect().top + (ball.getySpeed() / fps);
+        ball.getRect().right = ball.getRect().left + ball.getBallWidth();
+        ball.getRect().bottom = ball.getRect().top - ball.getBallHeight();
+    }
+
+    /**
+     * This method is running one time at the beginning to put the right position of the ball
+     * @param x is the length of the screen
+     * @param y is the height of the screen
+     * @param ball is the ball that will be reseted
+     */
+    public void resetBall(int x, int y,Ball ball){
+        ball.getRect().left = x / 2;
+        ball.getRect().top = y - 20;
+        ball.getRect().right = x / 2 + ball.getBallWidth();
+        ball.getRect().bottom = y - 20 - ball.getBallHeight();
+    }
+
+    /**
+     * The method() update will be run fps times per seconds and will update the paddle's hitbox position
+     * (and so the position of the paddle too)
+     * @param fps The number of update for each second
+     * @param screen The length of the screen
+     */
+    public void updatePaddle(long fps, float screen) {
+        /*
+        State of the paddle's direction :
+        STOPPED = 0;
+        LEFT = 1;
+        RIGHT = 2;
+        */
+        if ((paddle.getPaddleMoving() == 1) && (paddle.getRect().left > 0)) {
+            paddle.setX(paddle.getX() - paddle.getSpeed() / fps);
+        }
+
+        if ((paddle.getPaddleMoving() == 2) && (paddle.getRect().right < screen)) {
+            paddle.setX(paddle.getX() + paddle.getSpeed() / fps);
+        }
+
+        paddle.getRect().left = paddle.getX();
+        paddle.getRect().right = paddle.getX() + paddle.getLength();
+    }
+
+    /**
+     * The method setMovementState() is setting the paddle's state, if it has to go to the left, right or to be stopped.
+     * The parameter screen is used to stop the paddle if it's going to far on the left or on the right.
+     * @param state This is the paddle's direction
+     * @param screen This is the length of the screen
+     */
+    public void setMovementStatePaddle(int state, float screen) {
+        if ((state == 1) && (paddle.getRect().left > 0)) {
+            paddle.setPaddleMoving(1);
+        } else if ((state == 2) && (paddle.getRect().right < screen)) {
+            paddle.setPaddleMoving(2);
+        } else {
+            paddle.setPaddleMoving(0);
+        }
     }
 }
 

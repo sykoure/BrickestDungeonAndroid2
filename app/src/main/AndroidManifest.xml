@@ -5,8 +5,8 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -33,7 +33,6 @@
             android:name=".soundServices.BallStartService"
             android:enabled="true"
             android:exported="true" />
-
         <service
             android:name=".network.backend.services.NetworkBackendService"
             android:enabled="true"
@@ -42,7 +41,7 @@
         <receiver
             android:name=".network.backend.NetworkReceiver"
             android:enabled="true"
-            android:exported="true"></receiver>
+            android:exported="true" />
 
         <activity android:name=".activities.MainMenuActivity">
             <intent-filter>
@@ -53,9 +52,10 @@
         </activity>
         <activity android:name=".activities.ConnectionActivity" />
         <activity android:name=".activities.ClassesActivity" />
-        <activity android:name=".activities.TrueSpellSelectionActivity"></activity>
-
-
+        <activity android:name=".activities.TrueSpellSelectionActivity" />
+        <activity
+            android:name=".activities.TestNewModeActivy"
+            android:label="@string/title_activity_test_new_mode_activy" />
     </application>
 
 </manifest>

@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">Test</string>
+    <string name="title_activity_test_new_mode_activy">TestNewModeActivy</string>
 </resources>

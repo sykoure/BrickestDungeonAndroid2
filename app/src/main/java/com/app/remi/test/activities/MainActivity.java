@@ -11,16 +11,15 @@ import android.hardware.SensorManager;
 import android.os.Bundle;
 import android.os.IBinder;
 import android.support.v4.content.LocalBroadcastManager;
-import android.util.Log;
 
+import com.app.remi.test.engine.BasicEngine;
 import com.app.remi.test.engine.Engine;
-import com.app.remi.test.engine.Player;
+import com.app.remi.test.data.Player;
 import com.app.remi.test.network.backend.Displayable;
 import com.app.remi.test.network.backend.NetworkReceiver;
 import com.app.remi.test.network.backend.services.NetworkBackendService;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 
 /**
  * Activity which serve as a placeholder for drawing the game elements
@@ -31,7 +30,7 @@ public class MainActivity extends Activity implements Displayable {
     public final static String FILTER_GAME = "com.app.remi.test.activities.MainActivity.FILTER_GAME";
     public static final String TAG_FIGHT_RESULT = "com.app.remi.test.activities.MainActivity.TAG_FIGHT_RESULT";
 
-    private Engine engine;
+    private BasicEngine engine;
     private LocalBroadcastManager localBroadcastManager;
     private NetworkBackendService networkBackendService;
     private boolean mBound = false;
@@ -174,15 +173,15 @@ public class MainActivity extends Activity implements Displayable {
             BroadcastReceiver myReceiver = new NetworkReceiver(this);                                        // Create a class and set in it the behavior when an information is received
             IntentFilter intentFilter = new IntentFilter(FILTER_GAME);                                                  // The intentFilter action should match the action of the intent send
             localBroadcastManager.registerReceiver(myReceiver, intentFilter);                                           // We register the receiver for the localBroadcastManager
-            engine = new Engine(this, playWithSensor, sensorManager, number, ownPlayer, oppPlayer, networkBackendService);
+            engine = new BasicEngine(this, playWithSensor, sensorManager, number, ownPlayer, oppPlayer, networkBackendService);
 
         } else {
             ownPlayer = new Player(10, 10, "offLineClass", "Yourself");
             oppPlayer = new Player(10, 10, "offLineClass", "Opponent");
-            engine = new Engine(this, playWithSensor, sensorManager, number, ownPlayer, oppPlayer, null);
+            engine = new BasicEngine(this, playWithSensor, sensorManager, number, ownPlayer, oppPlayer, null);
 
         }
-        engine = new Engine(this, playWithSensor, sensorManager, number, ownPlayer, oppPlayer, networkBackendService);
+        engine = new BasicEngine(this, playWithSensor, sensorManager, number, ownPlayer, oppPlayer, networkBackendService);
         setContentView(engine);
     }
 

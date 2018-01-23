@@ -1,4 +1,4 @@
-package com.app.remi.test.engine;
+package com.app.remi.test.data;
 
 import android.graphics.RectF;
 
@@ -20,13 +20,8 @@ public class Paddle {
     //Speed of the paddle
     private float speed;
 
-    //State of the paddle's direction
-    public final int STOPPED = 0;
-    public final int LEFT = 1;
-    public final int RIGHT = 2;
-
     //At the beginning, the paddle has to be stopped
-    private int paddleMoving = STOPPED;
+    private int paddleMoving = 0;
 
     /**
      * The method Paddle() sets the dimension of the paddle, its hitbox and its speed.
@@ -50,41 +45,6 @@ public class Paddle {
      */
     public RectF getRect() {
         return rect;
-    }
-
-    /**
-     * The method setMovementState() is setting the paddle's state, if it has to go to the left, right or to be stopped.
-     * The parameter screen is used to stop the paddle if it's going to far on the left or on the right.
-     * @param state This is the paddle's direction
-     * @param screen This is the length of the screen
-     */
-    public void setMovementState(int state, float screen) {
-        if ((state == 1) && (rect.left > 0)) {
-            paddleMoving = 1;
-        } else if ((state == 2) && (rect.right < screen)) {
-            paddleMoving = 2;
-        } else {
-            paddleMoving = 0;
-        }
-    }
-
-    /**
-     * The method() update will be run fps times per seconds and will update the paddle's hitbox position
-     * (and so the position of the paddle too)
-     * @param fps The number of update for each second
-     * @param screen The length of the screen
-     */
-    public void update(long fps, float screen) {
-        if ((paddleMoving == LEFT) && (rect.left > 0)) {
-            x = x - speed / fps;
-        }
-
-        if ((paddleMoving == RIGHT) && (rect.right < screen)) {
-            x = x + speed / fps;
-        }
-
-        rect.left = x;
-        rect.right = x + length;
     }
 
     /**
@@ -128,4 +88,39 @@ public class Paddle {
         this.length = length;
     }
 
+    /**
+     * This method allows us to know the state of the paddle
+     * @return the current paddle state
+     */
+    public int getPaddleMoving(){
+        return this.paddleMoving;
+    }
+
+    /**
+     * This method allows us to change the value of the paddle's state
+     * @param paddleMoving is the new state
+     */
+    public void setPaddleMoving(int paddleMoving){
+        this.paddleMoving = paddleMoving;
+    }
+
+    public void setX(float x) {
+        this.x = x;
+    }
+
+    public void setY(float y) {
+        this.y = y;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public float getSpeed() {
+        return speed;
+    }
+
+    public void setSpeed(float speed) {
+        this.speed = speed;
+    }
 }

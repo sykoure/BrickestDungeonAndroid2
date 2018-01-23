@@ -1,7 +1,7 @@
-package com.app.remi.test.engine;
+package com.app.remi.test.data;
 
 /**
- * Created by Remi on 02/01/2018.
+ * Created by Remi on 22/01/2018.
  */
 
 public class BattleMessage {
@@ -13,15 +13,17 @@ public class BattleMessage {
     /**
      * This method creates a BattleMessage object, which contains a message
      * hasMessage is false to prevent it from beeing showing up by the history in the Engine class
+     *
      * @param messageCombat
      */
-    public BattleMessage(String messageCombat){
+    public BattleMessage(String messageCombat) {
         this.messageCombat = messageCombat;
         hasMessage = false;
     }
 
     /**
      * this method return the spell used that will be shown by the history of a BattleMessage
+     *
      * @return messageCombat
      */
     public String getMessageCombat() {
@@ -31,6 +33,7 @@ public class BattleMessage {
     /**
      * This method allows us to modify or create a messageCombat for a
      * BattleMessage that will be shown by the history
+     *
      * @param messageCombat
      */
     public void setMessageCombat(String messageCombat) {
@@ -39,6 +42,7 @@ public class BattleMessage {
 
     /**
      * This message allows the BattleMessage to show its messageCombat or not
+     *
      * @return hasMessage
      */
     public Boolean getHasMessage() {
@@ -47,6 +51,7 @@ public class BattleMessage {
 
     /**
      * This message allows the BattleMessage to show its messageCombat or not
+     *
      * @param hasMessage
      */
     public void setHasMessage(Boolean hasMessage) {
@@ -55,6 +60,7 @@ public class BattleMessage {
 
     /**
      * This method gives us the pseudo of the player who used a spell
+     *
      * @return pseudo
      */
     public String getPseudo() {
@@ -64,6 +70,7 @@ public class BattleMessage {
     /**
      * This method allows us, when we have created a BattleMessage,to assign a pseudo
      * to a BattleMessage
+     *
      * @param pseudo
      */
     public void setPseudo(String pseudo) {

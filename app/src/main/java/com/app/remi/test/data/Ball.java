@@ -1,4 +1,4 @@
-package com.app.remi.test.engine;
+package com.app.remi.test.data;
 
 /**
  * Created by Remi on 24/09/2017.
@@ -56,17 +56,6 @@ public class Ball {
        this.rect=rect;
     }
 
-    /**
-     * The method update() is fixing the position of the hitbox (and so the ball) fps times per second
-     * @param fps The number of time the hitbox will be updated
-     */
-    public void update(long fps){
-        rect.left = rect.left + (xSpeed / fps);
-        rect.top = rect.top + (ySpeed / fps);
-        rect.right = rect.left + ballWidth;
-        rect.bottom = rect.top - ballHeight;
-    }
-
     //The method change the Yspeed in -YSpeed, this is changing the direction
     public void reverseYVelocity(){
         ySpeed = -ySpeed;
@@ -77,17 +66,6 @@ public class Ball {
         xSpeed = - xSpeed;
     }
 
-    /**
-     * This method is running one time at the beginning to put the right position of the ball
-     * @param x is the length of the screen
-     * @param y is the height of the screen
-     */
-    public void reset(int x, int y){
-        rect.left = x / 2;
-        rect.top = y - 20;
-        rect.right = x / 2 + ballWidth;
-        rect.bottom = y - 20 - ballHeight;
-    }
 
     /**
      * We give the position of the ball b1 to the ball b2
@@ -178,5 +156,4 @@ public class Ball {
     public void setSommeSpeed(float sommeSpeed) {
         this.sommeSpeed = sommeSpeed;
     }
-
 }
