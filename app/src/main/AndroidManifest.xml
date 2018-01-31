@@ -13,12 +13,12 @@
         android:icon="@mipmap/skull"
         android:label="BrickestDungeon"
         android:roundIcon="@mipmap/back"
-        android:screenOrientation="portrait"
+        android:screenOrientation="landscape"
         android:supportsRtl="true"
         android:theme="@android:style/Theme.NoTitleBar.Fullscreen">
         <activity
             android:name=".activities.MainActivity"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="landscape" />
         <activity android:name=".activities.SpellSelectionActivity" />
 
         <service

@@ -203,7 +203,6 @@ public class Engine extends SurfaceView implements Runnable {
      */
     public void draw() {
 
-
         if (ourHolder.getSurface().isValid()) {
 
             //we set the canvas as the "drawer" of our canvas

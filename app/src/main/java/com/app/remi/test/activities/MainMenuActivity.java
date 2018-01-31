@@ -100,6 +100,7 @@ public class MainMenuActivity extends Activity implements Displayable {
     public void goToEngineBehavior(View view) {
         if (BRICKEST_DEBUG_MODE && BRICKEST_OFFLINE_MODE) {
             Intent intent = new Intent(this, MainActivity.class);
+
             startActivity(intent);
         }
     }
