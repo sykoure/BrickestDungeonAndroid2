@@ -31,7 +31,7 @@ public class MainActivity extends Activity implements Displayable {
     public final static String FILTER_GAME = "com.app.remi.test.activities.MainActivity.FILTER_GAME";
     public static final String TAG_FIGHT_RESULT = "com.app.remi.test.activities.MainActivity.TAG_FIGHT_RESULT";
 
-    private RotateEngine engine;
+    private BasicEngine engine;
     private LocalBroadcastManager localBroadcastManager;
     private NetworkBackendService networkBackendService;
     private boolean mBound = false;
@@ -96,28 +96,33 @@ public class MainActivity extends Activity implements Displayable {
 
     /**
      * Generate a player instance from a string containing all the necessary data
-     * TODO Remove useless components
-     *
      * @param playerData Data received from the server (BMATCH)
      * @return the Player structure for the opponent
      */
     public Player generatePlayer(String playerData) {
-        Player player;
-        int hp, shield, ballsNb;
-        float ballsSpeed, ballsSize, buttonSize, paddleSize;
-        String login, classPicked;
-        String[] parsedData = playerData.split(";");
-        hp = Integer.parseInt(parsedData[0]);
-        shield = Integer.parseInt(parsedData[1]);
-        ballsNb = Integer.parseInt(parsedData[2]);
-        ballsSpeed = Float.parseFloat(parsedData[3]);
-        ballsSize = Float.parseFloat(parsedData[4]);
-        buttonSize = Float.parseFloat(parsedData[5]);
-        paddleSize = Float.parseFloat(parsedData[6]);
-        classPicked = parsedData[7];
-        login = parsedData[8];
 
-        player = new Player(hp, shield, classPicked, login);
+        /**
+         hp = Integer.parseInt(parsedData[0]);
+         shield = Integer.parseInt(parsedData[1]);
+         ballsNb = Integer.parseInt(parsedData[2]);
+         ballsSpeed = Float.parseFloat(parsedData[3]);
+         ballsSize = Float.parseFloat(parsedData[4]);
+         buttonSize = Float.parseFloat(parsedData[5]);
+         paddleSize = Float.parseFloat(parsedData[6]);
+         classPicked = parsedData[7];
+         login = parsedData[8];
+         */
+
+        String[] parsedData = playerData.split(";");
+
+        Player player = new Player.PlayerBuilder(Integer.parseInt(parsedData[0]),Integer.parseInt(parsedData[1]),parsedData[8],parsedData[7]).
+                        ballsNb(Integer.parseInt(parsedData[2])).
+                        ballsSpeed(Integer.parseInt(parsedData[3])).
+                        ballsSize(Integer.parseInt(parsedData[4])).
+                        buttonSize(Integer.parseInt(parsedData[5])).
+                        paddleSize(Integer.parseInt(parsedData[6])).
+                        build();
+
         return player;
     }
 
@@ -129,22 +134,18 @@ public class MainActivity extends Activity implements Displayable {
      * @return the Player structure for the client
      */
     public Player generatePlayerOwn(String playerData, ArrayList<String> spellList) {
-        Player player;
-        int hp, shield, ballsNb;
-        float ballsSpeed, ballsSize, buttonSize, paddleSize;
-        String login, classPicked;
-        String[] parsedData = playerData.split(";");
-        hp = Integer.parseInt(parsedData[0]);
-        shield = Integer.parseInt(parsedData[1]);
-        ballsNb = Integer.parseInt(parsedData[2]);
-        ballsSpeed = Float.parseFloat(parsedData[3]);
-        ballsSize = Float.parseFloat(parsedData[4]);
-        buttonSize = Float.parseFloat(parsedData[5]);
-        paddleSize = Float.parseFloat(parsedData[6]);
-        classPicked = parsedData[7];
-        login = parsedData[8];
 
-        player = new Player(hp, shield, ballsNb, ballsSpeed, ballsSize, buttonSize, paddleSize, classPicked, login, spellList);
+        String[] parsedData = playerData.split(";");
+
+        Player player = new Player.PlayerBuilder(Integer.parseInt(parsedData[0]),Integer.parseInt(parsedData[1]),parsedData[8],parsedData[7]).
+                ballsNb(Integer.parseInt(parsedData[2])).
+                ballsSpeed(Integer.parseInt(parsedData[3])).
+                ballsSize(Integer.parseInt(parsedData[4])).
+                buttonSize(Integer.parseInt(parsedData[5])).
+                paddleSize(Integer.parseInt(parsedData[6])).
+                selectedSpells(spellList).
+                build();
+
         return player;
     }
 
@@ -172,18 +173,18 @@ public class MainActivity extends Activity implements Displayable {
             oppPlayer = this.generatePlayer(getIntent().getStringExtra(SpellSelectionActivity.TAG_PLAYER_OPP_INFO));
 
             this.localBroadcastManager = LocalBroadcastManager.getInstance(this);                                       // Get an instance of a broadcast manager
-            BroadcastReceiver myReceiver = new NetworkReceiver(this);                                        // Create a class and set in it the behavior when an information is received
+            BroadcastReceiver myReceiver = new NetworkReceiver(this);                                          // Create a class and set in it the behavior when an information is received
             IntentFilter intentFilter = new IntentFilter(FILTER_GAME);                                                  // The intentFilter action should match the action of the intent send
             localBroadcastManager.registerReceiver(myReceiver, intentFilter);                                           // We register the receiver for the localBroadcastManager
-            engine = new RotateEngine(this, playWithSensor, sensorManager, number, ownPlayer, oppPlayer, networkBackendService);
+            engine = new BasicEngine(this, playWithSensor, sensorManager, number, ownPlayer, oppPlayer, networkBackendService);
 
         } else {
-            ownPlayer = new Player(10, 10, "offLineClass", "Yourself");
-            oppPlayer = new Player(10, 10, "offLineClass", "Opponent");
-            engine = new RotateEngine(this, playWithSensor, sensorManager, number, ownPlayer, oppPlayer, null);
+            ownPlayer = new Player.PlayerBuilder(10,10,"offLineClass","Yourself").build();
+            oppPlayer = new Player.PlayerBuilder(10,10,"offLineClass","Opponent").build();
+            engine = new BasicEngine(this, playWithSensor, sensorManager, number, ownPlayer, oppPlayer, null);
 
         }
-        engine = new RotateEngine(this, playWithSensor, sensorManager, number, ownPlayer, oppPlayer, networkBackendService);
+        engine = new BasicEngine(this, playWithSensor, sensorManager, number, ownPlayer, oppPlayer, networkBackendService);
         setContentView(engine);
     }
 

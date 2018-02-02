@@ -4,6 +4,66 @@ import android.graphics.RectF;
 
 public class Paddle {
 
+    public static class PaddleBuilder{
+
+        private RectF rect;
+        private float length;
+        private float height;
+        public final static float SIZEMAX = 260;
+        public final static float SIZEMIN = 50;
+        public final static float SPEEDMAX = 500;
+        private float x;
+        private float y;
+        private float speed;
+        private int paddleMoving;
+
+        public PaddleBuilder(int screenX,int screenY){
+
+            // Initial dimension
+            length = 130;
+            height = 30;
+
+            // Initial position
+            x = screenX / 2;
+            y = screenY - 20;
+            rect = new RectF(x, y, x + length, y + height);
+
+            // Initial behavior
+            paddleMoving = 0;
+
+            // Initial speed
+            speed = 350;
+        }
+
+        public PaddleBuilder dimension(float length,float height){
+            this.height = height;
+            this.length = length;
+            return this;
+        }
+
+        public PaddleBuilder position(float x,float y){
+            this.x = x;
+            this.y = y;
+            return this;
+        }
+
+        public PaddleBuilder behavior(int paddleMoving){
+            this.paddleMoving = paddleMoving;
+            return this;
+        }
+
+        public PaddleBuilder speed(float speed){
+            this.speed = speed;
+            return this;
+        }
+
+        public Paddle build(){
+            return new Paddle(this);
+        }
+    }
+
+
+
     //Hitbox of the paddle
     private RectF rect;
 
@@ -19,25 +79,23 @@ public class Paddle {
 
     //Speed of the paddle
     private float speed;
+    public final static float SPEEDMAX = 500;
 
     //At the beginning, the paddle has to be stopped
-    private int paddleMoving = 0;
+    private int paddleMoving;
 
     /**
      * The method Paddle() sets the dimension of the paddle, its hitbox and its speed.
-     * @param screenX This is the length of the screen
-     * @param screenY This is the height of the screen
+     * @param paddleBuilder is the builder object that contains the data
      */
-    public Paddle(int screenX, int screenY) {
-        length = 130;
-        height = 30;
-
-        x = screenX / 2;
-        y = screenY - 20;
-
-        rect = new RectF(x, y, x + length, y + height);
-
-        speed = 350;
+    private Paddle(PaddleBuilder paddleBuilder) {
+        this.length = paddleBuilder.length;
+        this.height = paddleBuilder.height;
+        this.rect = paddleBuilder.rect;
+        this.x = paddleBuilder.x;
+        this.y = paddleBuilder.y;
+        this.speed = paddleBuilder.speed;
+        this.paddleMoving = paddleBuilder.paddleMoving;
     }
 
     /**

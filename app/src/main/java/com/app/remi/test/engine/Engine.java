@@ -120,20 +120,18 @@ public class Engine extends SurfaceView implements Runnable {
 
         screenX = size.x;
         screenY = size.y;
-
         this.player = ownPlayer;
         this.foe = oppPlayer;
 
         //We initialize the list which will be the history of the spell that was used
         history = new BattleMessage[5];
         for (int i = 0; i < 5; i++) {
-            history[i] = new BattleMessage("");
-            history[i].setPseudo(null);
+            history[i] = new BattleMessage.BattleMessageBuilder().setMessageCombat("").setHadMessage(false).build();
         }
 
-        paddle = new Paddle(screenX, screenY);      // We set the paddle position
-        ball = new Ball(screenX, screenY);          // We initialize the first ball
-        listeB.add(ball);                           // We add the first ball to the list of balls
+        paddle = new Paddle.PaddleBuilder(screenX,screenY).build();                                            // We set the paddle position
+        ball = new Ball.BallBuilder(200,-300).dimension(10,10).build();         // We initialize the first ball thanks to the builder
+        listeB.add(ball);                                                                                     // We add the first ball to the list of balls
 
         // Depending of the number of spellblock, the size and the position for each one will be different
         for (int i = 0; i < numberSpellBlocks; i++) {
@@ -141,11 +139,22 @@ public class Engine extends SurfaceView implements Runnable {
             if (!MainMenuActivity.BRICKEST_OFFLINE_MODE) {
                 String name = ownPlayer.getSelectedSpells().get(i);
 
-                spellBlock = new SpellBlock(screenX, screenY, xposition, screenY * 0.3, 150 / numberSpellBlocks * 3, 150 / numberSpellBlocks * 3, name);
+                spellBlock = new SpellBlock.SpellBlockBuilder(screenX,screenY).
+                             cooldownDuration(4*i).
+                             position(xposition,screenY * 0.3).
+                             dimension(150 / numberSpellBlocks * 3,150 / numberSpellBlocks * 3).
+                             spell(name).
+                             build();
 
 
             } else {
-                spellBlock = new SpellBlock(screenX, screenY, xposition, screenY * 0.3, 150 / numberSpellBlocks * 3, 150 / numberSpellBlocks * 3, "spellblock" + i + 1);
+
+                spellBlock = new SpellBlock.SpellBlockBuilder(screenX,screenY).
+                             cooldownDuration(4*i).
+                             position(xposition,screenY * 0.3).
+                             dimension(150 / numberSpellBlocks * 3,150 / numberSpellBlocks * 3).
+                             spell("spellblock" + i + 1).
+                             build();
 
             }
             listeS.add(spellBlock);               // We add the spellBlocks
@@ -667,14 +676,8 @@ public class Engine extends SurfaceView implements Runnable {
     @Deprecated
     public void splitBall(Ball ball, int indexSpell) {
         // New Ball with different trajectories
-        Ball ball2 = new Ball(screenX, screenY);
-
+        Ball ball2 = new Ball.BallBuilder(ball.getxSpeed() * -1,ball.getySpeed()).dimension(ball.getBallHeight(),ball.getBallWidth()).build();
         ball2.givePosition(ball2, ball);
-        ball2.setySpeed(ball.getySpeed());
-        ball2.setxSpeed(ball.getxSpeed());
-        ball2.reverseXVelocity();
-        ball2.setBallHeight(ball.getBallHeight());
-        ball2.setBallWidth(ball.getBallHeight());
 
         listeB.add(ball2);
         addHistory(history, "splitBall", true, (player.getLogin()));
@@ -685,14 +688,11 @@ public class Engine extends SurfaceView implements Runnable {
      */
     public void splitBall() {
         // New Ball with different trajectories
-        Ball ball2 = new Ball(screenX, screenY);
+        Ball ball2 = new Ball.BallBuilder(this.listeB.get(0).getxSpeed() * -1,this.listeB.get(0).getySpeed()).
+                     dimension(this.listeB.get(0).getBallHeight(),this.listeB.get(0).getBallHeight())
+                     .build();
 
         ball2.givePosition(ball2, this.listeB.get(0));
-        ball2.setySpeed(this.listeB.get(0).getySpeed());
-        ball2.setxSpeed(this.listeB.get(0).getxSpeed());
-        ball2.reverseXVelocity();
-        ball2.setBallHeight(this.listeB.get(0).getBallHeight());
-        ball2.setBallWidth(this.listeB.get(0).getBallHeight());
 
         this.listeB.add(ball2);
         this.player.setBallsNb(this.player.getBallsNb() + 1);

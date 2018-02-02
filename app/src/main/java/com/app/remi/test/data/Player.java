@@ -13,6 +13,56 @@ import java.util.ArrayList;
  */
 public class Player {
 
+    public static class PlayerBuilder{
+
+        private int life, shield, ballsNb;
+        private float ballsSpeed, ballsSize, buttonSize, paddleSize;
+        private String nameClass;
+        private String login;
+        private ArrayList<String> selectedSpells;
+
+        public PlayerBuilder(int life,int shield,String login,String nameClass){
+            this.life = life;
+            this.shield = shield;
+            this.login = login;
+            this.nameClass = nameClass;
+        }
+
+        public PlayerBuilder ballsNb(int ballsNb){
+            this.ballsNb = ballsNb;
+            return this;
+        }
+
+        public PlayerBuilder ballsSpeed(float ballsSpeed){
+            this.ballsSpeed = ballsSpeed;
+            return this;
+        }
+
+        public PlayerBuilder ballsSize(float ballsSize){
+            this.ballsSize = ballsSize;
+            return this;
+        }
+
+        public  PlayerBuilder buttonSize(float buttonSize){
+            this.buttonSize = buttonSize;
+            return this;
+        }
+
+        public PlayerBuilder paddleSize(float paddleSize){
+            this.paddleSize = paddleSize;
+            return this;
+        }
+
+        public PlayerBuilder selectedSpells(ArrayList<String> selectedSpells){
+            this.selectedSpells = selectedSpells;
+            return this;
+        }
+
+        public Player build(){
+            return new Player(this);
+        }
+
+    }
 
     private int life, shield, ballsNb;
     private float ballsSpeed, ballsSize, buttonSize, paddleSize;
@@ -22,44 +72,19 @@ public class Player {
 
 
     /**
-     * Used for opponent structure and offline mode
-     *
-     * @param life      life point of the player
-     * @param shield    Number of shields
-     * @param nameClass Name of the selected class
-     * @param login     Login of the player
-     */
-    public Player(int life, int shield, String nameClass, String login) {
-        this.life = life;
-        this.shield = shield;
-        this.nameClass = nameClass;
-        this.login = login;
-    }
-
-    /**
      * Real constructor
-     *
-     * @param life           life point of the player
-     * @param shield         Number of shields
-     * @param ballsNb        Number of balls
-     * @param ballsSpeed     Modifier of the balls speed
-     * @param ballsSize      Modifier of the balls size
-     * @param buttonSize     Modifier of the buttons size
-     * @param paddleSize     Modifier of the paddle size
-     * @param nameClass      Name of the selected class
-     * @param login          Login of the player
-     * @param selectedSpells List of spells selected by the player
      */
-    public Player(int life, int shield, int ballsNb, float ballsSpeed, float ballsSize, float buttonSize, float paddleSize, String nameClass, String login, ArrayList<String> selectedSpells) {
-        this.life = life;
-        this.shield = shield;
-        this.ballsSpeed = ballsSpeed;
-        this.ballsSize = ballsSize;
-        this.buttonSize = buttonSize;
-        this.paddleSize = paddleSize;
-        this.nameClass = nameClass;
-        this.login = login;
-        this.selectedSpells = selectedSpells;
+    private Player(PlayerBuilder playerBuilder) {
+        this.life = playerBuilder.life;
+        this.shield = playerBuilder.shield;
+        this.ballsNb = playerBuilder.ballsNb;
+        this.ballsSpeed = playerBuilder.ballsSpeed;
+        this.ballsSize = playerBuilder.ballsSize;
+        this.buttonSize = playerBuilder.buttonSize;
+        this.paddleSize = playerBuilder.paddleSize;
+        this.nameClass = playerBuilder.nameClass;
+        this.login = playerBuilder.login;
+        this.selectedSpells = playerBuilder.selectedSpells;
     }
 
     public String getNameClass() {

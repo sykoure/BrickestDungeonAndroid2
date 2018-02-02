@@ -6,6 +6,39 @@ package com.app.remi.test.data;
 
 public class BattleMessage {
 
+    public static class BattleMessageBuilder{
+
+        private String messageCombat;            // This message will be shown when the players will use a spell
+        private Boolean hasMessage;              // If the BattleMessage contains something
+        private String pseudo;                   // Contain the pseudo of one of the two players
+
+        public BattleMessageBuilder(){
+            this.messageCombat = null;
+            this.hasMessage = null;
+            this.pseudo = null;
+        }
+
+        public BattleMessageBuilder setMessageCombat(String messageCombat){
+            this.messageCombat = messageCombat;
+            return this;
+        }
+
+        public BattleMessageBuilder setHadMessage(Boolean hasMessage){
+            this.hasMessage = hasMessage;
+            return this;
+        }
+
+        public BattleMessageBuilder setPseudo(String pseudo){
+            this.pseudo = pseudo;
+            return this;
+        }
+
+        public BattleMessage build(){
+            return new BattleMessage(this);
+        }
+
+    }
+
     private String messageCombat;            // This message will be shown when the players will use a spell
     private Boolean hasMessage;              // If the BattleMessage contains something
     private String pseudo;                   // Contain the pseudo of one of the two players
@@ -13,12 +46,12 @@ public class BattleMessage {
     /**
      * This method creates a BattleMessage object, which contains a message
      * hasMessage is false to prevent it from beeing showing up by the history in the Engine class
-     *
-     * @param messageCombat
+     * @param battleMessageBuilder contains all the data for the BattleMessage object
      */
-    public BattleMessage(String messageCombat) {
-        this.messageCombat = messageCombat;
-        hasMessage = false;
+    private BattleMessage(BattleMessageBuilder battleMessageBuilder) {
+        this.messageCombat = battleMessageBuilder.messageCombat;
+        this.hasMessage = battleMessageBuilder.hasMessage;
+        this.pseudo = battleMessageBuilder.pseudo;
     }
 
     /**

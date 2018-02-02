@@ -8,6 +8,47 @@ import android.graphics.RectF;
 
 public class Ball {
 
+    // This is the builder pattern that will create the Ball object
+    // This is why the Constructor of the Ball class is private
+    public static class BallBuilder {
+
+        // The details about these attributs are in the Ball class below
+        private RectF rect;
+        private float xSpeed;
+        private float ySpeed;
+        private float sommeSpeed;
+        private float ballWidth;
+        private float ballHeight;
+
+        public BallBuilder(float xSpeed,float ySpeed){
+            this.ySpeed = ySpeed;
+            this.xSpeed = xSpeed;
+            sommeSpeed = Math.abs(xSpeed) + Math.abs(ySpeed);
+
+            rect = new RectF();
+        }
+
+        public BallBuilder dimension(float ballHeight, float ballWidth){
+            this.ballHeight = ballHeight;
+            this.ballWidth = ballWidth;
+            return this;
+        }
+
+        public BallBuilder position(float left, float right, float top, float bottom){
+            rect.right = right;
+            rect.left = left;
+            rect.top = top;
+            rect.bottom = bottom;
+            return this;
+        }
+
+        public Ball build(){
+            return new Ball(this);
+        }
+
+
+    }
+
     //The hitbox of the ball
     private RectF rect;
 
@@ -29,17 +70,25 @@ public class Ball {
 
     /**
      * The method Ball() is setting the values of the object Ball, its hitbox and its speed
-     * @param screenX is the length of the screen
-     * @param screenY is the height of the screen
+     * @param ballBuilder is the creater of the ball
      */
-    public Ball(int screenX, int screenY){
+    private Ball(BallBuilder ballBuilder){
 
+
+        this.ballHeight = ballBuilder.ballHeight;
+        this.ballWidth = ballBuilder.ballWidth;
+        this.xSpeed = ballBuilder.xSpeed;
+        this.ySpeed = ballBuilder.ySpeed;
+        this.sommeSpeed = ballBuilder.sommeSpeed;
+        this.rect = ballBuilder.rect;
+
+        /*
         xSpeed = 200;
         ySpeed = -300;
         sommeSpeed = 500;
 
         rect = new RectF();
-
+        */
     }
 
     /**

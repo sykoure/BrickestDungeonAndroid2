@@ -9,6 +9,54 @@ import android.graphics.RectF;
 
 public class SpellBlock {
 
+    public static class SpellBlockBuilder{
+
+        private String spell;
+        private float cooldown = 0;
+        private float cooldownDuration;
+        private int width;
+        private int height;
+        private double xPosition,yPosition;
+        private int xScreen;
+        private int yScreen;
+
+        public SpellBlockBuilder(int xScreen,int yScreen){
+            this.xScreen = xScreen;
+            this.yScreen = yScreen;
+        }
+
+        public SpellBlockBuilder spell(String spell){
+            this.spell = spell;
+            return this;
+        }
+
+        public SpellBlockBuilder dimension(int width,int height){
+            this.height = height;
+            this.width = width;
+            return this;
+        }
+
+        public SpellBlockBuilder cooldown(float cooldown){
+            this.cooldown = cooldown;
+            return this;
+        }
+
+        public SpellBlockBuilder cooldownDuration(float cooldownDuration){
+            this.cooldownDuration = cooldownDuration;
+            return this;
+        }
+
+        public SpellBlockBuilder position(double xPosition,double yPosition){
+            this.xPosition = xPosition;
+            this.yPosition = yPosition;
+            return this;
+        }
+
+        public SpellBlock build(){
+            return new SpellBlock(this);
+        }
+
+    }
     /**
      * rect is the global hitbox of the SpellBlock
      * leftSide is the left hitbox
@@ -37,22 +85,21 @@ public class SpellBlock {
     /**
      * This is the method to create a object SpellBlock
      * It will set its position, screen dimension, dimension and its hitbox according to its current position.
-     * @param xScreen is the lenght of the screen
-     * @param yScreen is the height of the screen
-     * @param xPosition is the xPosition of the Spellblock, the xposition of the upper-left corner
-     * @param yPosition is the yPosition of the Spellblock, the yposition of the upper-left corner
      */
-    public SpellBlock(int xScreen, int yScreen,double xPosition,double yPosition,int width,int height,String spell){
-        this.xScreen = xScreen;
-        this.yScreen = yScreen;
+    private SpellBlock(SpellBlockBuilder spellBlockBuilder){
+        this.xScreen = spellBlockBuilder.xScreen;
+        this.yScreen = spellBlockBuilder.yScreen;
 
-        this.spell = spell;
+        this.spell = spellBlockBuilder.spell;
 
-        this.xPosition = xPosition;
-        this.yPosition = yPosition;
+        this.xPosition = spellBlockBuilder.xPosition;
+        this.yPosition = spellBlockBuilder.yPosition;
 
-        this.width = width;
-        this.height = height;
+        this.width = spellBlockBuilder.width;
+        this.height = spellBlockBuilder.height;
+
+        this.cooldown = spellBlockBuilder.cooldown;
+        this.cooldownDuration = spellBlockBuilder.cooldownDuration;
 
         //We set the hitbox sides of the SpellBlock
         rect = new RectF((float)xPosition, (float)yPosition, (float)xPosition + width,(float) yPosition +height);
