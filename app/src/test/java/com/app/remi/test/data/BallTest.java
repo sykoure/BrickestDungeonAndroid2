@@ -115,9 +115,7 @@ public class BallTest {
 
     @Test
     public void setSommeSpeed() throws Exception {
-        ball.setxSpeed(200);
-        ball.setySpeed(300);
-        assertEquals(500,ball.getSommeSpeed(),0);
+        assertEquals(ball.getxSpeed()+ball.getySpeed(),ball.getSommeSpeed(),0);
     }
 
 }
