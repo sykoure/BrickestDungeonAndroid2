@@ -151,10 +151,10 @@ public class Ball {
     }
 
     /**
-     * Set the YSpeed of the ball
-     * @param ySpeed is the new ySpeed given
+     * Set the Yspeed of the ball
+     * @param ySpeed is the new xSpeed given
      */
-    public void setySpeed(float ySpeed){
+    public void setySpeed(float ySpeed) {
         this.ySpeed = ySpeed;
     }
 
