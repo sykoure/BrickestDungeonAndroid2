@@ -18,6 +18,7 @@ public class SpellBlockBuilderTest {
                                         cooldownDuration(5).
                                         cooldown(0).
                                         build();
+    //test
 
     @Test
     public void spell() throws Exception {
