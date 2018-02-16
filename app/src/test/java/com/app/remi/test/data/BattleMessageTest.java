@@ -20,6 +20,8 @@ public class BattleMessageTest {
     /**
      * Unit test about getters and setters
      */
+
+    // We will test the message inside the MessageCombat object
     @Test
     public void getMessageCombat() throws Exception {
         assertEquals("test",battleMessage.getMessageCombat());
@@ -31,6 +33,7 @@ public class BattleMessageTest {
         assertEquals("test2",battleMessage.getMessageCombat());
     }
 
+    // We will test if the message inside the MessageCombat has to be shown or not
     @Test
     public void getHasMessage() throws Exception {
         assertTrue(battleMessage.getHasMessage());
@@ -42,6 +45,7 @@ public class BattleMessageTest {
         assertFalse(battleMessage.getHasMessage());
     }
 
+    // We will test the pseudo of the player for the message combat
     @Test
     public void getPseudo() throws Exception {
         assertEquals("pseudo",battleMessage.getPseudo());
