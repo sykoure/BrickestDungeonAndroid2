@@ -157,8 +157,23 @@ public class ClassesActivity extends Activity implements Displayable {
         } else {
             this.listSelectedImageView.set(index, true);
             this.listHeroesImage.get(index).setImageAlpha(255);
+            this.unselectOther(index);
         }
 
+    }
+
+    /**
+     * Unselect all other hero
+     *
+     * @param index Index of the hero selected
+     */
+    public void unselectOther(int index) {
+        for (int i = 0; i < listSelectedImageView.size(); i++) {
+            if (i != index) {
+                this.listSelectedImageView.set(i, false);
+                this.listHeroesImage.get(i).setImageAlpha(90);
+            }
+        }
     }
 
     /**
