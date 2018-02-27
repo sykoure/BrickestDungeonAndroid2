@@ -13,6 +13,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.app.remi.test.R;
@@ -28,6 +29,7 @@ import java.util.ArrayList;
 public class ClassesActivity extends Activity implements Displayable {
 
     public final static String FILTER_CLASSES = "com.app.remi.test.activities.ClassesActivity.FILTER_CLASSES";
+    private TextView heroDescriptionView;
     private ImageView heroImagaView1, heroImagaView2, heroImagaView3;
     private Button goToMatchMakingActivityButton;
     private ArrayList<String> listHeroesName;
@@ -46,6 +48,8 @@ public class ClassesActivity extends Activity implements Displayable {
         setContentView(R.layout.activity_classes);
 
         this.goToSpellActitivy = (Button) findViewById(R.id.goToSpellbutton);
+
+        this.heroDescriptionView = (TextView)findViewById(R.id.heroDescriptionView);
 
         this.heroImagaView1 = (ImageView) findViewById(R.id.heroImageView1);
         this.heroImagaView2 = (ImageView) findViewById(R.id.heroImageView2);
@@ -157,7 +161,8 @@ public class ClassesActivity extends Activity implements Displayable {
         } else {
             this.listSelectedImageView.set(index, true);
             this.listHeroesImage.get(index).setImageAlpha(255);
-            this.unselectOther(index);
+            unselectOther(index);
+            setDescription(this.listHeroesName.get(index));
         }
 
     }
@@ -184,6 +189,26 @@ public class ClassesActivity extends Activity implements Displayable {
         for (int index = 0; index < this.listHeroesName.size(); index++) {
             this.listHeroesImage.get(index).setImageResource(getResources().getIdentifier(this.listHeroesName.get(index), "drawable", getPackageName()));
         }
+    }
+
+    public void setDescription(String heroName){
+        String descriptionToDisplay;
+        if(heroName.equals("paladin")){
+            descriptionToDisplay = "The Paladin :\nProtected behind his shields, slower than the others is however the most resilient one.";
+
+        }
+        else if(heroName.equals("wizard")){
+            descriptionToDisplay = "The Wizzard :\nComplex and mysterious his techniques require an utter mastery.";
+        }
+        else if(heroName.equals("berserk")){
+            descriptionToDisplay = "The Berserk :\nA powerful fighter capable of dealing huge damage at his expense.";
+        }
+        else{
+            descriptionToDisplay = "";
+        }
+
+        this.heroDescriptionView.setText(descriptionToDisplay);
+
     }
 
 

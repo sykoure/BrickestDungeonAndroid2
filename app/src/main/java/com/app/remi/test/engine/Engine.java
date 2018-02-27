@@ -218,7 +218,7 @@ public class Engine extends SurfaceView implements Runnable {
             canvas = ourHolder.lockCanvas();
 
             //we put the background of the game in the canvas, a big black rectangle
-            canvas.drawColor(Color.argb(100, 0, 0, 0));
+            canvas.drawColor(Color.argb(225, 214, 200, 166));
 
             //the paint (paintbrush) will now has a white color
             paint.setColor(Color.argb(100, 255, 255, 255));
@@ -305,13 +305,13 @@ public class Engine extends SurfaceView implements Runnable {
 
             // We are drawing each side for the Spellblocks
             for (int i = 0; i < listeS.size(); i++) {
-                paint.setColor(Color.argb(255, 0, 255, 255));
+                paint.setColor(Color.argb(255, 255, 255, 255));
                 canvas.drawRect(listeS.get(i).getLeftSide(), paint);
-                paint.setColor(Color.argb(255, 255, 0, 0));
+                paint.setColor(Color.argb(255, 255, 255, 255));
                 canvas.drawRect(listeS.get(i).getRightSide(), paint);
-                paint.setColor(Color.argb(255, 255, 255, 0));
+                paint.setColor(Color.argb(255, 255, 255, 255));
                 canvas.drawRect(listeS.get(i).getBotSide(), paint);
-                paint.setColor(Color.argb(255, 0, 255, 0));
+                paint.setColor(Color.argb(255, 255, 255, 255));
                 canvas.drawRect(listeS.get(i).getTopSide(), paint);
 
 

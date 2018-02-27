@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://D:\Android_Project\BrickestDungeonAndroid2\BrickestDungeonAndroid.iml" filepath="D:\Android_Project\BrickestDungeonAndroid2\BrickestDungeonAndroid.iml" />
       <module fileurl="file://$PROJECT_DIR$/BrickestDungeonAndroid2.iml" filepath="$PROJECT_DIR$/BrickestDungeonAndroid2.iml" />
-      <module fileurl="file://C:\Users\Remi\AndroidStudioProjects\BrickestDungeonAndroid\BrickestDungeonAndroid2.iml" filepath="C:\Users\Remi\AndroidStudioProjects\BrickestDungeonAndroid\BrickestDungeonAndroid2.iml" />
       <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
     </modules>
   </component>
