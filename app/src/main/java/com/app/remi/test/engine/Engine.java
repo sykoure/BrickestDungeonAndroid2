@@ -76,6 +76,9 @@ public class Engine extends SurfaceView implements Runnable {
     List<Ball> removeBall = new ArrayList<>();             // List of the balls which need to be removed after the method collision()
     BattleMessage[] history;                               // History of the spells used
 
+    Bitmap bitmapBall, bitmapPaddle, bitmapHud;
+
+    RectF hud;
 
     private int numberSpellBlocks;          // The number of spellBlocks
     private Boolean playWithSensor;         // If the player has to use the sensor or a touche on the screen to move the paddle
@@ -123,15 +126,17 @@ public class Engine extends SurfaceView implements Runnable {
         this.player = ownPlayer;
         this.foe = oppPlayer;
 
+        this.hud = new RectF(0, 0, screenX, (float) (screenY * 0.2));
+
         //We initialize the list which will be the history of the spell that was used
         history = new BattleMessage[5];
         for (int i = 0; i < 5; i++) {
             history[i] = new BattleMessage.BattleMessageBuilder().setMessageCombat("").setHadMessage(false).build();
         }
 
-        paddle = new Paddle.PaddleBuilder(screenX,screenY).build();                                            // We set the paddle position
-        ball = new Ball.BallBuilder(200,-300).dimension(10,10).build();         // We initialize the first ball thanks to the builder
-        listeB.add(ball);                                                                                     // We add the first ball to the list of balls
+        paddle = new Paddle.PaddleBuilder(screenX, screenY).build();                                                // We set the paddle position
+        ball = new Ball.BallBuilder(200, -300).dimension(10, 10).build();        // We initialize the first ball thanks to the builder
+        listeB.add(ball);                                                                                           // We add the first ball to the list of balls
 
         // Depending of the number of spellblock, the size and the position for each one will be different
         for (int i = 0; i < numberSpellBlocks; i++) {
@@ -139,29 +144,36 @@ public class Engine extends SurfaceView implements Runnable {
             if (!MainMenuActivity.BRICKEST_OFFLINE_MODE) {
                 String name = ownPlayer.getSelectedSpells().get(i);
 
-                spellBlock = new SpellBlock.SpellBlockBuilder(screenX,screenY).
-                             cooldownDuration(4*i).
-                             position(xposition,screenY * 0.3).
-                             dimension(150 / numberSpellBlocks * 3,150 / numberSpellBlocks * 3).
-                             spell(name).
-                             build();
+                spellBlock = new SpellBlock.SpellBlockBuilder(screenX, screenY).
+                        cooldownDuration(4 * i).
+                        position(xposition, screenY * 0.3).
+                        dimension(150 / numberSpellBlocks * 3, 150 / numberSpellBlocks * 3).
+                        spell(name).
+                        build();
 
 
             } else {
 
-                spellBlock = new SpellBlock.SpellBlockBuilder(screenX,screenY).
-                             cooldownDuration(4*i).
-                             position(xposition,screenY * 0.3).
-                             dimension(150 / numberSpellBlocks * 3,150 / numberSpellBlocks * 3).
-                             spell("spellblock" + i + 1).
-                             build();
+                spellBlock = new SpellBlock.SpellBlockBuilder(screenX, screenY).
+                        cooldownDuration(4 * i).
+                        position(xposition, screenY * 0.3).
+                        dimension(150 / numberSpellBlocks * 3, 150 / numberSpellBlocks * 3).
+                        spell("spellblock" + i + 1).
+                        build();
 
             }
             listeS.add(spellBlock);               // We add the spellBlocks
         }
 
-        resetBall(screenX,screenY,listeB.get(0));                 // We put the position of the ball
+        resetBall(screenX, screenY, listeB.get(0));                 // We put the position of the ball
+
+        // Resources instantiations
+        bitmapBall = BitmapFactory.decodeResource(getResources(), getResources().getIdentifier("ball_sprite", "drawable", mainActivityContext.getPackageName()));
+        bitmapPaddle = BitmapFactory.decodeResource(getResources(), getResources().getIdentifier("paddle_sprite", "drawable", mainActivityContext.getPackageName()));
+        bitmapHud = BitmapFactory.decodeResource(getResources(), getResources().getIdentifier("hud_sprite", "drawable", mainActivityContext.getPackageName()));
+
     }
+
 
     /**
      * run() is the method call automatically since our class is  implemented by the the interface runnable
@@ -194,11 +206,11 @@ public class Engine extends SurfaceView implements Runnable {
     public void update() {
 
         // We start the method by updating all the objects(the paddle, the balls and the spellblocks)
-        updatePaddle(fps,screenX);
+        updatePaddle(fps, screenX);
 
         for (int i = 0; i < listeB.size(); i++) {
             //listeB.get(i).update(fps,listeB.get(i));
-            updateBall(fps,listeB.get(i));
+            updateBall(fps, listeB.get(i));
         }
         for (int j = 0; j < listeS.size(); j++) {
             checkCooldown(listeS.get(j));
@@ -242,9 +254,15 @@ public class Engine extends SurfaceView implements Runnable {
                 }
 
             }
+            //We apply the sprite for the paddle and the ball
+            canvas.drawBitmap(bitmapBall, null, this.ball.getRect(), null);
+
+            canvas.drawBitmap(bitmapPaddle, null, this.paddle.getRect(), null);
 
             //this is the HUD
-            canvas.drawRect(0, (float) (screenY * 0.2), screenX, 0, paint);
+            //canvas.drawRect(  this.hud, paint);
+            canvas.drawBitmap(bitmapHud, null, this.hud, null);
+
 
             //the paint (paintbrush) will now has a teal color
             paint.setColor(Color.argb(255, 0, 247, 255));
@@ -372,7 +390,7 @@ public class Engine extends SurfaceView implements Runnable {
                 if (!playWithSensor) {
                     if (motionEvent.getX() > screenX / 2) {
                         //paddle.setMovementState(2, screenX);
-                        setMovementStatePaddle(2,screenX);
+                        setMovementStatePaddle(2, screenX);
                         leftTouched = false;
                         //The player serves the ball to the right
                         if (firstTouched) {
@@ -383,7 +401,7 @@ public class Engine extends SurfaceView implements Runnable {
 
                     } else {
                         //paddle.setMovementState(paddle.LEFT, screenX);
-                        setMovementStatePaddle(1,screenX);
+                        setMovementStatePaddle(1, screenX);
                         leftTouched = true;
                         //The player serves the ball to the left
                         if (firstTouched) {
@@ -401,7 +419,7 @@ public class Engine extends SurfaceView implements Runnable {
             case MotionEvent.ACTION_UP:
                 if (!playWithSensor) {
                     //paddle.setMovementState(paddle.STOPPED, screenX);
-                    setMovementStatePaddle(0,screenX);
+                    setMovementStatePaddle(0, screenX);
                 }
                 break;
         }
@@ -676,7 +694,7 @@ public class Engine extends SurfaceView implements Runnable {
     @Deprecated
     public void splitBall(Ball ball, int indexSpell) {
         // New Ball with different trajectories
-        Ball ball2 = new Ball.BallBuilder(ball.getxSpeed() * -1,ball.getySpeed()).dimension(ball.getBallHeight(),ball.getBallWidth()).build();
+        Ball ball2 = new Ball.BallBuilder(ball.getxSpeed() * -1, ball.getySpeed()).dimension(ball.getBallHeight(), ball.getBallWidth()).build();
         ball2.givePosition(ball2, ball);
 
         listeB.add(ball2);
@@ -688,9 +706,9 @@ public class Engine extends SurfaceView implements Runnable {
      */
     public void splitBall() {
         // New Ball with different trajectories
-        Ball ball2 = new Ball.BallBuilder(this.listeB.get(0).getxSpeed() * -1,this.listeB.get(0).getySpeed()).
-                     dimension(this.listeB.get(0).getBallHeight(),this.listeB.get(0).getBallHeight())
-                     .build();
+        Ball ball2 = new Ball.BallBuilder(this.listeB.get(0).getxSpeed() * -1, this.listeB.get(0).getySpeed()).
+                dimension(this.listeB.get(0).getBallHeight(), this.listeB.get(0).getBallHeight())
+                .build();
 
         ball2.givePosition(ball2, this.listeB.get(0));
 
@@ -702,6 +720,7 @@ public class Engine extends SurfaceView implements Runnable {
     /**
      * Reduce the size of the balls in the list of balls
      * TODO remane changeBallSize
+     *
      * @param liste      is the list of balls
      * @param indexSpell is the index of the spellblock
      */
@@ -720,7 +739,7 @@ public class Engine extends SurfaceView implements Runnable {
 
     /**
      * Reduce the size of the balls in the list of balls
-
+     *
      * @param multiplier is the variable that will be determinate the new speed of the balls
      */
     public void changeBallSize(float multiplier) {
@@ -728,12 +747,10 @@ public class Engine extends SurfaceView implements Runnable {
             if (listeB.get(i).getBallHeight() * multiplier < listeB.get(i).BALLHEIGTHMIN) {
                 listeB.get(i).setBallWidth(listeB.get(i).BALLWIDTHMIN);
                 listeB.get(i).setBallHeight(listeB.get(i).BALLHEIGTHMIN);
-            }
-            else if(listeB.get(i).getBallHeight() * multiplier > listeB.get(i).BALLHEIGTHMAX){
+            } else if (listeB.get(i).getBallHeight() * multiplier > listeB.get(i).BALLHEIGTHMAX) {
                 listeB.get(i).setBallWidth(listeB.get(i).BALLWIDTHMAX);
                 listeB.get(i).setBallHeight(listeB.get(i).BALLHEIGTHMAX);
-            }
-            else {
+            } else {
                 listeB.get(i).setBallHeight(listeB.get(i).getBallHeight() * multiplier);
                 listeB.get(i).setBallWidth(listeB.get(i).getBallWidth() * multiplier);
             }
@@ -789,7 +806,7 @@ public class Engine extends SurfaceView implements Runnable {
     public void changeBallSpeed(float multiplier) {
         for (int i = 0; i < this.listeB.size(); i++) {
             if ((listeB.get(i).getSommeSpeed() * multiplier <= Ball.SPEEDMAX) && (multiplier >= 1)) {
-                listeB.get(i).setSommeSpeed( (listeB.get(i).getSommeSpeed() * multiplier));
+                listeB.get(i).setSommeSpeed((listeB.get(i).getSommeSpeed() * multiplier));
                 listeB.get(i).setxSpeed(listeB.get(i).getxSpeed() * multiplier);
                 listeB.get(i).setySpeed(listeB.get(i).getySpeed() * multiplier);
             } else if ((listeB.get(i).getSommeSpeed() * multiplier >= Ball.SPEEDMIN) && (multiplier <= 1)) {
@@ -913,10 +930,11 @@ public class Engine extends SurfaceView implements Runnable {
 
     /**
      * The method update() is fixing the position of the hitbox (and so the ball) fps times per second
-     * @param fps the number of time the hitbox will be updated
+     *
+     * @param fps  the number of time the hitbox will be updated
      * @param ball is the ball that will be updated
      */
-    public void updateBall(long fps,Ball ball){
+    public void updateBall(long fps, Ball ball) {
         ball.getRect().left = ball.getRect().left + (ball.getxSpeed() / fps);
         ball.getRect().top = ball.getRect().top + (ball.getySpeed() / fps);
         ball.getRect().right = ball.getRect().left + ball.getBallWidth();
@@ -925,11 +943,12 @@ public class Engine extends SurfaceView implements Runnable {
 
     /**
      * This method is running one time at the beginning to put the right position of the ball
-     * @param x is the length of the screen
-     * @param y is the height of the screen
+     *
+     * @param x    is the length of the screen
+     * @param y    is the height of the screen
      * @param ball is the ball that will be reseted
      */
-    public void resetBall(int x, int y,Ball ball){
+    public void resetBall(int x, int y, Ball ball) {
         ball.getRect().left = x / 2;
         ball.getRect().top = y - 20;
         ball.getRect().right = x / 2 + ball.getBallWidth();
@@ -939,7 +958,8 @@ public class Engine extends SurfaceView implements Runnable {
     /**
      * The method() update will be run fps times per seconds and will update the paddle's hitbox position
      * (and so the position of the paddle too)
-     * @param fps The number of update for each second
+     *
+     * @param fps    The number of update for each second
      * @param screen The length of the screen
      */
     public void updatePaddle(long fps, float screen) {
@@ -964,7 +984,8 @@ public class Engine extends SurfaceView implements Runnable {
     /**
      * The method setMovementState() is setting the paddle's state, if it has to go to the left, right or to be stopped.
      * The parameter screen is used to stop the paddle if it's going to far on the left or on the right.
-     * @param state This is the paddle's direction
+     *
+     * @param state  This is the paddle's direction
      * @param screen This is the length of the screen
      */
     public void setMovementStatePaddle(int state, float screen) {
