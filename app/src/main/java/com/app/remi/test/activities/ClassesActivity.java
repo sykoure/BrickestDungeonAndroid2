@@ -199,7 +199,7 @@ public class ClassesActivity extends Activity implements Displayable {
             descriptionToDisplay = "\nThe Paladin :\nProtected behind his shields, slower than the others is however the most resilient one.";
 
         } else if (heroName.equals("wizard")) {
-            descriptionToDisplay = "\nThe Wizzard :\nComplex and mysterious, his techniques require an utter mastery.";
+            descriptionToDisplay = "\nThe Wizard :\nComplex and mysterious, his techniques require an utter mastery.";
         } else if (heroName.equals("warrior")) {
             descriptionToDisplay = "\nThe Warrior :\nA powerful fighter capable of dealing huge damages at his expense.";
         } else {
