@@ -29,7 +29,7 @@ public class MainMenuActivity extends Activity implements Displayable {
     public static final boolean BRICKEST_DEBUG_MODE = true;
     public static final boolean BRICKEST_OFFLINE_MODE = true;
     public final static String FILTER_MAIN_MENU = "com.app.remi.test.activities.MainMenuActivity.FILTER_MAIN_MENU";
-    private Button goToConnectionActivity, goToEngine, forceConnectionButton;
+    private Button goToConnectionActivity, goToEngine, forceConnectionButton, tutorial;
     private ImageView titleview;
     private LocalBroadcastManager localBroadcastManager;
     private NetworkBackendService networkBackendService;
@@ -43,6 +43,7 @@ public class MainMenuActivity extends Activity implements Displayable {
 
         this.goToConnectionActivity = (Button) findViewById(R.id.goToConnectionButton);
         this.goToEngine = (Button) findViewById(R.id.debugModeButton);
+        this.tutorial = (Button) findViewById(R.id.tutorial);
         this.forceConnectionButton = (Button) findViewById(R.id.networkDebugModeButton);
         if (!BRICKEST_DEBUG_MODE && BRICKEST_OFFLINE_MODE) {
             this.goToEngine.setVisibility(View.INVISIBLE);
@@ -158,4 +159,8 @@ public class MainMenuActivity extends Activity implements Displayable {
         super.onStop();
     }
 
+    public void goToTutorial(View view) {
+        Intent intent = new Intent(this,TutorialActivity.class);
+        startActivity(intent);
+    }
 }

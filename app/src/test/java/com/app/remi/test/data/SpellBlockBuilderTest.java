@@ -20,6 +20,7 @@ public class SpellBlockBuilderTest {
                                         build();
 
 
+
     @Test
     public void spell() throws Exception {
     }

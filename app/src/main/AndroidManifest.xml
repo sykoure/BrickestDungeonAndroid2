@@ -56,6 +56,9 @@
         <activity
             android:name=".activities.TestNewModeActivy"
             android:label="@string/title_activity_test_new_mode_activy" />
+        <activity
+            android:name=".activities.TutorialActivity"
+            android:label="@string/title_activity_tutorial"></activity>
     </application>
 
 </manifest>

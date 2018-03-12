@@ -40,16 +40,18 @@
     <Button
         android:id="@+id/debugModeButton"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="47dp"
         android:layout_marginBottom="8dp"
         android:layout_marginTop="8dp"
+        android:background="@drawable/buttonsprite"
         android:onClick="goToEngineBehavior"
         android:text="Go to engine"
-        android:background="@drawable/buttonsprite"
         app:layout_constraintBottom_toTopOf="@+id/goToConnectionButton"
         app:layout_constraintEnd_toEndOf="@+id/goToConnectionButton"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/goToConnectionButton"
-        app:layout_constraintTop_toBottomOf="@+id/titleView" />
+        app:layout_constraintTop_toBottomOf="@+id/titleView"
+        app:layout_constraintVertical_bias="0.502" />
 
     <Button
         android:id="@+id/networkDebugModeButton"
@@ -64,4 +66,20 @@
         app:layout_constraintEnd_toEndOf="@+id/debugModeButton"
         app:layout_constraintStart_toStartOf="@+id/debugModeButton"
         app:layout_constraintTop_toBottomOf="@+id/debugModeButton" />
+
+    <Button
+        android:id="@+id/tutorial"
+        android:layout_width="wrap_content"
+        android:layout_height="47dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/buttonsprite"
+        android:onClick="goToTutorial"
+        android:text="Tutorial"
+        app:layout_constraintBottom_toTopOf="@+id/debugModeButton"
+        app:layout_constraintEnd_toEndOf="@+id/debugModeButton"
+        app:layout_constraintStart_toStartOf="@+id/debugModeButton"
+        app:layout_constraintTop_toBottomOf="@+id/titleView" />
 </android.support.constraint.ConstraintLayout>
