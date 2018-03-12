@@ -49,7 +49,7 @@ public class ClassesActivity extends Activity implements Displayable {
 
         this.goToSpellActitivy = (Button) findViewById(R.id.goToSpellbutton);
 
-        this.heroDescriptionView = (TextView)findViewById(R.id.heroDescriptionView);
+        this.heroDescriptionView = (TextView) findViewById(R.id.heroDescriptionView);
 
         this.heroImagaView1 = (ImageView) findViewById(R.id.heroImageView1);
         this.heroImagaView2 = (ImageView) findViewById(R.id.heroImageView2);
@@ -70,6 +70,8 @@ public class ClassesActivity extends Activity implements Displayable {
         this.listInstantiation();
         this.setHeroImageVisibility();
         this.setHeroImageContent();
+
+//        this.heroDescriptionView.setCompoundDrawablesRelativeWithIntrinsicBounds(R.drawable.hero_selection_background, 0, 0, 0);
 
         this.localBroadcastManager = LocalBroadcastManager.getInstance(this);                                       // Get an instance of a broadcast manager
         BroadcastReceiver myReceiver = new NetworkReceiver(this);                                        // Create a class and set in it the behavior when an information is received
@@ -191,19 +193,16 @@ public class ClassesActivity extends Activity implements Displayable {
         }
     }
 
-    public void setDescription(String heroName){
+    public void setDescription(String heroName) {
         String descriptionToDisplay;
-        if(heroName.equals("paladin")){
-            descriptionToDisplay = "The Paladin :\nProtected behind his shields, slower than the others is however the most resilient one.";
+        if (heroName.equals("paladin")) {
+            descriptionToDisplay = "\nThe Paladin :\nProtected behind his shields, slower than the others is however the most resilient one.";
 
-        }
-        else if(heroName.equals("wizard")){
-            descriptionToDisplay = "The Wizzard :\nComplex and mysterious his techniques require an utter mastery.";
-        }
-        else if(heroName.equals("berserk")){
-            descriptionToDisplay = "The Berserk :\nA powerful fighter capable of dealing huge damage at his expense.";
-        }
-        else{
+        } else if (heroName.equals("wizard")) {
+            descriptionToDisplay = "\nThe Wizzard :\nComplex and mysterious, his techniques require an utter mastery.";
+        } else if (heroName.equals("warrior")) {
+            descriptionToDisplay = "\nThe Warrior :\nA powerful fighter capable of dealing huge damages at his expense.";
+        } else {
             descriptionToDisplay = "";
         }
 

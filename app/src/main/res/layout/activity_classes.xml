@@ -4,9 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.app.remi.test.activities.ClassesActivity"
     android:background="@drawable/background1"
-    >
+    tools:context="com.app.remi.test.activities.ClassesActivity">
 
     <Button
         android:id="@+id/goToSpellbutton"
@@ -16,14 +15,14 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:background="@drawable/buttonsprite"
         android:onClick="goToSpellActivity"
         android:text="Confirm Selection"
-        android:background="@drawable/buttonsprite"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.848" />
+        app:layout_constraintVertical_bias="0.929" />
 
     <ImageView
         android:id="@+id/heroImageView1"
@@ -32,8 +31,8 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:src="@drawable/paladin"
         android:onClick="behaviorHeroImage1"
+        android:src="@drawable/paladin"
         app:layout_constraintBottom_toBottomOf="@+id/heroImageView2"
         app:layout_constraintEnd_toStartOf="@+id/heroImageView2"
         app:layout_constraintHorizontal_bias="0.285"
@@ -49,12 +48,14 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:src="@drawable/warrior"
         android:onClick="behaviorHeroImage2"
+        android:src="@drawable/warrior"
         app:layout_constraintBottom_toTopOf="@+id/goToSpellbutton"
         app:layout_constraintEnd_toEndOf="@+id/goToSpellbutton"
+        app:layout_constraintHorizontal_bias="0.502"
         app:layout_constraintStart_toStartOf="@+id/goToSpellbutton"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.303" />
 
     <ImageView
         android:id="@+id/heroImageView3"
@@ -63,8 +64,8 @@
         android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:src="@drawable/wizard"
         android:onClick="behaviorHeroImage3"
+        android:src="@drawable/wizard"
         app:layout_constraintBottom_toBottomOf="@+id/heroImageView2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.703"
@@ -82,10 +83,25 @@
         android:layout_marginTop="8dp"
         android:text="Choose A Hero"
         android:textAppearance="@style/TextAppearance.AppCompat.Large"
+        android:textColor="@android:color/black"
+        android:textSize="24sp"
         app:layout_constraintBottom_toTopOf="@+id/heroImageView2"
         app:layout_constraintEnd_toEndOf="@+id/heroImageView2"
         app:layout_constraintStart_toStartOf="@+id/heroImageView2"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.46" />
+
+
+    <ImageView
+        android:id="@+id/heroDiscriptionBackgroundimageView"
+        android:layout_width="376dp"
+        android:layout_height="316dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginStart="8dp"
+        android:src="@drawable/hero_selection_background"
+        app:layout_constraintEnd_toEndOf="@+id/heroImageView3"
+        app:layout_constraintStart_toStartOf="@+id/heroImageView1"
+        app:layout_constraintTop_toBottomOf="@+id/heroImageView2" />
 
     <TextView
         android:id="@+id/heroDescriptionView"
@@ -95,7 +111,10 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
+        android:maxHeight="171dp"
+        android:maxWidth="279dp"
         android:text=""
+        android:textColor="@android:color/black"
         app:layout_constraintBottom_toTopOf="@+id/goToSpellbutton"
         app:layout_constraintEnd_toEndOf="@+id/goToSpellbutton"
         app:layout_constraintHorizontal_bias="0.483"
