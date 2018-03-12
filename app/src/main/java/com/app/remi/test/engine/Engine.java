@@ -233,12 +233,12 @@ public class Engine extends SurfaceView implements Runnable {
             canvas.drawColor(Color.argb(225, 214, 200, 166));
 
             //the paint (paintbrush) will now has a white color
-            paint.setColor(Color.argb(100, 255, 255, 255));
+            paint.setColor(Color.argb(100, 0, 0, 0));
 
             //we are putting each objects in the canvas
             canvas.drawRect(paddle.getRect(), paint);
             //canvas.drawRect(spellBlock.getRect(), paint);
-            //canvas.drawRect(ball.getRect(), paint);
+            canvas.drawRect(ball.getRect(), paint);
 
             for (int i = 0; i < listeB.size(); i++)
                 canvas.drawRect(listeB.get(i).getRect(), paint);
@@ -255,7 +255,7 @@ public class Engine extends SurfaceView implements Runnable {
 
             }
             //We apply the sprite for the paddle and the ball
-            canvas.drawBitmap(bitmapBall, null, this.ball.getRect(), null);
+//            canvas.drawBitmap(bitmapBall, null, this.ball.getRect(), null);
 
             canvas.drawBitmap(bitmapPaddle, null, this.paddle.getRect(), null);
 

@@ -61,10 +61,10 @@ public class Ball {
 
 
     //Dimension of the ball
-    private float ballWidth = 10;
-    private float ballHeight = 10;
-    public final static float BALLWIDTHMIN = 3;
-    public final static float BALLHEIGTHMIN = 3;
+    private float ballWidth = 15;
+    private float ballHeight = 15;
+    public final static float BALLWIDTHMIN = 10;
+    public final static float BALLHEIGTHMIN = 10;
     public final static float BALLWIDTHMAX = 50;
     public final static float BALLHEIGTHMAX = 50;
 
